@@ -1,4 +1,6 @@
-import { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { projects } from "@/data/mockData";
@@ -12,20 +14,157 @@ import {
   DialogDescription 
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useToast } from '@/components/ui/use-toast';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+interface Project {
+  _id: string;
+  title: string;
+  description: string;
+  projectUrl: string;
+  imageUrl?: string;
+  tags: string[];
+  status: 'pending' | 'approved' | 'rejected';
+  rejectionReason?: string;
+  createdAt: string;
+}
+
+interface ProjectFormData {
+  title: string;
+  description: string;
+  projectUrl: string;
+  imageUrl: string;
+  tags: string;
+}
 
 export default function Community() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [userProjects, setUserProjects] = useState<Project[]>([]);
+  const [publicProjects, setPublicProjects] = useState<Project[]>([]);
+  const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('all');
+  const [projects, setProjects] = useState([]);
+  const navigate = useNavigate();
+  const { token, isAuthenticated } = useAuth();
+  const { toast } = useToast();
 
-  // Only show approved projects
-  const approvedProjects = projects.filter((project) => project.approved);
+  const [formData, setFormData] = useState<ProjectFormData>({
+    title: '',
+    description: '',
+    projectUrl: '',
+    imageUrl: '',
+    tags: ''
+  });
 
-  const filteredProjects = approvedProjects.filter(
-    (project) =>
-      project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      // Get public projects
+      const publicResponse = await axios.get(`${API_URL}/api/community/public`);
+      setPublicProjects(publicResponse.data);
+
+      // Get user's projects if authenticated
+      if (isAuthenticated && token) {
+        const userResponse = await axios.get(`${API_URL}/api/community/user/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setUserProjects(userResponse.data);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.response?.data?.message || "Failed to fetch projects",
+        variant: "destructive",
+      });
+      console.error('Error fetching projects:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        toast.error('Please log in to submit a project');
+        return;
+      }
+
+      const data = {
+        ...formData,
+        tags: formData.tags.split(',').map(tag => tag.trim()),
+        userId
+      };
+
+      await axios.post('/api/community/submit', data);
+      toast.success('Project submitted successfully! Waiting for admin approval.');
+
+      setShowForm(false);
+      resetForm();
+      fetchProjects();
+    } catch (error) {
+      toast.error('Failed to submit project');
+      console.error('Error submitting project:', error);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      description: '',
+      projectUrl: '',
+      imageUrl: '',
+      tags: ''
+    });
+  };
+
+  const getStatusBadgeClass = (status: string) => {
+    switch (status) {
+      case 'approved':
+        return 'bg-green-100 text-green-800';
+      case 'rejected':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-yellow-100 text-yellow-800';
+    }
+  };
+
+  const handleSubmitClick = () => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Authentication Required",
+        description: "Please login to submit a project",
+        variant: "destructive",
+      });
+      navigate('/login');
+      return;
+    }
+    navigate('/community/submit');
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  const filteredProjects = publicProjects.filter(project => {
+    const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         project.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesTab = activeTab === 'all' || project.tags.includes(activeTab);
+    return matchesSearch && matchesTab;
+  });
 
   return (
     <>
@@ -48,20 +187,23 @@ export default function Community() {
               <Input
                 type="text"
                 placeholder="Search projects..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full"
               />
             </div>
             <div>
-              <Button className="w-full md:w-auto" asChild>
-                <a href="/submission">Submit Your Project</a>
+              <Button 
+                onClick={handleSubmitClick}
+                className="w-full md:w-auto"
+              >
+                Submit Your Project
               </Button>
             </div>
           </div>
 
           {/* Projects Grid */}
-          <Tabs defaultValue="all" className="mb-10">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-10">
             <div className="flex justify-center mb-8">
               <TabsList>
                 <TabsTrigger value="all">All Projects</TabsTrigger>
@@ -71,57 +213,42 @@ export default function Community() {
               </TabsList>
             </div>
 
-            <TabsContent value="all">
+            <TabsContent value={activeTab}>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredProjects.length > 0 ? (
                   filteredProjects.map((project) => (
                     <div
-                      key={project.id}
+                      key={project._id}
                       className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:scale-105"
                     >
-                      {project.image && (
+                      {project.imageUrl && (
                         <img
-                          src={project.image}
+                          src={project.imageUrl}
                           alt={project.title}
                           className="w-full h-48 object-cover"
                         />
                       )}
                       <div className="p-6">
                         <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                        <p className="text-gray-600 mb-2">By {project.author}</p>
-                        <p className="text-gray-600 mb-2 text-sm">{new Date(project.date).toLocaleDateString()}</p>
-                        <p className="text-gray-700 mb-4 line-clamp-2">{project.description}</p>
-                        <Button variant="outline" onClick={() => setSelectedProject(project)}>
-                          View Project
-                        </Button>
+                        <p className="text-gray-600 mb-4">{project.description}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {project.tags.map((tag, index) => (
+                            <span
+                              key={index}
+                              className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="col-span-3 text-center py-10">
-                    <p className="text-gray-500">No projects found matching your search.</p>
-                    <Button variant="link" onClick={() => setSearchTerm("")}>
-                      Clear search
-                    </Button>
+                  <div className="col-span-full text-center py-10">
+                    <p className="text-gray-500">No projects found</p>
                   </div>
                 )}
-              </div>
-            </TabsContent>
-
-            {/* Other tabs would have similar content but filtered differently */}
-            <TabsContent value="hardware">
-              <div className="text-center py-10">
-                <p className="text-gray-500">Use the category filter to browse hardware projects.</p>
-              </div>
-            </TabsContent>
-            <TabsContent value="software">
-              <div className="text-center py-10">
-                <p className="text-gray-500">Use the category filter to browse software projects.</p>
-              </div>
-            </TabsContent>
-            <TabsContent value="iot">
-              <div className="text-center py-10">
-                <p className="text-gray-500">Use the category filter to browse IoT projects.</p>
               </div>
             </TabsContent>
           </Tabs>
@@ -217,47 +344,36 @@ export default function Community() {
       </main>
 
       {/* Project Details Dialog */}
-      <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
-        {selectedProject && (
+      <Dialog open={!!formData.projectUrl} onOpenChange={() => setFormData({ ...formData, projectUrl: '' })}>
+        {formData.projectUrl && (
           <DialogContent className="max-w-4xl">
             <DialogHeader>
-              <DialogTitle className="text-2xl">{selectedProject.title}</DialogTitle>
+              <DialogTitle className="text-2xl">{formData.title}</DialogTitle>
               <DialogDescription>
-                By {selectedProject.author} • {new Date(selectedProject.date).toLocaleDateString()}
+                {new Date(formData.createdAt).toLocaleDateString()}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
-              {selectedProject.image && (
+              {formData.imageUrl && (
                 <img
-                  src={selectedProject.image}
-                  alt={selectedProject.title}
+                  src={formData.imageUrl}
+                  alt={formData.title}
                   className="w-full max-h-96 object-cover rounded-md"
                 />
               )}
-              <p className="text-gray-700">{selectedProject.description}</p>
+              <p className="text-gray-700">{formData.description}</p>
               
-              {selectedProject.video && (
-                <div className="mt-4">
-                  <h4 className="font-medium mb-2">Project Demo Video:</h4>
-                  <div className="bg-gray-100 p-4 rounded-md text-center">
-                    <p>Video link: <a href={selectedProject.video} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{selectedProject.video}</a></p>
-                  </div>
+              <div className="mt-4">
+                <h4 className="font-medium mb-2">Project Demo Video:</h4>
+                <div className="bg-gray-100 p-4 rounded-md text-center">
+                  <p>Video link: <a href={formData.projectUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{formData.projectUrl}</a></p>
                 </div>
-              )}
-              
-              {selectedProject.link && (
-                <div className="mt-4">
-                  <h4 className="font-medium mb-2">Project Details:</h4>
-                  <div className="bg-gray-100 p-4 rounded-md text-center">
-                    <p>For more information, visit: <a href={selectedProject.link} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{selectedProject.link}</a></p>
-                  </div>
-                </div>
-              )}
+              </div>
               
               <div className="pt-4 flex justify-end gap-3">
                 <Button 
                   variant="outline" 
-                  onClick={() => setSelectedProject(null)}
+                  onClick={() => setFormData({ ...formData, projectUrl: '' })}
                 >
                   Close
                 </Button>
