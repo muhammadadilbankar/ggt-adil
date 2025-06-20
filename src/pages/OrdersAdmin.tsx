@@ -47,11 +47,46 @@ export default function OrdersAdmin() {
   const [filterStatus, setFilterStatus] = useState<string>("");
   const [dateRange, setDateRange] = useState({ startDate: "", endDate: "" });
 
-  const fetchOrders = async () => {
-    try {
-      let url = "/api/orders";
-      const params = new URLSearchParams();
+  // const fetchOrders = async () => {
+  //   try {
+  //     let url = "/api/orders";
+  //     const params = new URLSearchParams();
       
+  //     if (filterStatus) {
+  //       params.append("status", filterStatus);
+  //     }
+  //     if (dateRange.startDate && dateRange.endDate) {
+  //       params.append("startDate", dateRange.startDate);
+  //       params.append("endDate", dateRange.endDate);
+  //     }
+      
+  //     if (params.toString()) {
+  //       url += `?${params.toString()}`;
+  //     }
+
+  //     const response = await axios.get(url);
+  //     setOrders(response.data);
+  //   } catch (error) {
+  //     toast.error("Failed to fetch orders");
+  //     console.error("Error fetching orders:", error);
+  //   }
+  // };
+  const fetchOrders = async () => {
+    console.log("Starting fetchOrders function");
+    try {
+      // Get token from localStorage
+      const token = localStorage.getItem("token");
+      console.log("Using token:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      // Create base URL pointing to backend server
+      let url = "http://localhost:5000/api/orders";
+      const params = new URLSearchParams();
+
+      // Add filters if specified
       if (filterStatus) {
         params.append("status", filterStatus);
       }
@@ -59,26 +94,77 @@ export default function OrdersAdmin() {
         params.append("startDate", dateRange.startDate);
         params.append("endDate", dateRange.endDate);
       }
-      
+
+      // Append query string if there are parameters
       if (params.toString()) {
         url += `?${params.toString()}`;
       }
 
-      const response = await axios.get(url);
+      console.log("Fetching orders from:", url);
+
+      // Use axios with proper authorization header
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      console.log("Orders data received:", response.data.length, "orders");
       setOrders(response.data);
     } catch (error) {
-      toast.error("Failed to fetch orders");
       console.error("Error fetching orders:", error);
+
+      // More detailed error handling
+      const errorMessage = error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch orders";
+
+      toast.error(errorMessage);
     }
   };
 
+  // const fetchStats = async () => {
+  //   try {
+  //     const response = await axios.get("/api/orders/stats");
+  //     setStats(response.data);
+  //   } catch (error) {
+  //     toast.error("Failed to fetch order statistics");
+  //     console.error("Error fetching stats:", error);
+  //   }
+  // };
   const fetchStats = async () => {
+    console.log("Starting fetchStats function");
     try {
-      const response = await axios.get("/api/orders/stats");
+      // Get token from localStorage
+      const token = localStorage.getItem("token");
+      console.log("Using token for stats:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      // Use absolute URL to backend server
+      const url = "http://localhost:5000/api/orders/stats";
+      console.log("Fetching order stats from:", url);
+
+      // Add authorization header
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      console.log("Stats data received:", response.data);
       setStats(response.data);
     } catch (error) {
-      toast.error("Failed to fetch order statistics");
-      console.error("Error fetching stats:", error);
+      console.error("Error fetching order stats:", error);
+
+      // More detailed error handling
+      const errorMessage = error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch order statistics";
+
+      toast.error(errorMessage);
     }
   };
 

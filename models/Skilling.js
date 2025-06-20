@@ -30,20 +30,12 @@ const skillingSchema = new mongoose.Schema({
   },
   duration: {
     type: Number, // in minutes
-    required: true
+    required: false
   },
   difficulty: {
     type: String,
     enum: ['beginner', 'intermediate', 'advanced'],
     default: 'beginner'
-  },
-  createdAt: { 
-    type: Date, 
-    default: Date.now 
-  },
-  updatedAt: { 
-    type: Date, 
-    default: Date.now 
   }
 }, {
   timestamps: true // This will automatically handle updatedAt

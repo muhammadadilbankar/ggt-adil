@@ -48,6 +48,8 @@ const upload = multer({
 // Public routes (no authentication needed)
 router.get('/public', getPublicProjects); // Get all approved projects
 router.get('/:id', getProjectById); // Public project details
+// routes/communityRoutes.js
+router.patch('/:id', communityController.updateCommunityPost);
 
 // Protected routes (authentication needed)
 router.get('/user/:userId', isAuthenticated, getUserProjects); // Get user's own projects

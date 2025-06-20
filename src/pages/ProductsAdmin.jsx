@@ -14,24 +14,37 @@ export default function ProductsAdmin() {
   }, []);
 
   const fetchProducts = async () => {
+    console.log("Starting fetchProducts function");
     try {
+      // Get token from localStorage instead of user object
+      const token = localStorage.getItem("token");
+      console.log("Using token:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const response = await fetch("http://localhost:5000/api/products", {
         headers: {
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
-      
+      console.log("Response status:", response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to fetch products');
+        const errorText = await response.text();
+        console.log("Error response body:", errorText);
+        throw new Error(`Failed to fetch products: ${response.status}`);
       }
-      
+
       const data = await response.json();
+      console.log("Fetched products data:", data);
       setProducts(data || []);
     } catch (error) {
       console.error('Error fetching products:', error);
       toast({
         title: "Error",
-        description: "Failed to load products",
+        description: error.message || "Failed to load products",
         variant: "destructive",
       });
       setProducts([]);
@@ -41,18 +54,36 @@ export default function ProductsAdmin() {
   };
 
   const deleteProduct = async (id) => {
+    console.log("Deleting product with ID:", id);
     try {
+      // Get token from localStorage instead of user object
+      const token = localStorage.getItem("token");
+      console.log("Using token:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const response = await fetch(`http://localhost:5000/api/products/${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
+      console.log("Delete response status:", response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to delete product');
+        // Try to get detailed error message from response
+        const errorData = await response.json().catch(() => null);
+        console.log("Error response:", errorData);
+        throw new Error(
+          errorData?.message ||
+          `Failed to delete product: ${response.status}`
+        );
       }
 
+      console.log("Product deleted successfully");
       setProducts(products.filter((p) => p._id !== id));
       toast({
         title: "Success",
@@ -62,7 +93,7 @@ export default function ProductsAdmin() {
       console.error('Error deleting product:', error);
       toast({
         title: "Error",
-        description: "Failed to delete product",
+        description: error.message || "Failed to delete product",
         variant: "destructive",
       });
     }
@@ -70,21 +101,46 @@ export default function ProductsAdmin() {
 
   const addProduct = async (e) => {
     e.preventDefault();
+    console.log("Adding product:", form);
+
     try {
+      // Get token from localStorage instead of user object
+      const token = localStorage.getItem("token");
+      console.log("Using token:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      // Validate required fields
+      if (!form.title || !form.price) {
+        throw new Error("Title and price are required");
+      }
+
       const response = await fetch("http://localhost:5000/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(form),
       });
 
+      console.log("Response status:", response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to add product');
+        // Try to get detailed error message from response
+        const errorData = await response.json().catch(() => null);
+        console.log("Error response:", errorData);
+        throw new Error(
+          errorData?.message ||
+          `Failed to add product: ${response.status}`
+        );
       }
 
       const newProduct = await response.json();
+      console.log("Product added successfully:", newProduct);
+
       setProducts([...products, newProduct]);
       setForm({ title: "", description: "", price: "" });
       toast({
@@ -95,7 +151,7 @@ export default function ProductsAdmin() {
       console.error('Error adding product:', error);
       toast({
         title: "Error",
-        description: "Failed to add product",
+        description: error.message || "Failed to add product",
         variant: "destructive",
       });
     }

@@ -1,7 +1,21 @@
 import { Request, Response } from 'express';
+// import type * as Express from 'express';
 import CommunitySubmission from '../models/CommunitySubmission';
 import { uploadToCloudinary } from '../utils/cloudinary';
 import { isValidObjectId } from 'mongoose';
+
+// Extend Express Request interface to include 'user'
+declare global {
+  namespace Express {
+    interface User {
+      _id: string;
+      // add other user properties if needed
+    }
+    interface Request {
+      user: User;
+    }
+  }
+}
 
 // Create a new submission
 export const createSubmission = async (req: Request, res: Response) => {

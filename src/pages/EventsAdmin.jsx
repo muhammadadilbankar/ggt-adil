@@ -20,25 +20,71 @@ export default function EventsAdmin() {
     fetchEvents();
   }, []);
 
+  // const fetchEvents = async () => {
+  //   console.log("Starting fetchEvents function");
+  //   try {
+  //     const response = await fetch("http://localhost:5000/api/events", {
+  //       headers: {
+  //         Authorization: `Bearer ${user?.token}`,
+  //       },
+  //     });
+  //     console.log("Response status:", response.status);
+  //     console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+      
+  //     if (!response.ok) {
+  //       const errorText = await response.text();
+  //       console.log("Error response body:", errorText);
+  //       throw new Error('Failed to fetch events');
+  //     }
+      
+  //     const data = await response.json();
+  //     console.log("Fetched data:", data);
+  //     setEvents(data || []);
+  //   } catch (error) {
+  //     console.error('Error fetching events:', error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to load events",
+  //       variant: "destructive",
+  //     });
+  //     setEvents([]);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const fetchEvents = async () => {
+    console.log("Starting fetchEvents function");
     try {
+      // Get token from localStorage instead of user object
+      const token = localStorage.getItem("token");
+      console.log("Using token:", token ? `${token.substring(0, 10)}...` : "none");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const response = await fetch("http://localhost:5000/api/events", {
         headers: {
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
-      
+      console.log("Response status:", response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to fetch events');
+        const errorText = await response.text();
+        console.log("Error response body:", errorText);
+        throw new Error(`Failed to fetch events: ${response.status}`);
       }
-      
+
       const data = await response.json();
+      console.log("Fetched data:", data);
       setEvents(data || []);
     } catch (error) {
       console.error('Error fetching events:', error);
       toast({
         title: "Error",
-        description: "Failed to load events",
+        description: error.message || "Failed to load events",
         variant: "destructive",
       });
       setEvents([]);
@@ -46,20 +92,109 @@ export default function EventsAdmin() {
       setLoading(false);
     }
   };
+  // const deleteEvent = async (id) => {
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/api/events/${id}`, {
+  //       method: "DELETE",
+  //       headers: {
+  //         Authorization: `Bearer ${user?.token}`,
+  //       },
+  //     });
 
+  //     if (!response.ok) {
+  //       throw new Error('Failed to delete event');
+  //     }
+
+  //     setEvents(events.filter((e) => e._id !== id));
+  //     toast({
+  //       title: "Success",
+  //       description: "Event deleted successfully",
+  //     });
+  //   } catch (error) {
+  //     console.error('Error deleting event:', error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to delete event",
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
+
+  // const addEvent = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const eventData = {
+  //       ...form,
+  //       tags: form.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+  //     };
+
+  //     const response = await fetch("http://localhost:5000/api/events", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${user?.token}`,
+  //       },
+  //       body: JSON.stringify(eventData),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Failed to add event');
+  //     }
+
+  //     const newEvent = await response.json();
+  //     setEvents([...events, newEvent]);
+  //     setForm({
+  //       title: "",
+  //       description: "",
+  //       imageUrl: "",
+  //       redirectUrl: "",
+  //       date: "",
+  //       tags: "",
+  //     });
+  //     toast({
+  //       title: "Success",
+  //       description: "Event added successfully",
+  //     });
+  //   } catch (error) {
+  //     console.error('Error adding event:', error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to add event",
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
   const deleteEvent = async (id) => {
+    console.log("Deleting event with ID:", id);
     try {
+      // Get token from localStorage instead of user object
+      const token = localStorage.getItem("token");
+      console.log("Using token:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const response = await fetch(`http://localhost:5000/api/events/${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
+      console.log("Delete response status:", response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to delete event');
+        // Try to get detailed error message from response
+        const errorData = await response.json().catch(() => null);
+        console.log("Error response:", errorData);
+        throw new Error(
+          errorData?.message ||
+          `Failed to delete event: ${response.status}`
+        );
       }
 
+      console.log("Event deleted successfully");
       setEvents(events.filter((e) => e._id !== id));
       toast({
         title: "Success",
@@ -69,7 +204,7 @@ export default function EventsAdmin() {
       console.error('Error deleting event:', error);
       toast({
         title: "Error",
-        description: "Failed to delete event",
+        description: error.message || "Failed to delete event",
         variant: "destructive",
       });
     }
@@ -77,26 +212,49 @@ export default function EventsAdmin() {
 
   const addEvent = async (e) => {
     e.preventDefault();
+    console.log("Adding event with form data:", form);
+
     try {
+      // Get token from localStorage instead of user object
+      const token = localStorage.getItem("token");
+      console.log("Using token:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      // Process tags if they exist in the form
       const eventData = {
         ...form,
-        tags: form.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+        tags: form.tags?.split(',').map(tag => tag.trim()).filter(tag => tag) || [],
       };
+
+      console.log("Processed event data:", eventData);
 
       const response = await fetch("http://localhost:5000/api/events", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(eventData),
       });
 
+      console.log("Response status:", response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to add event');
+        // Try to get detailed error message from response
+        const errorData = await response.json().catch(() => null);
+        console.log("Error response:", errorData);
+        throw new Error(
+          errorData?.message ||
+          `Failed to add event: ${response.status}`
+        );
       }
 
       const newEvent = await response.json();
+      console.log("Event added successfully:", newEvent);
+
       setEvents([...events, newEvent]);
       setForm({
         title: "",
@@ -114,7 +272,7 @@ export default function EventsAdmin() {
       console.error('Error adding event:', error);
       toast({
         title: "Error",
-        description: "Failed to add event",
+        description: error.message || "Failed to add event",
         variant: "destructive",
       });
     }

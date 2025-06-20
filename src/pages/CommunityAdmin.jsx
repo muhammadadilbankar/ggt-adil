@@ -20,24 +20,37 @@ export default function CommunityAdmin() {
   }, []);
 
   const fetchCommunities = async () => {
+    console.log("Starting fetchCommunities function");
     try {
+      // Get token from localStorage instead of user object
+      const token = localStorage.getItem("token");
+      console.log("Using token:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const response = await fetch("http://localhost:5000/api/community", {
         headers: {
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
-      
+      console.log("Response status:", response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to fetch communities');
+        const errorText = await response.text();
+        console.log("Error response body:", errorText);
+        throw new Error(`Failed to fetch communities: ${response.status}`);
       }
-      
+
       const data = await response.json();
+      console.log("Fetched communities data:", data);
       setCommunities(data || []);
     } catch (error) {
       console.error('Error fetching communities:', error);
       toast({
         title: "Error",
-        description: "Failed to load communities",
+        description: error.message || "Failed to load communities",
         variant: "destructive",
       });
       setCommunities([]);
@@ -46,19 +59,64 @@ export default function CommunityAdmin() {
     }
   };
 
+  // const deleteCommunity = async (id) => {
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/api/community/${id}`, {
+  //       method: "DELETE",
+  //       headers: {
+  //         Authorization: `Bearer ${user?.token}`,
+  //       },
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Failed to delete community');
+  //     }
+
+  //     setCommunities(communities.filter((c) => c._id !== id));
+  //     toast({
+  //       title: "Success",
+  //       description: "Community deleted successfully",
+  //     });
+  //   } catch (error) {
+  //     console.error('Error deleting community:', error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to delete community",
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
   const deleteCommunity = async (id) => {
+    console.log("Deleting community with ID:", id);
     try {
+      // Get token from localStorage instead of user object
+      const token = localStorage.getItem("token");
+      console.log("Using token:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const response = await fetch(`http://localhost:5000/api/community/${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
+      console.log("Delete response status:", response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to delete community');
+        // Try to get detailed error message from response
+        const errorData = await response.json().catch(() => null);
+        console.log("Error response:", errorData);
+        throw new Error(
+          errorData?.message ||
+          `Failed to delete community: ${response.status}`
+        );
       }
 
+      console.log("Community deleted successfully");
       setCommunities(communities.filter((c) => c._id !== id));
       toast({
         title: "Success",
@@ -68,29 +126,73 @@ export default function CommunityAdmin() {
       console.error('Error deleting community:', error);
       toast({
         title: "Error",
-        description: "Failed to delete community",
+        description: error.message || "Failed to delete community",
         variant: "destructive",
       });
     }
   };
 
+  // const toggleApproval = async (id, currentStatus) => {
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/api/community/${id}`, {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${user?.token}`,
+  //       },
+  //       body: JSON.stringify({ isApproved: !currentStatus }),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Failed to update approval status');
+  //     }
+
+  //     const updatedCommunity = await response.json();
+  //     setCommunities(communities.map(c =>
+  //       c._id === id ? updatedCommunity : c
+  //     ));
+  //     toast({
+  //       title: "Success",
+  //       description: `Community ${!currentStatus ? 'approved' : 'unapproved'} successfully`,
+  //     });
+  //   } catch (error) {
+  //     console.error('Error updating approval status:', error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to update approval status",
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
   const toggleApproval = async (id, currentStatus) => {
     try {
+      // Get token from localStorage instead of user object
+      const token = localStorage.getItem("token");
+      console.log("Using token for approval toggle:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const response = await fetch(`http://localhost:5000/api/community/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ isApproved: !currentStatus }),
       });
 
+      console.log("Approval toggle response status:", response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to update approval status');
+        const errorData = await response.json().catch(() => null);
+        console.log("Error response:", errorData);
+        throw new Error(errorData?.message || 'Failed to update approval status');
       }
 
       const updatedCommunity = await response.json();
-      setCommunities(communities.map(c => 
+      setCommunities(communities.map(c =>
         c._id === id ? updatedCommunity : c
       ));
       toast({
@@ -101,7 +203,7 @@ export default function CommunityAdmin() {
       console.error('Error updating approval status:', error);
       toast({
         title: "Error",
-        description: "Failed to update approval status",
+        description: error.message || "Failed to update approval status",
         variant: "destructive",
       });
     }
@@ -109,21 +211,46 @@ export default function CommunityAdmin() {
 
   const addCommunity = async (e) => {
     e.preventDefault();
+    console.log("Adding community with form data:", form);
+
     try {
+      // Get token from localStorage instead of user object
+      const token = localStorage.getItem("token");
+      console.log("Using token:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      // Validate required fields
+      if (!form.title || !form.description) {
+        throw new Error("Title and description are required");
+      }
+
       const response = await fetch("http://localhost:5000/api/community", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(form),
       });
 
+      console.log("Response status:", response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to add community');
+        // Try to get detailed error message from response
+        const errorData = await response.json().catch(() => null);
+        console.log("Error response:", errorData);
+        throw new Error(
+          errorData?.message ||
+          `Failed to add community: ${response.status}`
+        );
       }
 
       const newCommunity = await response.json();
+      console.log("Community added successfully:", newCommunity);
+
       setCommunities([...communities, newCommunity]);
       setForm({
         title: "",
@@ -140,7 +267,7 @@ export default function CommunityAdmin() {
       console.error('Error adding community:', error);
       toast({
         title: "Error",
-        description: "Failed to add community",
+        description: error.message || "Failed to add community",
         variant: "destructive",
       });
     }

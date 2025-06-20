@@ -1,5 +1,6 @@
 // controllers/communityController.js
 import Community from '../models/Community.js';
+import mongoose from 'mongoose';
 
 export const createCommunityPost = async (req, res) => {
   try {
@@ -110,29 +111,54 @@ export const getProjectById = async (req, res) => {
 };
 
 // Create new project (admin upload)
+// export const createProject = async (req, res) => {
+//   try {
+//     const { title, description, projectUrl, tags } = req.body;
+    
+//     // Handle file uploads if any
+//     const images = req.files ? req.files.map(file => file.path) : [];
+
+//     const project = new Community({
+//       title,
+//       description,
+//       projectUrl,
+//       tags,
+//       images,
+//       userId: req.user.id,
+//       status: 'approved', // Admin uploads are automatically approved
+//       isAdminUpload: true
+//     });
+
+//     await project.save();
+//     res.status(201).json({ message: 'Project created successfully', project });
+//   } catch (error) {
+//     console.error('Error creating project:', error);
+//     res.status(500).json({ message: 'Failed to create project' });
+//   }
+// };
 export const createProject = async (req, res) => {
   try {
-    const { title, description, projectUrl, tags } = req.body;
-    
-    // Handle file uploads if any
-    const images = req.files ? req.files.map(file => file.path) : [];
+    console.log("Received project data:", req.body);
 
-    const project = new Community({
-      title,
-      description,
-      projectUrl,
-      tags,
-      images,
-      userId: req.user.id,
-      status: 'approved', // Admin uploads are automatically approved
-      isAdminUpload: true
+    // Create the community/project with defaults for missing required fields
+    const community = new Community({
+      ...req.body,
+      // Provide defaults for required fields
+      projectUrl: req.body.projectUrl || req.body.githubLink || "https://example.com",
+      // Skip userId or use a default if needed
+      userId: new mongoose.Types.ObjectId("507f1f77bcf86cd799439011") // Use a valid ObjectId
     });
 
-    await project.save();
-    res.status(201).json({ message: 'Project created successfully', project });
+    console.log("Attempting to save community:", community);
+    const savedCommunity = await community.save();
+    console.log("Saved community successfully");
+    res.status(201).json(savedCommunity);
   } catch (error) {
     console.error('Error creating project:', error);
-    res.status(500).json({ message: 'Failed to create project' });
+    res.status(500).json({
+      message: 'Failed to create project',
+      details: error.message
+    });
   }
 };
 
@@ -205,5 +231,26 @@ export const deleteProject = async (req, res) => {
   } catch (error) {
     console.error('Error deleting project:', error);
     res.status(500).json({ message: 'Failed to delete project' });
+  }
+};
+
+export const updateCommunityPost = async (req, res) => {
+  try {
+    console.log('Updating community:', req.params.id, req.body);
+
+    const updatedCommunity = await Community.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedCommunity) {
+      return res.status(404).json({ message: 'Community not found' });
+    }
+
+    res.json(updatedCommunity);
+  } catch (err) {
+    console.error('Error updating community:', err);
+    res.status(500).json({ error: err.message });
   }
 };

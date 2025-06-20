@@ -2,8 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User';
 
+type UserType = {
+  _id: string;
+  name: string;
+  email: string;
+  isAdmin: boolean;
+};
 interface AuthRequest extends Request {
-  user?: any;
+  user: UserType;
 }
 
 export const isAuthenticated = async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -28,7 +34,12 @@ export const isAuthenticated = async (req: AuthRequest, res: Response, next: Nex
         return res.status(401).json({ message: 'User not found' });
       }
 
-      req.user = user;
+      req.user = {
+        _id: user._id.toString(),
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      };
       next();
     } catch (error) {
       return res.status(403).json({ message: 'Invalid token' });

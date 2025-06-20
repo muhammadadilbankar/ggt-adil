@@ -14,7 +14,7 @@ const communitySchema = new mongoose.Schema({
   },
   projectUrl: { 
     type: String,
-    required: true,
+    required: false,
     trim: true
   },
   images: [{ 
@@ -36,7 +36,7 @@ const communitySchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: false
   },
   isAdminUpload: {
     type: Boolean,

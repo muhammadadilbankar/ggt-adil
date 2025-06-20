@@ -13,19 +13,55 @@ export default function SkillingsAdmin() {
     fetchSkillings();
   }, []);
 
+  // const fetchSkillings = async () => {
+  //   try {
+  //     const response = await fetch("http://localhost:5000/api/skilling", {
+  //       headers: {
+  //         Authorization: `Bearer ${user?.token}`,
+  //       },
+  //     });
+      
+  //     if (!response.ok) {
+  //       throw new Error('Failed to fetch skillings');
+  //     }
+      
+  //     const data = await response.json();
+  //     setSkillings(data || []);
+  //   } catch (error) {
+  //     console.error('Error fetching skillings:', error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to load skillings",
+  //       variant: "destructive",
+  //     });
+  //     setSkillings([]);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const fetchSkillings = async () => {
+    console.log("Starting fetchSkillings function");
     try {
-      const response = await fetch("http://localhost:5000/api/skillings", {
+      // Get token from localStorage
+      const token = localStorage.getItem("token");
+      console.log("Token exists:", !!token);
+
+      const response = await fetch("http://localhost:5000/api/skilling", {
         headers: {
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
-      
+      console.log("Response status:", response.status);
+      console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+
       if (!response.ok) {
-        throw new Error('Failed to fetch skillings');
+        const errorText = await response.text();
+        console.log("Error response body:", errorText);
+        throw new Error(`Failed to fetch skillings: ${response.status} ${errorText}`);
       }
-      
+
       const data = await response.json();
+      console.log("Fetched data:", data);
       setSkillings(data || []);
     } catch (error) {
       console.error('Error fetching skillings:', error);
@@ -40,19 +76,103 @@ export default function SkillingsAdmin() {
     }
   };
 
+  // const deleteSkilling = async (id) => {
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/api/skillings/${id}`, {
+  //       method: "DELETE",
+  //       headers: {
+  //         Authorization: `Bearer ${user?.token}`,
+  //       },
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Failed to delete skilling');
+  //     }
+
+  //     setSkillings(skillings.filter((s) => s._id !== id));
+  //     toast({
+  //       title: "Success",
+  //       description: "Skilling deleted successfully",
+  //     });
+  //   } catch (error) {
+  //     console.error('Error deleting skilling:', error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to delete skilling",
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
+
+  // const addSkilling = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const skillingData = {
+  //       ...form,
+  //       tags: form.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+  //     };
+
+  //     const response = await fetch("http://localhost:5000/api/skillings", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${user?.token}`,
+  //       },
+  //       body: JSON.stringify(skillingData),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Failed to add skilling');
+  //     }
+
+  //     const newSkilling = await response.json();
+  //     setSkillings([...skillings, newSkilling]);
+  //     setForm({ title: "", description: "", videoUrl: "", tags: "" });
+  //     toast({
+  //       title: "Success",
+  //       description: "Skilling added successfully",
+  //     });
+  //   } catch (error) {
+  //     console.error('Error adding skilling:', error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to add skilling",
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
   const deleteSkilling = async (id) => {
+    console.log("Deleting skilling with ID:", id);
     try {
-      const response = await fetch(`http://localhost:5000/api/skillings/${id}`, {
+      // Get token from localStorage instead of user object
+      const token = localStorage.getItem("token");
+      console.log("Using token:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      // Fix URL path - should be "skilling" (singular) not "skillings"
+      const response = await fetch(`http://localhost:5000/api/skilling/${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
+      console.log("Delete response status:", response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to delete skilling');
+        // Try to get detailed error message from response
+        const errorData = await response.json().catch(() => null);
+        console.log("Error response:", errorData);
+        throw new Error(
+          errorData?.message ||
+          `Failed to delete skilling: ${response.status}`
+        );
       }
 
+      console.log("Skilling deleted successfully");
       setSkillings(skillings.filter((s) => s._id !== id));
       toast({
         title: "Success",
@@ -62,7 +182,7 @@ export default function SkillingsAdmin() {
       console.error('Error deleting skilling:', error);
       toast({
         title: "Error",
-        description: "Failed to delete skilling",
+        description: error.message || "Failed to delete skilling",
         variant: "destructive",
       });
     }
@@ -70,26 +190,50 @@ export default function SkillingsAdmin() {
 
   const addSkilling = async (e) => {
     e.preventDefault();
+    console.log("Adding skilling with form data:", form);
+
     try {
+      // Get token from localStorage instead of user object
+      const token = localStorage.getItem("token");
+      console.log("Using token:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      // Process tags
       const skillingData = {
         ...form,
         tags: form.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
       };
 
-      const response = await fetch("http://localhost:5000/api/skillings", {
+      console.log("Processed skilling data:", skillingData);
+
+      // Fix URL path - should be "skilling" (singular) not "skillings"
+      const response = await fetch("http://localhost:5000/api/skilling", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(skillingData),
       });
 
+      console.log("Response status:", response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to add skilling');
+        // Try to get detailed error message from response
+        const errorData = await response.json().catch(() => null);
+        console.log("Error response:", errorData);
+        throw new Error(
+          errorData?.message ||
+          `Failed to add skilling: ${response.status}`
+        );
       }
 
       const newSkilling = await response.json();
+      console.log("Skilling added successfully:", newSkilling);
+
       setSkillings([...skillings, newSkilling]);
       setForm({ title: "", description: "", videoUrl: "", tags: "" });
       toast({
@@ -100,7 +244,7 @@ export default function SkillingsAdmin() {
       console.error('Error adding skilling:', error);
       toast({
         title: "Error",
-        description: "Failed to add skilling",
+        description: error.message || "Failed to add skilling",
         variant: "destructive",
       });
     }
