@@ -1,29 +1,65 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { products, Product } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 
+// Define Product interface to match your MongoDB schema
+interface Product {
+  _id: string;
+  title: string;
+  description?: string;  // Optional since not required in schema
+  price: number;
+  imageUrl?: string;     // Optional since not required in schema
+  stock: number;
+  // No need to include createdAt and updatedAt as they're automatically handled by timestamps: true
+}
+
 export default function Products() {
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/products");
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load products",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [toast]);
+
   const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchTerm.toLowerCase())
+    product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (product.description?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
   );
+  console.log(filteredProducts);
 
   const addToCart = (product: Product) => {
-    const existingItem = cart.find((item) => item.product.id === product.id);
+    const existingItem = cart.find((item) => item.product._id === product._id);
 
     if (existingItem) {
       setCart(
         cart.map((item) =>
-          item.product.id === product.id
+          item.product._id === product._id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         )
@@ -34,12 +70,12 @@ export default function Products() {
 
     toast({
       title: "Added to cart",
-      description: `${product.name} added to your cart`,
+      description: `${product.title} added to your cart`,
     });
   };
 
   const removeFromCart = (productId: string) => {
-    setCart(cart.filter((item) => item.product.id !== productId));
+    setCart(cart.filter((item) => item.product._id !== productId));
 
     toast({
       title: "Removed from cart",
@@ -55,7 +91,7 @@ export default function Products() {
 
     setCart(
       cart.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
+        item.product._id === productId ? { ...item, quantity } : item
       )
     );
   };
@@ -95,47 +131,59 @@ export default function Products() {
                   />
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredProducts.map((product) => (
-                    <div
-                      key={product.id}
-                      className="border rounded-lg overflow-hidden bg-white transition-transform hover:shadow-lg"
-                    >
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-48 object-cover"
-                      />
-                      <div className="p-4">
-                        <h3 className="font-semibold text-lg">{product.name}</h3>
-                        <p className="text-gray-600 text-sm mb-2">
-                          {product.description}
-                        </p>
-                        <div className="flex justify-between items-center mt-4">
-                          <span className="font-bold">${product.price.toFixed(2)}</span>
-                          <span className="text-sm text-gray-500">
-                            {product.stock > 0
-                              ? `${product.stock} in stock`
-                              : "Out of stock"}
-                          </span>
+                {loading ? (
+                  <div className="text-center py-8">Loading products...</div>
+                ) : (
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredProducts.map((product) => (
+                      <div
+                        key={product._id}
+                        className="border rounded-lg overflow-hidden bg-white transition-transform hover:shadow-lg"
+                      >
+                        {product.imageUrl ? (
+                          <img
+                            src={product.imageUrl}
+                            alt={product.title}
+                            className="w-full h-48 object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+                            No Image
+                          </div>
+                        )}
+                        <div className="p-4">
+                          <h3 className="font-semibold text-lg">{product.title}</h3>
+                          {product.description && (
+                            <p className="text-gray-600 text-sm mb-2">
+                              {product.description}
+                            </p>
+                          )}
+                          <div className="flex justify-between items-center mt-4">
+                            <span className="font-bold">${product.price.toFixed(2)}</span>
+                            <span className="text-sm text-gray-500">
+                              {product.stock > 0
+                                ? `${product.stock} in stock`
+                                : "Out of stock"}
+                            </span>
+                          </div>
+                          <Button
+                            onClick={() => addToCart(product)}
+                            className="w-full mt-4"
+                            disabled={product.stock === 0}
+                          >
+                            Add to Cart
+                          </Button>
                         </div>
-                        <Button
-                          onClick={() => addToCart(product)}
-                          className="w-full mt-4"
-                          disabled={product.stock === 0}
-                        >
-                          Add to Cart
-                        </Button>
                       </div>
-                    </div>
-                  ))}
+                    ))}
 
-                  {filteredProducts.length === 0 && (
-                    <div className="col-span-3 py-8 text-center text-gray-500">
-                      No products matching your search were found.
-                    </div>
-                  )}
-                </div>
+                    {filteredProducts.length === 0 && !loading && (
+                      <div className="col-span-3 py-8 text-center text-gray-500">
+                        No products matching your search were found.
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -150,22 +198,28 @@ export default function Products() {
                     <div className="space-y-4 mb-6 max-h-[60vh] overflow-y-auto">
                       {cart.map((item) => (
                         <div
-                          key={item.product.id}
+                          key={item.product._id}
                           className="flex border-b pb-4"
                         >
-                          <img
-                            src={item.product.image}
-                            alt={item.product.name}
-                            className="w-16 h-16 object-cover rounded"
-                          />
+                          {item.product.imageUrl ? (
+                            <img
+                              src={item.product.imageUrl}
+                              alt={item.product.title}
+                              className="w-16 h-16 object-cover rounded"
+                            />
+                          ) : (
+                            <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded text-xs text-gray-500">
+                              No Image
+                            </div>
+                          )}
                           <div className="ml-4 flex-grow">
-                            <h4 className="font-medium">{item.product.name}</h4>
+                            <h4 className="font-medium">{item.product.title}</h4>
                             <div className="flex justify-between items-center mt-2">
                               <div className="flex items-center">
                                 <button
                                   onClick={() =>
                                     updateQuantity(
-                                      item.product.id,
+                                      item.product._id,
                                       item.quantity - 1
                                     )
                                   }
@@ -177,7 +231,7 @@ export default function Products() {
                                 <button
                                   onClick={() =>
                                     updateQuantity(
-                                      item.product.id,
+                                      item.product._id,
                                       item.quantity + 1
                                     )
                                   }
@@ -192,7 +246,7 @@ export default function Products() {
                             </div>
                           </div>
                           <button
-                            onClick={() => removeFromCart(item.product.id)}
+                            onClick={() => removeFromCart(item.product._id)}
                             className="text-red-500 ml-2"
                           >
                             &times;

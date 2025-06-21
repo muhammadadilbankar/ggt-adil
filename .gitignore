@@ -1,4 +1,6 @@
-# Logs
+# =======================
+# Logs and Debug Files
+# =======================
 logs
 *.log
 npm-debug.log*
@@ -7,18 +9,59 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# =======================
+# Dependency folders
+# =======================
+node_modules/
 
-# Editor directories and files
+# =======================
+# Production builds
+# =======================
+dist/
+dist-ssr/
+build/
+
+# =======================
+# Environment files
+# =======================
+.env
+.env.*   # if you use .env.local, .env.dev, etc.
+
+# =======================
+# System files
+# =======================
+.DS_Store
+Thumbs.db
+
+# =======================
+# IDE/Editor stuff
+# =======================
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# =======================
+# Uploads & Generated Files
+# =======================
+uploads/
+public/uploads/
+
+# =======================
+# Firebase / Cloud / Hosting Cache (if used)
+# =======================
+.firebaserc
+.firebase/
+.vercel/
+.netlify/
+out/
+
+# =======================
+# Misc
+# =======================
+coverage/
+*.tgz

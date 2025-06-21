@@ -4,7 +4,13 @@ import { useToast } from "@/components/ui/use-toast";
 
 export default function ProductsAdmin() {
   const [products, setProducts] = useState([]);
-  const [form, setForm] = useState({ title: "", description: "", price: "" });
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    price: "",
+    imageUrl: "",
+    stock: 0
+  });
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const { toast } = useToast();
@@ -187,10 +193,30 @@ export default function ProductsAdmin() {
         </div>
         <div>
           <input
+            type="text"
+            placeholder="Image URL"
+            value={form.imageUrl}
+            onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+            required
+            className="w-full p-2 border rounded"
+          />
+        </div>
+        <div>
+          <input
             type="number"
             placeholder="Price"
             value={form.price}
             onChange={(e) => setForm({ ...form, price: e.target.value })}
+            required
+            className="w-full p-2 border rounded"
+          />
+        </div>
+        <div>
+          <input
+            type="number"
+            placeholder="Stock Quantity"
+            value={form.stock}
+            onChange={(e) => setForm({ ...form, stock: e.target.value })}
             required
             className="w-full p-2 border rounded"
           />

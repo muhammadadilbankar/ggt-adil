@@ -10,7 +10,8 @@ import {
   deleteProject,
   submitUserProject,
   getUserProjects,
-  getPublicProjects
+  getPublicProjects,
+  updateCommunityPost
 } from '../controllers/communityController.js';
 import { isAuthenticated, isAdmin } from '../middleware/auth.js';
 
@@ -49,7 +50,7 @@ const upload = multer({
 router.get('/public', getPublicProjects); // Get all approved projects
 router.get('/:id', getProjectById); // Public project details
 // routes/communityRoutes.js
-router.patch('/:id', communityController.updateCommunityPost);
+router.patch('/:id', updateCommunityPost);
 
 // Protected routes (authentication needed)
 router.get('/user/:userId', isAuthenticated, getUserProjects); // Get user's own projects
