@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
+// import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import jwt from "jsonwebtoken";
@@ -34,6 +35,7 @@ import communityRoutes from "./routes/communityRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import uploadRoutes from './routes/upload.routes.js';
 
 // Middleware
 import { isAuthenticated, isAdmin } from "./middleware/auth.js";
@@ -41,6 +43,9 @@ import { isAuthenticated, isAdmin } from "./middleware/auth.js";
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use('/api', uploadRoutes);
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

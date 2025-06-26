@@ -7,6 +7,8 @@ export default function EventsAdmin() {
   const [form, setForm] = useState({
     title: "",
     description: "",
+    shortDescription: "",
+    location: "",
     imageUrl: "",
     redirectUrl: "",
     date: "",
@@ -212,7 +214,16 @@ export default function EventsAdmin() {
 
   const addEvent = async (e) => {
     e.preventDefault();
-    console.log("Adding event with form data:", form);
+    console.log("Raw form data before submission:", JSON.stringify(form, null, 2));
+    // Add validation for location
+    if (!form.location?.trim()) {
+      toast({
+        title: "Error",
+        description: "Location is required for all events",
+        variant: "destructive",
+      });
+      return;
+    }
 
     try {
       // Get token from localStorage instead of user object
@@ -230,6 +241,7 @@ export default function EventsAdmin() {
       };
 
       console.log("Processed event data:", eventData);
+      console.log("Final request payload:", JSON.stringify(eventData, null, 2));
 
       const response = await fetch("http://localhost:5000/api/events", {
         method: "POST",
@@ -263,6 +275,7 @@ export default function EventsAdmin() {
         redirectUrl: "",
         date: "",
         tags: "",
+        location: ""
       });
       toast({
         title: "Success",
@@ -296,6 +309,17 @@ export default function EventsAdmin() {
             placeholder="Enter event title"
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
+            required
+            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
+          <input
+            type="text"
+            placeholder="About the Event"
+            value={form.shortDescription}
+            onChange={(e) => setForm({ ...form, shortDescription: e.target.value })}
             required
             className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
@@ -336,6 +360,20 @@ export default function EventsAdmin() {
             type="datetime-local"
             value={form.date}
             onChange={(e) => setForm({ ...form, date: e.target.value })}
+            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+          <input
+            type="text"
+            placeholder="Location"
+            value={form.location}
+            onChange={(e) => {
+              console.log("Location changed to:", e.target.value);
+              setForm({ ...form, location: e.target.value });
+            }}
+            required
             className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>

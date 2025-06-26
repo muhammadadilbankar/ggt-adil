@@ -47,14 +47,49 @@ export const getEventById = async (req, res) => {
 };
 
 // Create new event
+// export const createEvent = async (req, res) => {
+//   try {
+//     const event = new Event(req.body);
+//     await event.save();
+//     res.status(201).json(event);
+//   } catch (error) {
+//     console.error('Error creating event:', error);
+//     res.status(400).json({ message: error.message });
+//   }
+// };
+// controllers/eventController.js
 export const createEvent = async (req, res) => {
   try {
-    const event = new Event(req.body);
-    await event.save();
-    res.status(201).json(event);
+    const { title, description, date, location, redirectUrl, ...otherFields } = req.body;
+
+    // Validate required fields
+    if (!title || !description || !date || !location || !redirectUrl) {
+      return res.status(400).json({
+        message: "Missing required fields",
+        missingFields: [
+          !title ? 'title' : null,
+          !description ? 'description' : null,
+          !date ? 'date' : null,
+          !location ? 'location' : null,
+          !redirectUrl ? 'redirectUrl' : null
+        ].filter(Boolean)
+      });
+    }
+
+    const event = new Event({
+      title,
+      description,
+      date,
+      location,
+      redirectUrl,
+      ...otherFields
+    });
+
+    const savedEvent = await event.save();
+    res.status(201).json(savedEvent);
   } catch (error) {
     console.error('Error creating event:', error);
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

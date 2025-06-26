@@ -55,11 +55,22 @@ export const getSkillingById = async (req, res) => {
 // Create new skilling content
 export const createSkilling = async (req, res) => {
   try {
-    const skilling = new Skilling(req.body);
-    await skilling.save();
-    res.status(201).json(skilling);
+    const { title, description, videoUrl, tags, syllabus, difficulty, imageUrl } = req.body;
+    
+    const newSkilling = new Skilling({
+      title,
+      description,
+      videoUrl,
+      tags,
+      syllabus,
+      difficulty,
+      imageUrl // Include the image URL from Cloudinary
+    });
+    
+    const savedSkilling = await newSkilling.save();
+    res.status(201).json(savedSkilling);
   } catch (error) {
-    console.error('Error creating skilling content:', error);
+    console.error("Error creating skilling:", error);
     res.status(400).json({ message: error.message });
   }
 };

@@ -26,10 +26,41 @@ export default function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/products");
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
+        // Get the token from localStorage
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          console.warn("No authentication token found");
+          // You might want to redirect to login page here
+          // window.location.href = '/login';
+          setLoading(false);
+          return;
         }
+
+        const response = await fetch("http://localhost:5000/api/products", {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+
+        if (response.status === 401) {
+          // Token expired or invalid
+          console.error("Authentication token expired or invalid");
+          toast({
+            title: "Authentication Error",
+            description: "Your session has expired. Please log in again.",
+            variant: "destructive",
+          });
+          // Redirect to login or show login modal
+          // window.location.href = '/login';
+          setLoading(false);
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch products: ${response.status}`);
+        }
+
         const data = await response.json();
         setProducts(data);
       } catch (error) {

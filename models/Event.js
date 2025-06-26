@@ -22,6 +22,15 @@ const eventSchema = new mongoose.Schema({
   published: {
     type: Boolean,
     default: false
+  },
+  location: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  shortDescription: {
+    type: String,
+    trim: true,
   }
 }, {
   timestamps: true

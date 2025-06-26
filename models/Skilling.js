@@ -12,9 +12,12 @@ const skillingSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  imageUrl: {
+    type: String,
+    default: null // Default image or null
+  },
   videoUrl: { 
-    type: String, 
-    required: true 
+    type: String,
   },
   resourceUrl: { 
     type: String,
@@ -36,6 +39,11 @@ const skillingSchema = new mongoose.Schema({
     type: String,
     enum: ['beginner', 'intermediate', 'advanced'],
     default: 'beginner'
+  },
+  syllabus: {
+    type: String,
+    required: true,
+    trim: true
   }
 }, {
   timestamps: true // This will automatically handle updatedAt

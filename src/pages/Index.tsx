@@ -31,7 +31,10 @@ const Index = () => {
                   </Button>
                 </Link>
                 <Link to="/submission">
-                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary">
+                  {/* <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary">
+                    Submit Project
+                  </Button> */}
+                  <Button size="lg" className="bg-white text-primary hover:bg-gray-100">
                     Submit Project
                   </Button>
                 </Link>

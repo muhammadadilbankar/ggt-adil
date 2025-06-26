@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, User } from "lucide-react";
@@ -24,47 +23,36 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="bg-white shadow-md py-4 px-6 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <div className="flex items-center">
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">EC</span>
-            </div>
-            <span className="text-xl font-bold text-gray-800">ElectronNexus</span>
+    <nav className="flex items-center justify-between p-4 bg-white shadow-sm">
+      <div className="flex items-center">
+        <Link to="/" className="flex items-center gap-2 text-primary hover:text-primary-dark">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+          </svg>
+          <span>Back to Homepage</span>
+        </Link>
+      </div>
+
+      <div className="hidden md:flex space-x-6">
+        {navLinks.map((link) => (
+          <Link
+            key={link.name}
+            to={link.path}
+            className="text-gray-700 hover:text-primary transition-colors"
+          >
+            {link.name}
           </Link>
-        </div>
+        ))}
+      </div>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex space-x-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              className="text-gray-700 hover:text-primary transition-colors"
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
-
-        <div className="hidden md:flex items-center space-x-4">
-          {isAdmin ? (
-            <>
-              <Link to="/admin">
-                <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white">
-                  Dashboard
-                </Button>
-              </Link>
-              <Button
-                variant="ghost"
-                onClick={logout}
-                className="text-gray-700"
-              >
-                Logout
+      <div className="hidden md:flex items-center space-x-4">
+        {isAdmin ? (
+          <>
+            <Link to="/admin">
+              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white">
+                Dashboard
               </Button>
-            </>
-          ) : user ? (
+            </Link>
             <Button
               variant="ghost"
               onClick={logout}
@@ -72,29 +60,37 @@ export default function Navbar() {
             >
               Logout
             </Button>
-          ) : (
-            <Link to="/admin-login">
-              <Button variant="ghost" className="text-gray-700">
-                <User className="h-5 w-5 mr-2" />
-                Admin Login
-              </Button>
-            </Link>
-          )}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center">
-          <button
-            onClick={toggleMenu}
-            className="text-gray-700 focus:outline-none"
+          </>
+        ) : user ? (
+          <Button
+            variant="ghost"
+            onClick={logout}
+            className="text-gray-700"
           >
-            {isMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
-        </div>
+            Logout
+          </Button>
+        ) : (
+          <Link to="/admin-login">
+            <Button variant="ghost" className="text-gray-700">
+              <User className="h-5 w-5 mr-2" />
+              Admin Login
+            </Button>
+          </Link>
+        )}
+      </div>
+
+      {/* Mobile Menu Button */}
+      <div className="md:hidden flex items-center">
+        <button
+          onClick={toggleMenu}
+          className="text-gray-700 focus:outline-none"
+        >
+          {isMenuOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
+        </button>
       </div>
 
       {/* Mobile Menu */}
