@@ -20,7 +20,7 @@ const Index = () => {
           <div className="absolute inset-0 z-0">
             <Spline 
               scene="https://prod.spline.design/us04LImB2HUgqS2d/scene.splinecode" 
-              className="w-full h-full opacity-30"
+              className="w-full h-full opacity-90"
             />
           </div>
         </section>
