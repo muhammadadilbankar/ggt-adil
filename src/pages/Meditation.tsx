@@ -15,7 +15,7 @@ export default function Meditation() {
   const sessions = [
     {
       id: "focus",
-      title: "Focus Enhancement",
+      title: "Focus Enhancement Tips",
       duration: 10,
       description: "Improve concentration for electronics problem-solving",
       benefits: [
