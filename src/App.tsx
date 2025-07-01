@@ -25,10 +25,7 @@ import AboutCentre from "./pages/AboutCentre";
 import Objectives from "./pages/Objectives";
 import Gallery from "./pages/Gallery";
 import Facilities from "./pages/Facilities";
-import SkillDevelopment from "./pages/SkillDevelopment";
 import Activities from "./pages/Activities";
-import AgriculturalTechnologies from "./pages/AgriculturalTechnologies";
-import Donors from "./pages/Donors";
 import ContactUs from "./pages/ContactUs";
 import DonateUs from "./pages/DonateUs";
 import Home from "./pages/Home";
@@ -56,10 +53,7 @@ const App = () => (
             <Route path="/objectives" element={<Objectives />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/facilities" element={<Facilities />} />
-            <Route path="/skill-development" element={<SkillDevelopment />} />
             <Route path="/activities" element={<Activities />} />
-            <Route path="/agricultural-technologies" element={<AgriculturalTechnologies />} />
-            <Route path="/donors" element={<Donors />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/donate-us" element={<DonateUs />} />
             <Route path="/meditation/home" element={<Meditation />} />

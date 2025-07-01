@@ -9,10 +9,7 @@ const NAV_SECTIONS = [
   { id: "objectives", label: "Objectives", path: "/objectives" },
   { id: "gallery", label: "Gallery", path: "/gallery" },
   { id: "facilities", label: "Facilities & Registrations/Booking", path: "/facilities" },
-  { id: "skill-development", label: "Skill Development Progress", path: "/skill-development" },
   { id: "activities", label: "Activities", path: "/activities" },
-  { id: "agri-tech", label: "Agricultural Technologies", path: "/agricultural-technologies" },
-  { id: "donors", label: "Donors", path: "/donors" },
   { id: "contact", label: "Contact Us", path: "/contact-us" },
   { id: "donate", label: "Donate Us", path: "/donate-us" },
 ];
@@ -30,14 +27,7 @@ export default function AboutCentre() {
             className="w-full h-full opacity-90"
           />
         </div>
-        {/* Overlay Title */}
-        <div className="absolute z-10 flex items-center justify-center w-full h-full">
-          <div className="border-8 border-white px-12 py-4 rounded-lg bg-transparent flex items-center justify-center">
-            <span className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg tracking-wide" style={{letterSpacing: '0.04em'}}>
-              ABOUT CENTRE
-            </span>
-          </div>
-        </div>
+
       </section>
       {/* Meditation Navbar */}
       <nav className="w-full flex justify-center z-30 relative" style={{ background: '#57cc99', marginTop: '2rem', borderBottom: '2px solid #fff', boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)' }}>

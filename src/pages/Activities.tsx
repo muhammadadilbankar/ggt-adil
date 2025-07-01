@@ -9,10 +9,7 @@ const NAV_SECTIONS = [
   { id: "objectives", label: "Objectives", path: "/objectives" },
   { id: "gallery", label: "Gallery", path: "/gallery" },
   { id: "facilities", label: "Facilities & Registrations/Booking", path: "/facilities" },
-  { id: "skill-development", label: "Skill Development Progress", path: "/skill-development" },
   { id: "activities", label: "Activities", path: "/activities" },
-  { id: "agri-tech", label: "Agricultural Technologies", path: "/agricultural-technologies" },
-  { id: "donors", label: "Donors", path: "/donors" },
   { id: "contact", label: "Contact Us", path: "/contact-us" },
   { id: "donate", label: "Donate Us", path: "/donate-us" },
 ];
@@ -29,14 +26,6 @@ export default function Activities() {
             scene="https://prod.spline.design/kWG69DTJa9NL6IHr/scene.splinecode" 
             className="w-full h-full opacity-90"
           />
-        </div>
-        {/* Overlay Title */}
-        <div className="absolute z-10 flex items-center justify-center w-full h-full">
-          <div className="border-8 border-white px-12 py-4 rounded-lg bg-transparent flex items-center justify-center">
-            <span className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg tracking-wide" style={{letterSpacing: '0.04em'}}>
-              ACTIVITIES
-            </span>
-          </div>
         </div>
       </section>
       {/* Meditation Navbar */}

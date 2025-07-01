@@ -9,10 +9,7 @@ const NAV_SECTIONS = [
   { id: "objectives", label: "Objectives", path: "/objectives" },
   { id: "gallery", label: "Gallery", path: "/gallery" },
   { id: "facilities", label: "Facilities & Registrations/Booking", path: "/facilities" },
-  { id: "skill-development", label: "Skill Development Progress", path: "/skill-development" },
   { id: "activities", label: "Activities", path: "/activities" },
-  { id: "agri-tech", label: "Agricultural Technologies", path: "/agricultural-technologies" },
-  { id: "donors", label: "Donors", path: "/donors" },
   { id: "contact", label: "Contact Us", path: "/contact-us" },
   { id: "donate", label: "Donate Us", path: "/donate-us" },
 ];
@@ -30,14 +27,6 @@ export default function Facilities() {
             className="w-full h-full opacity-90"
           />
         </div>
-        {/* Overlay Title */}
-        <div className="absolute z-10 flex items-center justify-center w-full h-full">
-          <div className="border-8 border-white px-12 py-4 rounded-lg bg-transparent flex items-center justify-center">
-            <span className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg tracking-wide" style={{letterSpacing: '0.04em'}}>
-              FACILITIES & REGISTRATIONS/BOOKING
-            </span>
-          </div>
-        </div>
       </section>
       {/* Meditation Navbar */}
       <nav className="w-full flex justify-center z-30 relative" style={{ background: '#57cc99', marginTop: '2rem', borderBottom: '2px solid #fff', boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)' }}>
@@ -54,9 +43,46 @@ export default function Facilities() {
           ))}
         </div>
       </nav>
-      <main className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold mb-4">Facilities & Registrations/Booking</h1>
-        <p className="text-lg text-gray-700">This is the Facilities & Registrations/Booking page. Add your content here.</p>
+      <main className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-8">
+        <h1 className="text-4xl font-bold mb-4 text-green-800">Facilites and Registrations/Booking</h1>
+        <p className="text-lg text-black-1000 mb-5 max-w-4xl text-center">
+          Explore our diverse range of facilities designed to support meditation, learning, recreation, and community engagement. Please review the list below and check the availability before proceeding with your booking.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 text-gray-800 max-w-2xl mb-8">
+          <li>Block - 1 (300 square feet with attached toilet)</li>
+          <li>Block - 2 (300 square feet with attached toilet)</li>
+          <li>Block - 3 (300 square feet with attached toilet)</li>
+          <li>Block - 4 (300 square feet with attached toilet)</li>
+          <li>Block - 5 (300 square feet with attached toilet)</li>
+          <li>Tree House Level-1 (Neem tree house 150 square feet with attached toilet)</li>
+          <li>Tree House Level-2 (Neem tree house 150 square feet with balcony)</li>
+          <li>Under Ground Meditation Hall (1600 square feet hexagon)</li>
+          <li>Amphitheatre (1600 square feet hexagon + openspace)</li>
+          <li>Open space</li>
+          <li>Musical Garden</li>
+          <li>Botanical Garden</li>
+          <li>Science & Technology Center</li>
+          <li>Meditation</li>
+          <li>Yoga</li>
+          <li>Sports</li>
+          <li>Visit</li>
+        </ul>
+        <div className="w-full max-w-2xl flex flex-col items-center mb-8">
+          <p className="text-lg text-gray-700 mb-4 text-center">
+            Please check the availability of the facility in sheet below, then kindly fill the form given below.
+          </p>
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSf3WJm4DxCBJE9RuujC82Pd4JteP976SqGcsa82DYFAhoVvaw/viewform"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold text-white text-lg px-8 py-4 rounded-full bg-green-600 border-4 border-green-300 shadow transition-all duration-200 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300"
+style={{ boxShadow: '0 0 0 4px #22c55e, 0 2px 8px 0 rgba(0,0,0,0.08)' }}
+
+          >
+            Facilities Registration/Booking Form
+          </a>
+        </div>
+    
       </main>
       <Footer />
       <style>{`
