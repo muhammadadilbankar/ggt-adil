@@ -2,6 +2,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Spline from "@splinetool/react-spline";
 import { Link, useLocation } from "react-router-dom";
+import { FaMapMarkerAlt, FaGlobe, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 
 const NAV_SECTIONS = [
   { id: "home", label: "Home", path: "/meditation" },
@@ -44,8 +45,47 @@ export default function ContactUs() {
         </div>
       </nav>
       <main className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
-        <p className="text-lg text-gray-700">This is the Contact Us page. Add your content here.</p>
+        <h1 className="text-4xl font-bold mb-4 mt-8">Where To Find Us?</h1>
+        {/* Contact Info Cards */}
+        <div className="w-full max-w-6xl flex flex-col md:flex-row justify-between items-center md:items-start gap-8 mb-8 px-4">
+          {/* Location */}
+          <div className="flex flex-col items-center flex-1 min-w-[200px]">
+            <FaMapMarkerAlt className="h-12 w-12 mb-2 text-green-700" />
+            <span className="text-lg font-semibold mt-2">LOCATION</span>
+            <span className="text-gray-700 text-center mt-1">Vellanki, Krishna (Dist), AP-521181</span>
+          </div>
+          {/* Website */}
+          <div className="flex flex-col items-center flex-1 min-w-[200px]">
+            <FaGlobe className="h-12 w-12 mb-2 text-green-700" />
+            <span className="text-lg font-semibold mt-2">WEBSITE</span>
+            <a href="https://www.yrkmgstc.in" className="text-green-600 mt-1 hover:underline" target="_blank" rel="noopener noreferrer">www.yrkmgstc.in</a>
+          </div>
+          {/* Call Us */}
+          <div className="flex flex-col items-center flex-1 min-w-[200px]">
+            <FaPhoneAlt className="h-12 w-12 mb-2 text-green-700" />
+            <span className="text-lg font-semibold mt-2">CALL US</span>
+            <span className="text-gray-700 text-center mt-1">9137692917 / 9820962870</span>
+          </div>
+          {/* Email */}
+          <div className="flex flex-col items-center flex-1 min-w-[200px]">
+            <FaEnvelope className="h-12 w-12 mb-2 text-green-700" />
+            <span className="text-lg font-semibold mt-2">EMAIL</span>
+            <span className="text-gray-700 text-center mt-1">ysrao@spit.ac.in<br/>gogreenramakrishna@gmail.com</span>
+          </div>
+        </div>
+        {/* Google Map Embed */}
+        <div className="w-full max-w-6xl flex justify-center mb-12 px-4">
+          <iframe
+            title="Google Map"
+            src="https://www.google.com/maps?q=16.764975,80.368592&z=17&output=embed"
+            width="100%"
+            height="400"
+            style={{ border: 0, borderRadius: '12px', minHeight: '300px' }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
       </main>
       <Footer />
       <style>{`

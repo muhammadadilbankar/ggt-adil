@@ -43,9 +43,62 @@ export default function DonateUs() {
           ))}
         </div>
       </nav>
-      <main className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold mb-4">Donate Us</h1>
-        <p className="text-lg text-gray-700">This is the Donate Us page. Add your content here.</p>
+      <main className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-0">
+        <h1 className="text-4xl font-bold mb-8 mt-10">Donate Us</h1>
+        <div className="max-w-2xl w-full mb-6 px-4">
+          <h2 className="text-2xl font-semibold mb-4 text-green-800 text-center">Donations and Gifts</h2>
+          <ul className="list-disc pl-6 text-gray-700 mb-4">
+            <li>Donations and materialistic gifts are accepted from the public for the establishment and maintenance of the Centre.</li>
+            <li>Names of the donor's are displayed in the Centre at appropriate location as decided by the Trust.</li>
+            <li>Donors may be offered to serve as the Members of Committees constituted by the Trust for the functioning of the Centre.</li>
+            <li>Concession to Donor's on utilization of the Centre as decided by the Trust from time to time.</li>
+          </ul>
+        </div>
+        <section
+          className="w-full flex flex-col items-center justify-center py-16 px-4"
+          style={{
+            background: 'linear-gradient(120deg, #3a86ff 0%, #36c486 100%)',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <div className="max-w-3xl w-full flex flex-col items-center text-center">
+            <h3 className="text-4xl md:text-5xl font-bold text-white mb-4">Donate and make a difference</h3>
+            <p className="text-lg md:text-2xl text-white mb-8 font-medium">
+              We respectfully ask that you consider making a gift to help the Meditation Center.<br/>
+              Your gift will make a significant impact on our ability to keep our<br/>
+              Center running and provide Meditation and social activities in our area.<br/>
+              Even a small gift will have an impact on the ability of the Center.
+            </p>
+            <hr className="w-full border-t border-white/70 mb-8" />
+            <div className="text-white text-base md:text-lg mb-6">
+              <div className="mb-4">
+                Shri Yerramreddy Ramakrishna's Go Green Science & Technology Trust<br/>
+                <span className="font-bold text-xl">A/C No: <span className="font-extrabold">1645234591</span></span><br/>
+                IFSC: KKBK0007857<br/>
+                Kotak Mahindra Bank Ltd., Nandigama
+              </div>
+              <div className="font-bold text-lg mb-4">[OR]</div>
+              <div className="mb-4">
+                Yerramreddy Srinivasa Rao<br/>
+                <span className="font-bold text-xl">A/C No: <span className="font-extrabold">35439719096</span></span><br/>
+                IFSC: SBIN0014173<br/>
+                State Bank of India, Nandigama Town
+              </div>
+              <div className="mb-4">
+                <span className="font-bold">Phone Pay:</span> 9137692917 / 9820962870
+              </div>
+            </div>
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSdEzzwv3Gnk-SIkY4Ur61FofSvuVaZm9MqKvhtk7Io3S8hQ6g/viewform"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-white text-[#36c486] font-semibold px-8 py-3 rounded-full shadow-lg border-2 border-white hover:bg-[#36c486] hover:text-white transition-colors text-lg mt-2"
+            >
+              Donation Form
+            </a>
+          </div>
+        </section>
       </main>
       <Footer />
       <style>{`
