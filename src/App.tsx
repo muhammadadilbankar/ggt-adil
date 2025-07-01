@@ -21,6 +21,18 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import { SignIn, SignUp } from '@clerk/clerk-react';
 import { RedirectToSignIn, useUser } from '@clerk/clerk-react';
+import AboutCentre from "./pages/AboutCentre";
+import Objectives from "./pages/Objectives";
+import Gallery from "./pages/Gallery";
+import Facilities from "./pages/Facilities";
+import SkillDevelopment from "./pages/SkillDevelopment";
+import Activities from "./pages/Activities";
+import AgriculturalTechnologies from "./pages/AgriculturalTechnologies";
+import Donors from "./pages/Donors";
+import ContactUs from "./pages/ContactUs";
+import DonateUs from "./pages/DonateUs";
+import MeditationHome from "./pages/MeditationHome";
+import Home from "./pages/Home";
 
 const ClerkProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const { isSignedIn, isLoaded } = useUser();
@@ -40,9 +52,20 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/about-centre" element={<AboutCentre />} />
+            <Route path="/objectives" element={<Objectives />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/facilities" element={<Facilities />} />
+            <Route path="/skill-development" element={<SkillDevelopment />} />
+            <Route path="/activities" element={<Activities />} />
+            <Route path="/agricultural-technologies" element={<AgriculturalTechnologies />} />
+            <Route path="/donors" element={<Donors />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/donate-us" element={<DonateUs />} />
+            <Route path="/meditation/home" element={<MeditationHome />} />
             <Route path="/login" element={<SignIn routing="path" path="/login" />} />
-<Route path="/register" element={<SignUp routing="path" path="/register" />} />
+            <Route path="/register" element={<SignUp routing="path" path="/register" />} />
             <Route path="/products" element={<Products />} />
             <Route path="/skilling" element={<Skilling />} />
             <Route path="/meditation" element={<Meditation />} />
