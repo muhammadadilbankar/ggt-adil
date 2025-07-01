@@ -51,7 +51,7 @@ export default function Meditation() {
       {/* About Section Modern Layout */}
       <section className="max-w-5xl mx-auto my-16 px-4">
         {/* Heading Centered */}
-        <h2 className="text-4xl md:text-5xl font-extrabold font-sans mb-12 text-green-900 text-center">About Sri Yerramreddy Rama Krishna Murthy, B.A., LL.B., Advocate</h2>
+        <h2 className="text-4xl md:text-5xl font-extrabold font-sans mb-12 text-green-900 text-center">About Sri Yerramreddy Rama Krishna Murthy, B.A., LL.B., Advocate <span className="block text-lg font-normal text-green-700 mt-2">(Meditation Centre Subpage)</span></h2>
         {/* Two-column: Image + Birth & Education */}
         <div className="flex flex-col md:flex-row gap-8 items-center md:items-start mb-12">
           {/* Image Placeholder */}

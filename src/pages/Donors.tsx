@@ -30,6 +30,14 @@ export default function Donors() {
             className="w-full h-full opacity-90"
           />
         </div>
+        {/* Overlay Title */}
+        <div className="absolute z-10 flex items-center justify-center w-full h-full">
+          <div className="border-8 border-white px-12 py-4 rounded-lg bg-transparent flex items-center justify-center">
+            <span className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg tracking-wide" style={{letterSpacing: '0.04em'}}>
+              DONORS
+            </span>
+          </div>
+        </div>
       </section>
       {/* Meditation Navbar */}
       <nav className="w-full flex justify-center z-30 relative" style={{ background: '#57cc99', marginTop: '2rem', borderBottom: '2px solid #fff', boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)' }}>

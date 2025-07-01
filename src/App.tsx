@@ -31,7 +31,6 @@ import AgriculturalTechnologies from "./pages/AgriculturalTechnologies";
 import Donors from "./pages/Donors";
 import ContactUs from "./pages/ContactUs";
 import DonateUs from "./pages/DonateUs";
-import MeditationHome from "./pages/MeditationHome";
 import Home from "./pages/Home";
 
 const ClerkProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -63,7 +62,7 @@ const App = () => (
             <Route path="/donors" element={<Donors />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/donate-us" element={<DonateUs />} />
-            <Route path="/meditation/home" element={<MeditationHome />} />
+            <Route path="/meditation/home" element={<Meditation />} />
             <Route path="/login" element={<SignIn routing="path" path="/login" />} />
             <Route path="/register" element={<SignUp routing="path" path="/register" />} />
             <Route path="/products" element={<Products />} />
