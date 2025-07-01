@@ -19,6 +19,16 @@ import { AuthProvider } from "./context/AuthContext";
 import CommunitySubmissionForm from './pages/CommunitySubmissionForm';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import { SignIn, SignUp } from '@clerk/clerk-react';
+import { RedirectToSignIn, useUser } from '@clerk/clerk-react';
+
+const ClerkProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const { isSignedIn, isLoaded } = useUser();
+
+  if (!isLoaded) return null; // or a loader
+
+  return isSignedIn ? children : <RedirectToSignIn />;
+};
 
 const queryClient = new QueryClient();
 
@@ -31,8 +41,8 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<SignIn routing="path" path="/login" />} />
+<Route path="/register" element={<SignUp routing="path" path="/register" />} />
             <Route path="/products" element={<Products />} />
             <Route path="/skilling" element={<Skilling />} />
             <Route path="/meditation" element={<Meditation />} />

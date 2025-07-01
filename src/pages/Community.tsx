@@ -15,8 +15,10 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useUser, RedirectToSignIn } from '@clerk/clerk-react';
 import { useToast } from '@/components/ui/use-toast';
+
+
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -49,7 +51,8 @@ export default function Community() {
   const [activeTab, setActiveTab] = useState('all');
   const [projects, setProjects] = useState([]);
   const navigate = useNavigate();
-  const { token, isAuthenticated } = useAuth();
+  const { isSignedIn, user } = useUser();
+
   const { toast } = useToast();
 
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -89,6 +92,7 @@ export default function Community() {
       setLoading(false);
     }
   };
+ 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,18 +142,15 @@ export default function Community() {
     }
   };
 
+  
+
   const handleSubmitClick = () => {
-    if (!isAuthenticated) {
-      toast({
-        title: "Authentication Required",
-        description: "Please login to submit a project",
-        variant: "destructive",
-      });
-      navigate('/login');
-      return;
-    }
-    navigate('/community/submit');
-  };
+  if (!isSignedIn) {
+    navigate('/login'); // or Clerk’s route like `/sign-in`
+    return;
+  }
+  navigate('/community/submit');
+};
 
   if (loading) {
     return (
