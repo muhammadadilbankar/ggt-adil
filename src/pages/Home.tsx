@@ -25,6 +25,41 @@ const Index = () => {
           </div>
         </section>
 
+        {/* About the Company Section */}
+        <section className="py-16 bg-transparent">
+          <div className="max-w-7xl mx-auto px-6">
+            <motion.div 
+              className="text-center mb-8"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-4xl md:text-5xl font-bold mb-8 text-gray-900">
+                About the Company
+              </h2>
+            </motion.div>
+            <motion.div 
+              className="bg-gray-100 rounded-2xl shadow-md p-8 md:p-12 max-w-5xl mx-auto relative"
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <p className="text-lg md:text-xl text-gray-800 text-center leading-relaxed">
+                <span className="text-2xl align-top mr-1 text-primary">"</span>
+                <span className="font-semibold text-primary">Go-Green Technologies Pvt. Ltd.</span> <span className="text-gray-700">formerly known as</span> <span className="font-semibold text-secondary">Emtron technologies</span> <span className="text-gray-700">is an</span> <span className="font-semibold text-green-700">IIT-Bombay alumnus venture</span> <span className="text-gray-700">and it is recognized as a Startup company by the Government of India. Currently, it is incubated at</span> <span className="font-semibold text-blue-700">Sardar Patel Technology Incubation Center (SP-TBI)</span>, Bhavans Campus, Andheri-W, Mumbai-58. <span className="text-gray-700">For the past twenty years, we are in the field of developing customizable solutions for</span> <span className="font-semibold text-primary">Cyber-Physical Systems</span>, <span className="font-semibold text-primary">and Digital Power Electronics applications</span>.
+                <span className="text-2xl align-bottom ml-1 text-primary">"</span>
+              </p>
+              {/* <div className="text-center mt-6">
+                <Link to="/about">
+                  <Button className="bg-primary text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-primary/90 transition-all duration-300">Learn More</Button>
+                </Link>
+              </div> */}
+            </motion.div>
+          </div>
+        </section>
+
         {/* Features Section */}
         <section className="py-24 bg-gradient-to-b from-gray-50 to-white relative">
           <div className="max-w-7xl mx-auto px-6">
@@ -214,111 +249,32 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Upcoming Events Section */}
-        <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
+        {/* About the Managing Director Section */}
+        <section className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-6">
-            <motion.div 
-              className="flex justify-between items-center mb-16"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <div>
-                <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-                  Upcoming Events
-                </h2>
-                <p className="text-xl text-gray-600">Don't miss out on our exciting workshops and events</p>
-              </div>
-              <Link to="/events" className="hidden md:block text-primary font-semibold hover:underline text-lg">
-                View All Events →
-              </Link>
-            </motion.div>
-            
-            <div className="grid md:grid-cols-2 gap-8">
-              {upcomingEvents.map((event, index) => (
-                <motion.div
-                  key={event.id}
-                  className="group relative"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -10 }}
-                >
-                  <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
-                    <div className="flex flex-col lg:flex-row">
-                      {event.image && (
-                        <div className="lg:w-2/5 relative overflow-hidden">
-                          <motion.img
-                            src={event.image}
-                            alt={event.title}
-                            className="w-full h-64 lg:h-full object-cover"
-                            whileHover={{ scale: 1.1 }}
-                            transition={{ duration: 0.5 }}
-                          />
-                          <motion.div 
-                            className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                            initial={{ opacity: 0 }}
-                            whileHover={{ opacity: 1 }}
-                          ></motion.div>
-                        </div>
-                      )}
-                      <div className="p-8 lg:w-3/5">
-                        <h3 className="text-2xl font-bold mb-4 text-gray-900 group-hover:text-primary transition-colors duration-300">
-                          {event.title}
-                        </h3>
-                        <div className="space-y-3 mb-6">
-                          <motion.div 
-                            className="flex items-center text-gray-600"
-                            whileHover={{ x: 5 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <svg className="w-5 h-5 mr-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span className="font-medium">
-                              {new Date(event.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                            </span>
-                          </motion.div>
-                          <motion.div 
-                            className="flex items-center text-gray-600"
-                            whileHover={{ x: 5 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <svg className="w-5 h-5 mr-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <span className="font-medium">{event.location}</span>
-                          </motion.div>
-                        </div>
-                        <p className="text-gray-600 mb-6 leading-relaxed">{event.description}</p>
-                        <Link to={`/events#event-${event.id}`}>
-                          <Button className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105">
-                            Event Details
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl font-bold mb-8 text-gray-900">
+                About the Managing Director
+              </h2>
             </div>
-            
-            <motion.div 
-              className="text-center mt-12"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <Link to="/events">
-                <Button size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                  View All Events
-                </Button>
-              </Link>
-            </motion.div>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-center gap-10 md:gap-16 mb-0">
+              <img
+                src="/ysr.png"
+                alt="Dr. Y. Srinivasa Rao"
+                className="w-80 h-80 object-cover rounded-2xl shadow-lg mb-8 md:mb-0"
+              />
+              <p className="text-lg md:text-xl text-gray-800 leading-relaxed text-left">
+                Dr. Y.Srinivasa Rao holds a Ph.D. degree from IIT-Bombay and has a work experience of more than 10 years in the industry. He has been in the teaching profession for over 30+ years, of which he has been associated with Bhartiya Vidya Bhavans' Sardar Patel College of Engineering and subsequently, Sardar Patel Institute of Technology for more than 20 years. He has served as the Head of Department several times and is currently the Vice-Principal as well as the Dean of R&D at Sardar Patel Institute of Technology. He is also a guest faculty for various institutes. Dr. Y. S. Rao has been an expert lecturer at Short Term Teachers Training Program (STTP) of ISTE and TEQIP programs of AICTE. The lecture topics cover robotics, embedded system design, real-time systems, DSP applications and many more. He has also developed IDE systems for short term training programs.
+              </p>
+            </div>
+            <div className="max-w-4xl mx-auto mt-10">
+              <p className="text-lg md:text-xl text-gray-800 leading-relaxed text-justify mb-6">
+                He has been awarded by the IEEE Computer Society, Washington D.C., USA, at the International Design Competition (CSIDC-2002), for the project 'Swift Doc'. His research work ranges from Electrical Load Emulation using Power Electronic Converters, designing Real-time systems and operating system development for various applications, Signal processing to Embedded systems, VLSI design, Power electronics, etc. He has submitted seven patents, also consultant, and corporate trainer to companies like Gadhia Solar, Siemens Information Systems Ltd., KarRox Technologies Ltd., and L&T.
+              </p>
+              <p className="text-lg md:text-xl text-gray-800 leading-relaxed text-justify">
+                His major research publications are in Embedded Systems, Digital Power Electronics, and Communication Systems
+              </p>
+            </div>
           </div>
         </section>
 
