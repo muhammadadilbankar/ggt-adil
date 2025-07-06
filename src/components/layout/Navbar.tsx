@@ -29,15 +29,16 @@ export default function Navbar() {
           to="/"
           className="flex items-center gap-2 text-primary hover:text-primary-dark"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-          </svg>
-          <span>Back to Homepage</span>
+          <img 
+            src="/ysrlogo.png" 
+            alt="YSR Logo" 
+            className="h-12 w-auto object-contain"
+          />
         </Link>
       </div>
 
-      {/* Center - Nav Links */}
-      <div className="hidden md:flex space-x-6">
+      {/* Center - Nav Links (absolutely centered) */}
+      <div className="hidden md:flex space-x-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
         {navLinks.map((link) => (
           <Link
             key={link.name}

@@ -52,6 +52,8 @@ export default function Community() {
   const [projects, setProjects] = useState([]);
   const navigate = useNavigate();
   const { isSignedIn, user } = useUser();
+  const [redirecting, setRedirecting] = useState(false);
+
 
   const { toast } = useToast();
 
@@ -144,13 +146,15 @@ export default function Community() {
 
   
 
-  const handleSubmitClick = () => {
+ const handleSubmitClick = () => {
   if (!isSignedIn) {
-    navigate('/login'); // or Clerk’s route like `/sign-in`
-    return;
+    setShowForm(false);
+    setRedirecting(true); // <-- new state to trigger redirect
+  } else {
+    setShowForm(true);
   }
-  navigate('/community/submit');
 };
+
 
   if (loading) {
     return (
@@ -168,7 +172,10 @@ export default function Community() {
   });
 
   return (
+
+
     <>
+      {redirecting && <RedirectToSignIn />}
       <Navbar />
       <main className="bg-gray-50 min-h-screen pb-16">
         <div className="bg-gradient-to-r from-primary to-secondary text-white py-12 mb-8">
@@ -345,44 +352,48 @@ export default function Community() {
       </main>
 
       {/* Project Details Dialog */}
-      <Dialog open={!!formData.projectUrl} onOpenChange={() => setFormData({ ...formData, projectUrl: '' })}>
-        {formData.projectUrl && (
-          <DialogContent className="max-w-4xl">
-            <DialogHeader>
-              <DialogTitle className="text-2xl">{formData.title}</DialogTitle>
-              <DialogDescription>
-                {new Date(formData.createdAt).toLocaleDateString()}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              {formData.imageUrl && (
-                <img
-                  src={formData.imageUrl}
-                  alt={formData.title}
-                  className="w-full max-h-96 object-cover rounded-md"
-                />
-              )}
-              <p className="text-gray-700">{formData.description}</p>
-              
-              <div className="mt-4">
-                <h4 className="font-medium mb-2">Project Demo Video:</h4>
-                <div className="bg-gray-100 p-4 rounded-md text-center">
-                  <p>Video link: <a href={formData.projectUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{formData.projectUrl}</a></p>
-                </div>
-              </div>
-              
-              <div className="pt-4 flex justify-end gap-3">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setFormData({ ...formData, projectUrl: '' })}
-                >
-                  Close
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        )}
-      </Dialog>
+      <Dialog open={showForm} onOpenChange={setShowForm}>
+  <DialogContent className="max-w-2xl">
+    <DialogHeader>
+      <DialogTitle className="text-xl font-bold">Submit Your Project</DialogTitle>
+    </DialogHeader>
+    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+      <Input
+        placeholder="Project Title"
+        value={formData.title}
+        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+        required
+      />
+      <Input
+        placeholder="Description"
+        value={formData.description}
+        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+        required
+      />
+      <Input
+        placeholder="Demo Video URL"
+        value={formData.projectUrl}
+        onChange={(e) => setFormData({ ...formData, projectUrl: e.target.value })}
+        required
+      />
+      <Input
+        placeholder="Image URL"
+        value={formData.imageUrl}
+        onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+      />
+      <Input
+        placeholder="Tags (comma-separated)"
+        value={formData.tags}
+        onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+      />
+      <div className="flex justify-end gap-2 pt-4">
+        <Button type="button" variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
+        <Button type="submit">Submit</Button>
+      </div>
+    </form>
+  </DialogContent>
+</Dialog>
+
       <Footer />
     </>
   );
