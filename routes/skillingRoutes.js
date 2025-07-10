@@ -11,6 +11,7 @@ import { isAuthenticated, isAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
+router.get('/public',getAllSkilling)
 // Protected routes - require authentication and admin access
 router.use(isAuthenticated);
 router.use(isAdmin);

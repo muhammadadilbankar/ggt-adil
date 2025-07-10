@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { format } from "date-fns";
+import axios from "axios";
 
 // Define Event interface to match your MongoDB schema
 interface Event {
@@ -46,6 +47,7 @@ export default function Events() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
+        setLoading(true)
         // Get the token from localStorage
         const token = localStorage.getItem("token");
 
@@ -56,12 +58,13 @@ export default function Events() {
           setLoading(false);
           return;
         }
-
-        const response = await fetch("http://localhost:5000/api/events", {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
+        
+        const response = await axios.get("http://localhost:5000/api/events/public");
+        // const response = await fetch("http://localhost:5000/api/events", {
+        //   headers: {
+        //     "Authorization": `Bearer ${token}`
+        //   }
+        // });
 
         if (response.status === 401) {
           // Token expired or invalid
@@ -77,11 +80,11 @@ export default function Events() {
           return;
         }
 
-        if (!response.ok) {
-          throw new Error(`Failed to fetch events: ${response.status}`);
-        }
+        // if (!response.ok) {
+        //   throw new Error(`Failed to fetch events: ${response.status}`);
+        // }
 
-        const data = await response.json();
+        const data = await response.data;
         setEvents(data);
       } catch (error) {
         console.error("Error fetching events:", error);

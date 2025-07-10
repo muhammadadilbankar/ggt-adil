@@ -116,12 +116,14 @@ app.post("/api/submit-project", async (req, res) => {
 
 // Community routes (some public, some protected)
 app.use("/api/community", communityRoutes);
-
+app.use("/api/products", productRoutes);
+app.use("/api/skilling", skillingRoutes)
+app.use("/api/events", eventRoutes)
 // Protected routes
 app.use("/api/submissions", isAuthenticated, submissionRoutes);
-app.use("/api/products", isAuthenticated, productRoutes);
-app.use("/api/skilling", isAuthenticated, skillingRoutes);
-app.use("/api/events", isAuthenticated, eventRoutes);
+// app.use("/api/products", isAuthenticated, productRoutes);
+// app.use("/api/skilling", isAuthenticated, skillingRoutes);
+// app.use("/api/events", isAuthenticated, eventRoutes);
 app.use("/api/orders", isAuthenticated, orderRoutes);
 
 const PORT = process.env.PORT || 5000;

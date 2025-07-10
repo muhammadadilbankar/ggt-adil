@@ -4,6 +4,7 @@ import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import axios from "axios";
 
 // Define Product interface to match your MongoDB schema
 interface Product {
@@ -26,6 +27,7 @@ export default function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
         // Get the token from localStorage
         const token = localStorage.getItem("token");
 
@@ -37,11 +39,13 @@ export default function Products() {
           return;
         }
 
-        const response = await fetch("http://localhost:5000/api/products", {
-          headers: {
-            "Authorization": `Bearer ${token}` //possible error here it should be - Authorization: `Bearer ${token}`
-          }
-        });
+        const response = await axios.get("http://localhost:5000/api/products/public")
+
+        // const response = await fetch("http://localhost:5000/api/products", {
+        //   headers: {
+        //     "Authorization": `Bearer ${token}` //possible error here it should be - Authorization: `Bearer ${token}`
+        //   }
+        // });
 
         if (response.status === 401) {
           // Token expired or invalid
@@ -57,11 +61,11 @@ export default function Products() {
           return;
         }
 
-        if (!response.ok) {
-          throw new Error(`Failed to fetch products: ${response.status}`);
-        }
+        // if (!response.ok) {
+        //   throw new Error(`Failed to fetch products: ${response.status}`);
+        // }
 
-        const data = await response.json();
+        const data = await response.data;
         setProducts(data);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -172,11 +176,14 @@ export default function Products() {
                         className="border rounded-lg overflow-hidden bg-white transition-transform hover:shadow-lg"
                       >
                         {product.imageUrl ? (
-                          <img
-                            src={product.imageUrl}
-                            alt={product.title}
-                            className="w-full h-48 object-cover"
-                          />
+                          // <img
+                          //   src={product.imageUrl}
+                          //   alt={product.title}
+                          //   className="w-full h-48 object-cover"
+                          // />
+                          <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+                            <a href={product.imageUrl} className='underline text-blue-500' target='_blank'>View Product Image</a>
+                          </div>
                         ) : (
                           <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
                             No Image
@@ -190,7 +197,7 @@ export default function Products() {
                             </p>
                           )}
                           <div className="flex justify-between items-center mt-4">
-                            <span className="font-bold">${product.price.toFixed(2)}</span>
+                            <span className="font-bold">Rs.{product.price.toFixed(2)}</span>
                             <span className="text-sm text-gray-500">
                               {product.stock > 0
                                 ? `${product.stock} in stock`
@@ -221,7 +228,7 @@ export default function Products() {
             {/* Cart Section */}
             <div className="md:w-1/3">
               <div className="bg-white p-6 rounded-lg shadow-md sticky top-20">
-                <h2 className="text-xl font-bold mb-4">Your Cart</h2>
+                <h2 className="text-xl font-bold mb-4">Your Cart (Check Total Price Only)</h2>
                 {cart.length === 0 ? (
                   <p className="text-gray-500 mb-4">Your cart is empty.</p>
                 ) : (
@@ -272,7 +279,7 @@ export default function Products() {
                                 </button>
                               </div>
                               <span className="font-medium">
-                                ${(item.product.price * item.quantity).toFixed(2)}
+                                Rs.{(item.product.price * item.quantity).toFixed(2)}
                               </span>
                             </div>
                           </div>
@@ -292,14 +299,14 @@ export default function Products() {
                       </div>
                       <div className="flex justify-between font-bold mb-4">
                         <span>Total:</span>
-                        <span>${totalPrice.toFixed(2)}</span>
+                        <span>Rs.{totalPrice.toFixed(2)}</span>
                       </div>
                       <Button
                         className="w-full"
                         onClick={() => {
                           toast({
-                            title: "Order Placed!",
-                            description: "This is a demo. No actual order was placed.",
+                            title: "Thank you for choosing us!",
+                            description: "You can place your order by emailing these details to ysrao@spit.ac.in or contact us on phone!",
                           });
                           setCart([]);
                         }}

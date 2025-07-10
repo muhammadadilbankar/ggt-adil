@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import axios from "axios";
 
 // Remove mock data import
 // import { courses } from "@/data/mockData";
@@ -44,20 +45,22 @@ export default function Skilling() {
   useEffect(() => {
     const fetchSkillings = async () => {
       try {
+        setLoading(true)
         // Get token if authentication is needed
         const token = localStorage.getItem("token");
 
-        const response = await fetch("http://localhost:5000/api/skilling", {
-          headers: {
-            ...(token ? { "Authorization": `Bearer ${token}` } : {})
-          }
-        });
+        const response = await axios.get("http://localhost:5000/api/skilling/public")
+        // const response = await fetch("http://localhost:5000/api/skilling", {
+        //   headers: {
+        //     ...(token ? { "Authorization": `Bearer ${token}` } : {})
+        //   }
+        // });
 
-        if (!response.ok) {
-          throw new Error(`Failed to fetch skillings: ${response.status}`);
-        }
+        // if (!response.ok) {
+        //   throw new Error(`Failed to fetch skillings: ${response.status}`);
+        // }
 
-        const data = await response.json();
+        const data = await response.data;
         setSkillings(data);
         console.log("Fetched skillings:", data);
       } catch (error) {
@@ -83,8 +86,8 @@ export default function Skilling() {
 
   const handleEnroll = (skillingTitle: string) => {
     toast({
-      title: "Enrollment Request Sent",
-      description: `You've requested to join "${skillingTitle}". A club administrator will contact you with further details.`,
+      title: "Enrollment Request",
+      description: `You've requested to join "${skillingTitle}". A Google Form will be available for the same shortly.`,
     });
   };
 
@@ -187,18 +190,18 @@ export default function Skilling() {
                           className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row"
                         >
                           <div className="md:w-1/3 bg-gray-200 h-64 relative">
-                            {skilling.imageUrl ? (
-                              <img
-                                src={skilling.imageUrl}
-                                alt={skilling.title}
-                                className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
-                                onError={(e) => {
-                                  // Fallback if image fails to load
-                                  e.currentTarget.onerror = null;
-                                  e.currentTarget.src = "https://via.placeholder.com/500x300?text=Course+Image";
-                                }}
-                              />
-                            ) : (
+                            {(
+                              // <img
+                              //   src={skilling.imageUrl}
+                              //   alt={skilling.title}
+                              //   className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+                              //   onError={(e) => {
+                              //     // Fallback if image fails to load
+                              //     e.currentTarget.onerror = null;
+                              //     e.currentTarget.src = "https://via.placeholder.com/500x300?text=Course+Image";
+                              //   }}
+                              // />
+                            // ) : (
                               <div className="flex items-center justify-center h-full">
                                 <div className="text-center">
                                   <svg
@@ -232,14 +235,17 @@ export default function Skilling() {
                             <p className="text-gray-700 mb-6">
                               {skilling.description}
                             </p>
-
+                           
                             {/* Bottom section with buttons and tags */}
                             <div className="flex flex-wrap items-center justify-between">
                               <div className="flex flex-wrap gap-4 mb-3 md:mb-0">
                                 <Button
-                                  onClick={() => handleEnroll(skilling.title)}
+                                  onClick={() => {
+                                    skilling.resourceUrl ?
+                                    <></>:handleEnroll(skilling.title)
+                                  }}
                                 >
-                                  Enroll Now
+                                  <a href={skilling.resourceUrl}>Enroll Now</a>
                                 </Button>
                                 <Button
                                   variant="outline"
@@ -251,7 +257,7 @@ export default function Skilling() {
 
                               {/* Tags in bottom right */}
                               {/* Tags in bottom right - with improved layout */}
-                              <div className="flex flex-wrap gap-1.5 justify-end max-w-[50%]">
+                              <div className="flex flex-wrap gap-1.5 justify-end mt-5">
                                 {skilling.tags?.length > 3 ? (
                                   <>
                                     {skilling.tags.slice(0, 2).map((tag, index) => (
