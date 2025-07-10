@@ -54,6 +54,17 @@ export default function DonateUs() {
             <li>Concession to Donor's on utilization of the Centre as decided by the Trust from time to time.</li>
           </ul>
         </div>
+        
+        <h1 className="text-4xl font-bold mb-8 mt-10">Our Proud Donors</h1>
+        <div className="max-w-2xl w-full mb-6 px-4">
+          <h2 className="text-2xl font-semibold mb-4 text-green-800 text-center">Donors List</h2>
+          <center>
+           <iframe style={{width:"90%",height:"2050px"}} 
+                        src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSIbZpboiO825u8fgfAItXm9cvImmM2T1L9GFLNyEF7YB5YgIMyAt_ifWoeZTqISQ/pubhtml?gid=1675550864&amp;single=true&amp;widget=false&amp;headers=false&amp;chrome=false">           
+           </iframe>
+           </center>
+        </div>
+
         <section
           className="w-full flex flex-col items-center justify-center py-16 px-4"
           style={{

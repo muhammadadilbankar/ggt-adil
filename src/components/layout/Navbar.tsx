@@ -18,7 +18,7 @@ export default function Navbar() {
     { name: "Meditation", path: "/meditation" },
     { name: "Events", path: "/events" },
     { name: "Community", path: "/community" },
-    { name: "Submit Project", path: "/submission" },
+    { name: "MDM Submit Project", path: "/submission" },
   ];
 
   return (

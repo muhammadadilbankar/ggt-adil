@@ -39,7 +39,7 @@ export default function Products() {
 
         const response = await fetch("http://localhost:5000/api/products", {
           headers: {
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${token}` //possible error here it should be - Authorization: `Bearer ${token}`
           }
         });
 

@@ -47,9 +47,9 @@ const Index = () => {
               viewport={{ once: true }}
             >
               <p className="text-lg md:text-xl text-gray-800 text-center leading-relaxed">
-                <span className="text-2xl align-top mr-1 text-primary">"</span>
+                <span className="text-2xl align-top mr-1 text-primary"></span>
                 <span className="font-semibold text-primary">Go-Green Technologies Pvt. Ltd.</span> <span className="text-gray-700">formerly known as</span> <span className="font-semibold text-secondary">Emtron technologies</span> <span className="text-gray-700">is an</span> <span className="font-semibold text-green-700">IIT-Bombay alumnus venture</span> <span className="text-gray-700">and it is recognized as a Startup company by the Government of India. Currently, it is incubated at</span> <span className="font-semibold text-blue-700">Sardar Patel Technology Incubation Center (SP-TBI)</span>, Bhavans Campus, Andheri-W, Mumbai-58. <span className="text-gray-700">For the past twenty years, we are in the field of developing customizable solutions for</span> <span className="font-semibold text-primary">Cyber-Physical Systems</span>, <span className="font-semibold text-primary">and Digital Power Electronics applications</span>.
-                <span className="text-2xl align-bottom ml-1 text-primary">"</span>
+                <span className="text-2xl align-bottom ml-1 text-primary"></span>
               </p>
               {/* <div className="text-center mt-6">
                 <Link to="/about">
@@ -91,15 +91,15 @@ const Index = () => {
                 {
                   icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
                   title: "Skill Development",
-                  description: "Learn electronics through structured courses designed for all skill levels.",
+                  description: "Learn electronics through structured courses designed for all skill levels ranging from beginner to expert.",
                   link: "/skilling",
                   linkText: "View Courses",
                   color: "bg-primary"
                 },
                 {
                   icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z",
-                  title: "Events & Workshops",
-                  description: "Participate in hands-on workshops, hackathons, and guest lectures.",
+                  title: "Events & Workshop",
+                  description: "Participate in hands-on workshops, hackathons, seminars, webinars and guest lectures.",
                   link: "/events",
                   linkText: "See Events",
                   color: "bg-secondary"
@@ -107,7 +107,7 @@ const Index = () => {
                 {
                   icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z",
                   title: "Community",
-                  description: "Connect with fellow enthusiasts, share projects, and collaborate on ideas.",
+                  description: "Connect with fellow enthusiasts in the field of electronics, share projects, and collaborate on ideas.",
                   link: "/community",
                   linkText: "Join Community",
                   color: "bg-green-500"

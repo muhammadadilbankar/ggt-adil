@@ -142,12 +142,12 @@ export const projects: Project[] = [
   },
   {
     id: '2',
-    title: 'Gesture-Controlled Robot',
+    title: 'Gesture-Controlled Robot Using Computer Vision',
     author: 'Emma Johnson',
     date: '2025-03-15',
     description: 'A robot that follows hand gestures using computer vision',
     image: 'https://images.pexels.com/photos/2399840/pexels-photo-2399840.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    video: 'https://www.youtube.com/watch?v=example',
+    link: 'https://www.youtube.com/watch?v=example',
     approved: true,
   },
   {

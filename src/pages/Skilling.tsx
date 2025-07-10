@@ -157,8 +157,8 @@ export default function Skilling() {
                   </p>
                   <Button variant="outline" className="w-full" onClick={() => {
                     toast({
-                      title: "Request Sent",
-                      description: "A club mentor will contact you soon to discuss course options.",
+                      title: "Request Pop-up",
+                      description: "Hi! please contact one of the club mentors or email to ysrao@spit.ac.in to discuss course options.",
                     });
                   }}>
                     Request Guidance

@@ -281,7 +281,7 @@ export default function CommunityAdmin() {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">Community Management</h2>
+      <h2 className="text-2xl font-bold mb-6">Community Management (Projects and Google Groups)</h2>
 
       <form onSubmit={addCommunity} className="mb-8 space-y-4 max-w-2xl">
         <div>
@@ -315,10 +315,10 @@ export default function CommunityAdmin() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">GitHub Link</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Community Link</label>
           <input
             type="url"
-            placeholder="Enter GitHub repository link"
+            placeholder="Enter Community link"
             value={form.githubLink}
             onChange={(e) => setForm({ ...form, githubLink: e.target.value })}
             className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"

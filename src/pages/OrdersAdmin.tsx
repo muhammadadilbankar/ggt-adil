@@ -226,6 +226,12 @@ export default function OrdersAdmin() {
 
   return (
     <div className="p-6">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-red-600">Service Unavilable</h2>
+        <p className="mt-1 text-sm text-gray-600">
+          Review and manage orders
+        </p>
+      </div>
       {/* Stats Section */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">

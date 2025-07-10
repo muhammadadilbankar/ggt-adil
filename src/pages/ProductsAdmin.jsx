@@ -204,13 +204,14 @@ export default function ProductsAdmin() {
         <div>
           <input
             type="number"
-            placeholder="Price"
+            placeholder="Price in INR per Quantity"
             value={form.price}
             onChange={(e) => setForm({ ...form, price: e.target.value })}
             required
             className="w-full p-2 border rounded"
           />
         </div>
+        <h3>Stock Quantity</h3>
         <div>
           <input
             type="number"
@@ -237,7 +238,7 @@ export default function ProductsAdmin() {
             <li key={p._id} className="flex items-center justify-between p-4 border rounded">
               <div>
                 <h3 className="font-semibold">{p.title}</h3>
-                <p className="text-gray-600">${p.price}</p>
+                <p className="text-gray-600">Rs.{p.price}</p>
                 {p.description && <p className="text-sm text-gray-500">{p.description}</p>}
               </div>
               <button 

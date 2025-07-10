@@ -134,26 +134,36 @@ export default function Events() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row gap-8">
             {/* Sidebar with Calendar */}
-            <div className="md:w-1/3 lg:w-1/4">
+            <div className="">
               <div className="bg-white p-6 rounded-lg shadow-md sticky top-20">
-                <h2 className="text-xl font-bold mb-4">Find Events</h2>
-                <Input
-                  type="text"
-                  placeholder="Search events..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="mb-6"
-                />
-
-                <div className="mb-6">
-                  <h3 className="font-medium mb-2">Filter by Date</h3>
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    className="rounded-md border"
-                  // highlightedDays={eventDates.map(date => date.getDate())}
+                <div>
+                  <h2 className="text-xl font-bold mb-4">Find Events</h2>
+                  <Input
+                    type="text"
+                    placeholder="Search events..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="mb-6"
                   />
+                </div>
+
+
+                {/* <div className="">
+                  <div className="">
+                    <h3 className="font-medium mb-2">Filter by Date</h3>
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      className="rounded-md border
+                                [&_.rdp-table]:w-full 
+                                [&_.rdp-day]:w-full 
+                                [&_.rdp-caption_label]:text-center"
+                  
+                    />
+                  </div>
+                 </div> */}
+                 {/* <div>
                   {date && (
                     <div className="mt-2 text-right">
                       <Button
@@ -165,7 +175,7 @@ export default function Events() {
                       </Button>
                     </div>
                   )}
-                </div>
+                </div> */}
 
                 <div className="border-t pt-4">
                   <h3 className="font-medium mb-2">Event Categories</h3>
@@ -201,7 +211,7 @@ export default function Events() {
                   <Button variant="outline" className="w-full" onClick={() => {
                     toast({
                       title: "Thank you for your interest!",
-                      description: "Event suggestions can be submitted through the club email.",
+                      description: "Event suggestions can be submitted through the club email or sent to ysrao@spit.ac.in",
                     });
                   }}>
                     Suggest Event
@@ -222,14 +232,14 @@ export default function Events() {
                     <h2 className="text-2xl font-bold">
                       {filteredEvents.length} {filteredEvents.length === 1 ? "Event" : "Events"} Found
                     </h2>
-                    <Button onClick={() => {
+                    {/* <Button onClick={() => {
                       toast({
                         title: "Calendar Synced",
                         description: "Events have been added to your calendar.",
                       });
                     }}>
                       Add to Calendar
-                    </Button>
+                    </Button> */}
                   </div>
 
                   {filteredEvents.length === 0 ? (

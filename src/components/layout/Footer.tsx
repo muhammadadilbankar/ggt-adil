@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div>
-            <h3 className="text-xl font-bold text-white mb-4">ElectronNexus Club</h3>
+            <h3 className="text-xl font-bold text-white mb-4">Go Green Technologies Pvt. Ltd.</h3>
             <p className="mb-4">
               A student organization dedicated to fostering innovation and
               knowledge in electronics and electrical engineering.
@@ -29,6 +29,12 @@ export default function Footer() {
                 <span className="sr-only">Twitter</span>
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                </svg>
+              </a>
+              <a href="https://www.youtube.com/channel/UC-2azTT3UFPgc8u77x6Rg_A" className="hover:text-primary">
+                <span className="sr-only">YouTube</span>
+                <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M23.498 6.186a2.934 2.934 0 00-2.062-2.075C19.738 3.5 12 3.5 12 3.5s-7.738 0-9.437.611a2.934 2.934 0 00-2.061 2.075A30.222 30.222 0 000 12a30.222 30.222 0 00.502 5.814 2.934 2.934 0 002.061 2.075C4.262 20.5 12 20.5 12 20.5s7.738 0 9.437-.611a2.934 2.934 0 002.061-2.075A30.222 30.222 0 0024 12a30.222 30.222 0 00-.502-5.814zM9.75 15.021V8.979L15.5 12l-5.75 3.021z" />
                 </svg>
               </a>
             </div>
@@ -62,20 +68,27 @@ export default function Footer() {
           <div>
             <h3 className="text-xl font-bold text-white mb-4">Contact Us</h3>
             <address className="not-italic">
-              <p className="mb-2">Engineering Building, Room 302</p>
-              <p className="mb-2">University Campus</p>
-              <p className="mb-2">City, State 12345</p>
+              <p className="mb-2">Bharatiya Vidya Bhavan’s</p>
+              <p className="mb-2">Sardar Patel Institute of Technology,</p>
+              <p className="mb-2">Bhavans Campus, Andheri-W, Mumbai-58</p>
               <p className="mb-2">
-                Email: <a href="mailto:info@electronnexus.edu" className="hover:text-primary">info@electronnexus.edu</a>
+                Email: <a href="mailto:ysrao@spit.ac.in" className="hover:text-primary">ysrao@spit.ac.in</a>
               </p>
               <p>
-                Phone: <a href="tel:+11234567890" className="hover:text-primary">(123) 456-7890</a>
+                Phone: <a href="tel: 9137692917 / 9820962870" className="hover:text-primary">9137692917 / 9820962870</a>
               </p>
             </address>
           </div>
         </div>
         <div className="border-t border-gray-800 mt-10 pt-6 text-center">
-          <p>&copy; {new Date().getFullYear()} ElectronNexus Club. All rights reserved.</p>
+          <p>Frontend design assisted by <span className="text-primary hover:underline"><a href="https://lovable.dev/" target="_blank" rel="noopener noreferrer">Lovable.dev</a></span></p>
+          <p>Designed and hosted by&nbsp;
+          <a className="hover:underline decoration-sky-500" href="https://www.linkedin.com/in/harsh-walavalkar-15232b254?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAD6yUQ4BsevDRiXxRHQUS3uTP3y5qr1_voo&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BVvX5V21PRFmg0QCJm6FgXQ%3D%3D" target="_blank" rel="noopener noreferrer">Harsh Walavalkar</a>,&nbsp; 
+          <a className="hover:underline decoration-sky-500" href="https://www.linkedin.com/in/muhammad-adil-bankar-946865319?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAFDAPQYB3HjxLRKvbDbwa2VYbvgv7Psbvko&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BB5MKQ7TnT2adrO9otjuzuw%3D%3D" target="_blank" rel="noopener noreferrer">Adil Bankar</a>,&nbsp;
+          <a className="hover:underline decoration-sky-500" href="https://www.linkedin.com/in/ria-talsania-b57775292?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAEby0zMB8gjcgOKjzOlQ7SeT_S_9qqwwX-I&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BV2Ew0leQSMi8pyru5gpaew%3D%3D" target="_blank" rel="noopener noreferrer">Ria Talsania</a>,&nbsp;
+          <a  className="hover:underline decoration-sky-500" href="https://www.linkedin.com/in/aaron-mascarenhas-ab315125a?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAD-8zecB0Qvbzg1BWEK2B_0ev1ZWlT9IF7Q&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BDRmS0LKJRkq%2F2THHFywrhA%3D%3D" target="_blank" rel="noopener noreferrer">Aaron Mascarenhas</a> and&nbsp;
+          <a className="hover:underline decoration-sky-500" href="https://www.linkedin.com/in/amey-agarwal-5bb56224b/" target="_blank" rel="noopener noreferrer">Amey Agarwal</a></p>
+          <p>&copy; {new Date().getFullYear()} GoGreen Technologies. All rights reserved.</p>
         </div>
       </div>
     </footer>
