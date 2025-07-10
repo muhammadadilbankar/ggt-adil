@@ -171,6 +171,16 @@ export default function Community() {
     return matchesSearch && matchesTab;
   });
 
+  const formatDate = (isoString:string) => {
+  const date = new Date(isoString);
+
+  const day = date.getDate();
+  const month = date.toLocaleString('default', { month: 'long' });
+  const year = date.getFullYear();
+
+  return `${day} ${month}, ${year}`;
+}
+
   return (
 
 
@@ -210,7 +220,61 @@ export default function Community() {
             </div>
           </div>
 
+          {/* Google Community Groups */}
+          <h1 className="text-4xl font-bold mb-6 justify-center align-items flex">Google Communities</h1>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredProjects.length > 0 ? (
+                  filteredProjects
+                  .filter(project => project.title.toLowerCase().includes("group"))
+                  .map((project) => (
+                    <div
+                      key={project._id}
+                      className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:scale-105"
+                    >
+                      <div className="p-6">
+                        {project.imageUrl ? (
+                        // <img
+                        //   src={project.imageUrl}
+                        //   alt={project.title}
+                        //   className="w-full h-48 object-cover"
+                        // />
+                        <a href={project.imageUrl} className='underline text-blue-500'>View Image</a>
+                      ): project.title.toLowerCase().includes("group") ? <></> : <span className='text-gray-500' >Image Unavailable</span>}
+                        
+                        <div className='flex flex-row justify-between items-center'>
+                         <div className='mb-4'>
+                            <h3 className="text-xl font-semibold">{project.title}</h3>
+                            <h5 className="text-xs text-gray-500">{formatDate(project.createdAt)}</h5>
+                          </div>
+                        <Button 
+                          className="w-full md:w-auto"
+                        >
+                          <a href={project.projectUrl}>Join Group</a>
+                        </Button>
+                        </div>
+                        <p className="text-gray-600 mb-4 mt-4">{project.description}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {project.tags.map((tag, index) => (
+                            <span
+                              key={index}
+                              className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-10">
+                    <p className="text-gray-500">No Communities found</p>
+                  </div>
+                )}
+              </div>
+
           {/* Projects Grid */}
+          <h1 className="text-4xl font-bold mt-10 mb-6 justify-center align-items flex">Projects</h1>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-10">
             <div className="flex justify-center mb-8">
               <TabsList>
@@ -224,20 +288,29 @@ export default function Community() {
             <TabsContent value={activeTab}>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredProjects.length > 0 ? (
-                  filteredProjects.map((project) => (
+                  filteredProjects
+                  .filter(project => !project.title.toLowerCase().includes("group"))
+                  .map((project) => (
                     <div
                       key={project._id}
                       className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:scale-105"
                     >
-                      {project.imageUrl && (
-                        <img
-                          src={project.imageUrl}
-                          alt={project.title}
-                          className="w-full h-48 object-cover"
-                        />
-                      )}
                       <div className="p-6">
-                        <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                        {project.imageUrl ? (
+                        <a href={project.imageUrl} className='underline text-blue-500'>View Image</a>
+                      ): project.title.toLowerCase().includes("group") ? <></> : <span className='text-gray-500' >Image Unavailable</span>}
+                        {/* CreatedAt:{project.createdAt}<br></br> */}
+                        <div className='flex flex-row justify-between items-center'>
+                          <div className='mb-4 mt-2'>
+                            <h3 className="text-xl font-semibold">{project.title}</h3>
+                            <h5 className="text-xs text-gray-500">{formatDate(project.createdAt)}</h5>
+                          </div>
+                          <Button 
+                            className="w-full md:w-auto"
+                          >
+                            <a href={project.projectUrl}>View Project</a>
+                          </Button>
+                        </div>
                         <p className="text-gray-600 mb-4">{project.description}</p>
                         <div className="flex flex-wrap gap-2">
                           {project.tags.map((tag, index) => (

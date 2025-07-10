@@ -285,10 +285,10 @@ export default function CommunityAdmin() {
 
       <form onSubmit={addCommunity} className="mb-8 space-y-4 max-w-2xl">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Title (Include the word "Group" if Google Community)</label>
           <input
             type="text"
-            placeholder="Enter community title"
+            placeholder="Enter community/project title"
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
             required
@@ -298,7 +298,7 @@ export default function CommunityAdmin() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
           <textarea
-            placeholder="Enter community description"
+            placeholder="Enter community/project description"
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24"
@@ -318,7 +318,7 @@ export default function CommunityAdmin() {
           <label className="block text-sm font-medium text-gray-700 mb-1">Community Link</label>
           <input
             type="url"
-            placeholder="Enter Community link"
+            placeholder="Enter Community/Project link"
             value={form.githubLink}
             onChange={(e) => setForm({ ...form, githubLink: e.target.value })}
             className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
