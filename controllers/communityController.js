@@ -44,7 +44,7 @@ export const submitUserProject = async (req, res) => {
       projectUrl,
       tags,
       images,
-      userId: req.user.id,
+      userId: req.userId,
       status: 'pending',
       isAdminUpload: false
     });

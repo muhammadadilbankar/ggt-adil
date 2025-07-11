@@ -55,7 +55,7 @@ export default function Community() {
   const [redirecting, setRedirecting] = useState(false);
 
 
-  const { toast } = useToast();
+  // const { toast } = useToast();
 
   const [formData, setFormData] = useState<ProjectFormData>({
     title: '',
@@ -77,18 +77,18 @@ export default function Community() {
       setPublicProjects(publicResponse.data);
 
       // Get user's projects if authenticated
-      if (isAuthenticated && token) {
-        const userResponse = await axios.get(`${API_URL}/api/community/user/me`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setUserProjects(userResponse.data);
-      }
+      // if (isAuthenticated && token) {
+      //   const userResponse = await axios.get(`${API_URL}/api/community/user/me`, {
+      //     headers: { Authorization: `Bearer ${token}` }
+      //   });
+      //   setUserProjects(userResponse.data);
+      // }
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.response?.data?.message || "Failed to fetch projects",
-        variant: "destructive",
-      });
+      toast.error("Failed to fetch projects"
+        // title: "Error",
+        // description: error.response?.data?.message || "Failed to fetch projects",
+        // variant: "destructive",
+      );
       console.error('Error fetching projects:', error);
     } finally {
       setLoading(false);
@@ -99,7 +99,8 @@ export default function Community() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const userId = localStorage.getItem('userId');
+      const userId = localStorage.getItem('token');
+      console.log("Handled Submit:"+userId)
       if (!userId) {
         toast.error('Please log in to submit a project');
         return;
@@ -111,7 +112,8 @@ export default function Community() {
         userId
       };
 
-      await axios.post('/api/community/submit', data);
+      await axios.post('/api/community/submit/public', data);
+      alert("Project submitted successfully! Waiting for admin approval.")
       toast.success('Project submitted successfully! Waiting for admin approval.');
 
       setShowForm(false);

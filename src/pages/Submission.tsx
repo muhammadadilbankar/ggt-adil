@@ -62,7 +62,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 
   try {
-    const response = await fetch(`${API_URL}/api/submissions`, {
+    const response = await fetch(`${API_URL}/api/submissions/mdm`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

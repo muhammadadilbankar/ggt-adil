@@ -119,6 +119,7 @@ app.use("/api/community", communityRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/skilling", skillingRoutes)
 app.use("/api/events", eventRoutes)
+app.use("/api/submissions/mdm", submissionRoutes)
 // Protected routes
 app.use("/api/submissions", isAuthenticated, submissionRoutes);
 // app.use("/api/products", isAuthenticated, productRoutes);
