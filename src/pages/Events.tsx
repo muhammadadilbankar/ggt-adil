@@ -110,10 +110,18 @@ export default function Events() {
       (!date || new Date(event.date).toDateString() === date.toDateString())
   );
 
-  const handleRSVP = (eventTitle: string) => {
+  const handleRSVP = (eventTitle: string, eventURL:string) => {
     toast({
-      title: "RSVP Successful",
-      description: `You've successfully registered for "${eventTitle}". We'll send you a reminder before the event.`,
+      title: "See you at the event!",
+      //description: `You've requested to register for "${eventTitle}". We are redirecting you to the ${<a href={eventURL} className="underline">registration page</a>}.`,
+      description: (
+      <>
+        You've requested to register for "<strong>{eventTitle}</strong>". We are redirecting you to the{" "}
+        <a href={eventURL} className="underline" target="_blank" rel="noopener noreferrer">
+          registration page
+        </a>.
+      </>
+    ),
     });
   };
 
@@ -251,12 +259,17 @@ export default function Events() {
                     </div>
                   ) : (
                     <div className="space-y-6">
-                      {filteredEvents.map((event) => (
+                      {filteredEvents.map((event, index) => (
                         <div
                           key={event._id}
                           id={`event-${event._id}`}
                           className="bg-white rounded-lg shadow-md overflow-hidden"
                         >
+                          {index === 0 && (
+                          <div className="bg-primary text-white p-4 text-center">
+                            <span className="font-bold text-xl">Featured Workshop</span>
+                          </div>
+                          )}
                           <div className="md:flex">
                             {event.imageUrl ? (
                               <div className="md:w-1/3">
@@ -333,7 +346,7 @@ export default function Events() {
                               <div className="flex flex-wrap gap-3">
                                 <Button
                                   asChild
-                                  onClick={() => handleRSVP(event.title)}
+                                  onClick={() => handleRSVP(event.title,event.redirectUrl)}
                                 >
                                   <a
                                     href={event.redirectUrl}
@@ -360,7 +373,7 @@ export default function Events() {
               )}
 
               {/* Keep the Featured Workshop section if you want */}
-              {!loading && events.length > 0 && (
+              {/* {!loading && events.length > 0 && (
                 <div className="mt-12 bg-white rounded-lg shadow-md overflow-hidden">
                   <div className="bg-primary text-white p-4 text-center">
                     <span className="font-bold text-xl">Featured Workshop</span>
@@ -412,7 +425,7 @@ export default function Events() {
                     </div>
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
@@ -455,7 +468,7 @@ export default function Events() {
                   Close
                 </Button>
                 <Button asChild onClick={() => {
-                  handleRSVP(selectedEvent.title);
+                  handleRSVP(selectedEvent.title, selectedEvent.redirectUrl);
                   setSelectedEvent(null);
                 }}>
                   <a
