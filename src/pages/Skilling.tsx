@@ -38,6 +38,8 @@ export default function Skilling() {
   const [searchTerm, setSearchTerm] = useState("");
   const [skillings, setSkillings] = useState<Skilling[]>([]);
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState('');
+  var [titleDict, setTitleDict] = useState({});
   const [selectedSkilling, setSelectedSkilling] = useState<Skilling | null>(null);
   const { toast } = useToast();
 
@@ -78,6 +80,66 @@ export default function Skilling() {
     fetchSkillings();
   }, [toast]);
 
+  useEffect(() => {
+      if (skillings.length > 0) {
+        fetchSkillingImages();
+        setFlag(true)
+      }
+    }, [skillings]);
+
+  function cleanString(str) {
+    return str.replace(/[^a-zA-Z0-9]/g, '');
+    }
+  
+    const [flag, setFlag] = useState(false)
+
+    const fetchSkillingImages = async() => {
+        if(flag){
+            console.log("Skillings:",skillings);
+            console.log("Fetching skilling images");
+            const token = localStorage.getItem("token");
+            console.log("Using token:", token ? "Token found" : "No token found");
+        
+            if (!token) {
+              throw new Error("No authentication token found");
+            }
+        
+            const newDict = {}
+        
+           await Promise.all(
+              skillings.map(async (skilling)=>{
+                var key = "skilling";
+                var imageIdname = cleanString(skilling.title);
+                // console.log("Key",key)
+                // console.log("ImageID:",imageIdname)
+                try {
+              const res = await axios.post('http://localhost:5000/imageapi/imageCloudinary/getimageURL', 
+                { key, imageIdname },{
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              //console.log("API Fetch done")
+              //setStatus(`Fetched Image URL: ${res.data.result}`);
+              newDict[skilling.title] = res.data.result
+              // if(res.data.result != ""){
+              //   console.log("image Found")
+              // }
+              //setImageUrl(res.data.result);
+            } catch (err) {
+              console.error(err);
+              newDict[skilling.title] = "";
+              //setStatus('Failed to fetch image');
+            }
+                //newDict[product.title] = cleanString(product.title);
+              })
+            );
+        
+              setTitleDict(newDict)
+              setFlag(true)
+              console.log("NEWDICT SKILLING:",newDict)
+          }
+      }
   // Filter skillings based on search term
   const filteredSkillings = skillings.filter((skilling) =>
     skilling.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -184,7 +246,9 @@ export default function Skilling() {
                 </div>
               ) : (
                     <div className="space-y-6">
-                      {filteredSkillings.map((skilling) => (
+                      {filteredSkillings.map((skilling) => {
+                        const imageUrl = titleDict[skilling.title]
+                      return(
                         <div
                           key={skilling._id}
                           className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row"
@@ -204,7 +268,7 @@ export default function Skilling() {
                             // ) : (
                               <div className="flex items-center justify-center h-full">
                                 <div className="text-center">
-                                  <svg
+                                  {/* <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-16 w-16 mx-auto text-gray-400"
                                     fill="none"
@@ -212,7 +276,14 @@ export default function Skilling() {
                                     stroke="currentColor"
                                   >
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                  </svg>
+                                  </svg> */}
+                                  {imageUrl &&  (
+                                    <img
+                                      src={imageUrl}
+                                      alt="skilling-image"
+                                      className="mt-2 w-full h-24 object-cover rounded"
+                                    />
+                                  )}
                                   <h4 className="mt-2 font-medium text-gray-600">Course Materials</h4>
                                 </div>
                               </div>
@@ -280,7 +351,8 @@ export default function Skilling() {
                             </div>
                           </div>
                         </div>
-                      ))}
+                      )}
+                      )}
                     </div>
               )}
 

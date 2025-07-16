@@ -35,14 +35,16 @@ export default function Events() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState('');
+    var [titleDict, setTitleDict] = useState({});
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (events.length > 0) {
-      console.log("First event:", events[0]);
-      console.log("Location value:", events[0].location);
-    }
-  }, [events]);
+  // useEffect(() => {
+  //   if (events.length > 0) {
+  //     console.log("First event:", events[0]);
+  //     console.log("Location value:", events[0].location);
+  //   }
+  // }, [events]);
   // Fetch events from API
   useEffect(() => {
     const fetchEvents = async () => {
@@ -101,6 +103,66 @@ export default function Events() {
     fetchEvents();
   }, [toast]);
 
+  useEffect(() => {
+    if (events.length > 0) {
+      fetchEventImages();
+      setFlag(true)
+    }
+  }, [events]);
+
+  function cleanString(str) {
+    return str.replace(/[^a-zA-Z0-9]/g, '');
+    }
+  
+  const [flag, setFlag] = useState(false)
+
+  const fetchEventImages = async () => {
+      if(flag){
+        console.log("Events:",events);
+        console.log("Fetching event images");
+        const token = localStorage.getItem("token");
+        console.log("Using token:", token ? "Token found" : "No token found");
+  
+        if (!token) {
+          throw new Error("No authentication token found");
+        }
+  
+        const newDict = {}
+  
+     await Promise.all(
+        events.map(async (event)=>{
+          var key = "events";
+          var imageIdname = cleanString(event.title);
+          // console.log("Key",key)
+          // console.log("ImageID:",imageIdname)
+          try {
+        const res = await axios.post('http://localhost:5000/imageapi/imageCloudinarypublic/getimageURL', 
+          { key, imageIdname },{
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        //console.log("API Fetch done")
+        //setStatus(`Fetched Image URL: ${res.data.result}`);
+        newDict[event.title] = res.data.result
+        if(res.data.result != ""){
+          console.log("image Found")
+        }
+        //setImageUrl(res.data.result);
+      } catch (err) {
+        console.error(err);
+        newDict[event.title] = "";
+        //setStatus('Failed to fetch image');
+      }
+          //newDict[product.title] = cleanString(product.title);
+        })
+      );
+  
+        setTitleDict(newDict)
+        setFlag(true)
+        console.log("NEWDICT:",newDict)
+    }
+  }
   // Filter events based on search term and selected date
   const filteredEvents = events.filter(
     (event) =>
@@ -253,13 +315,16 @@ export default function Events() {
                     </Button> */}
                   </div>
 
-                  {filteredEvents.length === 0 ? (
+                  {filteredEvents.length === 0 ? 
+                  (
                     <div className="bg-white p-8 rounded-lg shadow-md text-center">
                       <p className="text-gray-500">No events matching your criteria.</p>
                     </div>
                   ) : (
                     <div className="space-y-6">
-                      {filteredEvents.map((event, index) => (
+                      {filteredEvents.map((event, index) => {
+                        const imageUrl = titleDict[event.title]
+                      return(
                         <div
                           key={event._id}
                           id={`event-${event._id}`}
@@ -271,7 +336,14 @@ export default function Events() {
                           </div>
                           )}
                           <div className="md:flex">
-                            {event.imageUrl ? (
+                            {imageUrl &&  (
+            <img
+              src={imageUrl}
+              alt="event-image"
+              className="mt-2 ml-2 w-auto h-full object-cover rounded"
+            />
+          )}
+                            {/* {event.imageUrl ? (
                               <div className="md:w-1/3">
                                 <img
                                   src={event.imageUrl}
@@ -283,7 +355,7 @@ export default function Events() {
                               <div className="md:w-1/3 bg-gray-200 flex items-center justify-center">
                                 <span className="text-gray-500">No Image</span>
                               </div>
-                            )}
+                            )} */}
                             <div className="p-6 md:w-2/3">
                               <h3 className="text-2xl font-bold mb-2">{event.title}</h3>
                               <div className="flex flex-wrap gap-y-2 mb-4">
@@ -366,7 +438,8 @@ export default function Events() {
                             </div>
                           </div>
                         </div>
-                      ))}
+                      )}
+                      )}
                     </div>
                   )}
                 </>

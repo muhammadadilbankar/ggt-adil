@@ -5,6 +5,7 @@ import cloudinaryClient from "@/utils/cloudinaryClient"
 // import {cloudinary as cloudinaryConfig} from "../utils/cloudinary"
 // import uploadMiddleware from "../middleware/uploadMiddleware";
 // const upload = uploadMiddleware("../../uploads");
+import axios from "axios";
 
 export default function SkillingsAdmin() {
   const [skillings, setSkillings] = useState([]);
@@ -21,12 +22,28 @@ export default function SkillingsAdmin() {
   const [imagePreview, setImagePreview] = useState(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [file, setFile] = useState(null);
+  const [status, setStatus] = useState('');
+  var [titleDict, setTitleDict] = useState({});
   const { user } = useAuth();
   const { toast } = useToast();
 
   useEffect(() => {
     fetchSkillings();
   }, []);
+
+  useEffect(() => {
+    if (skillings.length > 0) {
+      fetchSkillingImages();
+      setFlag(true)
+    }
+  }, [skillings]);
+
+  function cleanString(str) {
+  return str.replace(/[^a-zA-Z0-9]/g, '');
+  }
+
+  const [flag, setFlag] = useState(false)
 
   const fetchSkillings = async () => {
     console.log("Starting fetchSkillings function");
@@ -64,6 +81,55 @@ export default function SkillingsAdmin() {
       setLoading(false);
     }
   };
+
+  const fetchSkillingImages = async() => {
+    if(flag){
+        console.log("Skillings:",skillings);
+        console.log("Fetching skilling images");
+        const token = localStorage.getItem("token");
+        console.log("Using token:", token ? "Token found" : "No token found");
+    
+        if (!token) {
+          throw new Error("No authentication token found");
+        }
+    
+        const newDict = {}
+    
+       await Promise.all(
+          skillings.map(async (skilling)=>{
+            var key = "skilling";
+            var imageIdname = cleanString(skilling.title);
+            // console.log("Key",key)
+            // console.log("ImageID:",imageIdname)
+            try {
+          const res = await axios.post('http://localhost:5000/imageapi/imageCloudinary/getimageURL', 
+            { key, imageIdname },{
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          //console.log("API Fetch done")
+          //setStatus(`Fetched Image URL: ${res.data.result}`);
+          newDict[skilling.title] = res.data.result
+          // if(res.data.result != ""){
+          //   console.log("image Found")
+          // }
+          //setImageUrl(res.data.result);
+        } catch (err) {
+          console.error(err);
+          newDict[skilling.title] = "";
+          //setStatus('Failed to fetch image');
+        }
+            //newDict[product.title] = cleanString(product.title);
+          })
+        );
+    
+          setTitleDict(newDict)
+          setFlag(true)
+          console.log("NEWDICT SKILLING:",newDict)
+      }
+  }
+  
 
   const deleteSkilling = async (id) => {
     console.log("Deleting skilling with ID:", id);
@@ -112,15 +178,62 @@ export default function SkillingsAdmin() {
     }
   };
 
-  // Handle image file selection
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      // Create a preview URL for the selected image
-      setImagePreview(URL.createObjectURL(file));
+  const deleteSkillingImage = async (imagetitle) => {
+        const token = localStorage.getItem("token");
+        console.log("Using token:", token ? "Token found" : "No token found");
+  
+        if (!token) {
+          throw new Error("No authentication token found");
+        }
+        var imagename = cleanString(imagetitle);
+        var key = 'skilling'
+        var imageId = imagename;
+        if (!key || !imageId) return;
+        console.log("Key:",key)
+        console.log("imageid:",imageId)
+        try {
+        const res = await axios.post('http://localhost:5000/imageapi/imageCloudinary/delete', 
+          { key, imageId },{
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+        );
+        if(res.data.result.result == "ok"|| res == "ok"){
+          setStatus("Success")
+        }
+        else{
+          setStatus("Error")
+        }
+        toast(
+          {
+            title: `${status}`,
+            description:`Image delete ${status}`
+          }
+        )
+        //setStatus(`Deleted: ${res.data.result.result}`);
+        console.log(res)
+      } catch (err) {
+        console.error(err);
+        setStatus('Failed to delete image');
+         toast(
+          {
+            title: "Error",
+            description:`${status}`
+          }
+        )
+      }
     }
-  };
+
+  // Handle image file selection
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setImageFile(file);
+  //     // Create a preview URL for the selected image
+  //     setImagePreview(URL.createObjectURL(file));
+  //   }
+  // };
 
   // Upload image to Cloudinary
   // const uploadImage = async () => {
@@ -205,104 +318,120 @@ export default function SkillingsAdmin() {
   //     setUploadingImage(false);
   //   }
   // };
-  const compressImage = (file) => {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        const img = new Image();
-        img.onload = function () {
-          const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 1200;
-          const MAX_HEIGHT = 1200;
-          let width = img.width;
-          let height = img.height;
+  // const compressImage = (file) => {
+  //   return new Promise((resolve) => {
+  //     const reader = new FileReader();
+  //     reader.onload = function (event) {
+  //       const img = new Image();
+  //       img.onload = function () {
+  //         const canvas = document.createElement('canvas');
+  //         const MAX_WIDTH = 1200;
+  //         const MAX_HEIGHT = 1200;
+  //         let width = img.width;
+  //         let height = img.height;
 
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
-          }
+  //         if (width > height) {
+  //           if (width > MAX_WIDTH) {
+  //             height *= MAX_WIDTH / width;
+  //             width = MAX_WIDTH;
+  //           }
+  //         } else {
+  //           if (height > MAX_HEIGHT) {
+  //             width *= MAX_HEIGHT / height;
+  //             height = MAX_HEIGHT;
+  //           }
+  //         }
 
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
+  //         canvas.width = width;
+  //         canvas.height = height;
+  //         const ctx = canvas.getContext('2d');
+  //         ctx.drawImage(img, 0, 0, width, height);
 
-          // You can adjust quality (0 to 1)
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
-          resolve(compressedDataUrl);
-        };
-        img.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-  // Upload image to Cloudinary
-  const uploadImage = async () => {
-    if (!imageFile) return null;
+  //         // You can adjust quality (0 to 1)
+  //         const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+  //         resolve(compressedDataUrl);
+  //       };
+  //       img.src = event.target.result;
+  //     };
+  //     reader.readAsDataURL(file);
+  //   });
+  // };
+  // // Upload image to Cloudinary
+  // const uploadImage = async () => {
+  //   if (!imageFile) return null;
 
-    try {
-      setUploadingImage(true);
-      //compressing the image
-      const compressedImage = await compressImage(imageFile);
+  //   try {
+  //     setUploadingImage(true);
+  //     //compressing the image
+  //     const compressedImage = await compressImage(imageFile);
 
-      // Convert file to base64 string (similar to your chat app)
-      const reader = new FileReader();
+  //     // Convert file to base64 string (similar to your chat app)
+  //     const reader = new FileReader();
 
-      // Create a promise to handle the FileReader async operation
-      const base64Data = await new Promise((resolve, reject) => {
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-        reader.readAsDataURL(imageFile);
-      });
+  //     // Create a promise to handle the FileReader async operation
+  //     const base64Data = await new Promise((resolve, reject) => {
+  //       reader.onload = () => resolve(reader.result);
+  //       reader.onerror = (error) => reject(error);
+  //       reader.readAsDataURL(imageFile);
+  //     });
 
-      // Get token from localStorage
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("No authentication token found");
-      }
+  //     // Get token from localStorage
+  //     const token = localStorage.getItem("token");
+  //     if (!token) {
+  //       throw new Error("No authentication token found");
+  //     }
 
-      // Send to server-side endpoint (like in your chat app)
-      const response = await fetch("http://localhost:5000/api/upload", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ image: compressedImage }),
-      });
+  //     // Send to server-side endpoint (like in your chat app)
+  //     const response = await fetch("http://localhost:5000/api/upload", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify({ image: compressedImage }),
+  //     });
 
-      if (!response.ok) {
-        throw new Error(`Upload failed: ${response.status}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`Upload failed: ${response.status}`);
+  //     }
 
-      const data = await response.json();
-      console.log("Upload successful:", data);
+  //     const data = await response.json();
+  //     console.log("Upload successful:", data);
 
-      return data.imageUrl;
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      toast({
-        title: "Error",
-        description: "Failed to upload image. Please try again.",
-        variant: "destructive",
-      });
-      return null;
-    } finally {
-      setUploadingImage(false);
-    }
-  };
+  //     return data.imageUrl;
+  //   } catch (error) {
+  //     console.error('Error uploading image:', error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to upload image. Please try again.",
+  //       variant: "destructive",
+  //     });
+  //     return null;
+  //   } finally {
+  //     setUploadingImage(false);
+  //   }
+  // };
   
-
   const addSkilling = async (e) => {
     e.preventDefault();
     console.log("Adding skilling with form data:", form);
+
+    const key = 'skilling';
+    const imageId = cleanString(form.title);
+    if (!key || !imageId || !file) {
+      setStatus('Please fill all fields and select an image.');
+       toast({
+        title:"Error",
+        description:`${status}`
+      })
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', import.meta.env.VITE_UPLOAD_PRESET);
+    formData.append('folder', key); // e.g., 'products'
+    formData.append('public_id', imageId); // e.g., 'apple123'
 
     try {
       // Get token from localStorage
@@ -313,12 +442,12 @@ export default function SkillingsAdmin() {
 
       // Upload image if one is selected
       let imageUrl = form.imageUrl;
-      if (imageFile) {
-        imageUrl = await uploadImage();
-        // if (!imageUrl) {
-        //   throw new Error("Failed to upload image");
-        // }
-      }
+      // if (imageFile) {
+      //   imageUrl = await uploadImage();
+      //   // if (!imageUrl) {
+      //   //   throw new Error("Failed to upload image");
+      //   // }
+      // }
 
       // Process tags
       const skillingData = {
@@ -345,6 +474,20 @@ export default function SkillingsAdmin() {
           `Failed to add skilling: ${response.status}`
         );
       }
+
+      //Upload image to Cloudinary
+            try {
+            const res = await axios.post(
+              `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`,
+              formData
+            );
+            setStatus('Success'); //URL: ${res.data.secure_url}
+            console.log(`URL: ${res.data.secure_url}`)
+            } catch (err) {
+            console.error(err);
+            setStatus('Error');
+            }
+
       const newSkilling = await response.json();
       console.log("Skilling added successfully:", newSkilling);
 
@@ -358,12 +501,17 @@ export default function SkillingsAdmin() {
         difficulty: "beginner",
         imageUrl: ""
       });
-      setImageFile(null);
-      setImagePreview(null);
+      // setImageFile(null);
+      // setImagePreview(null);
+      setFile(null)
       toast({
         title: "Success",
         description: "Skilling added successfully",
       });
+      toast({
+        title: `${status}`,
+        description: `Skilling Image upload ${status}`,
+      })
     } catch (error) {
       console.error('Error adding skilling:', error);
       toast({
@@ -402,25 +550,26 @@ export default function SkillingsAdmin() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Course Image</label>
           <div className="flex items-center space-x-4">
+          <h3>Upload Image</h3>
             <input
               type="file"
               accept="image/*"
-              onChange={handleImageChange}
+              onChange={(e) => setFile(e.target.files[0])}
               className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             {/* Optional: External image URL input */}
             <div className="text-sm text-gray-500">or</div>
-            <input
-              type="url"
-              placeholder="External image URL"
-              value={form.imageUrl}
-              onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-              className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+              <input
+                type="text"
+                placeholder="Google Drive URL Link for Image(Backup)"
+                value={form.imageUrl}
+                onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
           </div>
 
           {/* Image preview */}
-          {imagePreview && (
+          {/* {imagePreview && (
             <div className="mt-2">
               <img
                 src={imagePreview}
@@ -438,7 +587,7 @@ export default function SkillingsAdmin() {
                 Remove image
               </button>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Description field */}
@@ -506,9 +655,11 @@ export default function SkillingsAdmin() {
         <p className="text-gray-500 text-center py-8">No skillings found.</p>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {skillings.map((s) => (
+          {skillings.map((s) => {
+            const imageUrl = titleDict[s.title]
+          return (
             <div key={s._id} className="bg-white p-4 rounded-lg shadow-md">
-              {s.imageUrl && (
+              {/* {s.imageUrl && (
                 <div className="mb-3">
                   <img
                     src={s.imageUrl}
@@ -516,11 +667,22 @@ export default function SkillingsAdmin() {
                     className="w-full h-48 object-cover rounded"
                   />
                 </div>
-              )}
+              )} */}
+              {imageUrl &&  (
+            <img
+              src={imageUrl}
+              alt="skilling-image"
+              className="mt-2 w-24 h-24 object-cover rounded"
+            />
+          )}
               <div className="flex justify-between items-start mb-2">
                 <h3 className="font-semibold text-lg">{s.title}</h3>
                 <button
-                  onClick={() => deleteSkilling(s._id)}
+                  onClick={() => {
+                    deleteSkilling(s._id);
+                    deleteSkillingImage(s.title);
+                  }
+                  }
                   className="text-red-500 hover:text-red-700 transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -549,8 +711,11 @@ export default function SkillingsAdmin() {
                   </span>
                 ))}
               </div>
+              <p className="text-sm text-gray-300">If Image Unavailable to Fetch.&nbsp;
+            <a href={s.imageUrl} className="text-blue-300 underline text-sm">View Image</a></p>
             </div>
-          ))}
+          )}
+          )}
         </div>
       )}
     </div>

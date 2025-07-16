@@ -22,6 +22,9 @@ console.log('Environment loaded:', {
   JWT_SECRET: process.env.JWT_SECRET ? '[SET]' : '[NOT SET]'
 });
 
+//cloudinary
+import { v2 as cloudinary } from 'cloudinary';
+
 // Models
 import User, { createDefaultAdmin } from "./models/User.js";
 import Submission from "./models/Submission.js";
@@ -36,6 +39,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import uploadRoutes from './routes/upload.routes.js';
+import cloudinaryRoutes from "./routes/cloudinaryRoutes.js";
 
 // Middleware
 import { isAuthenticated, isAdmin } from "./middleware/auth.js";
@@ -97,6 +101,13 @@ app.post("/api/admin/login", async (req, res) => {
   }
 });
 
+//cloudinary connect
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 // ✨ Manual submission endpoint (if used separately)
 app.post("/api/submit-project", async (req, res) => {
   const { name, uid, branch, title, pdfLink } = req.body;
@@ -120,11 +131,14 @@ app.use("/api/products", productRoutes);
 app.use("/api/skilling", skillingRoutes)
 app.use("/api/events", eventRoutes)
 app.use("/api/submissions/mdm", submissionRoutes)
+app.use("/imageapi/imageCloudinarypublic",cloudinaryRoutes)
+
 // Protected routes
 app.use("/api/submissions", isAuthenticated, submissionRoutes);
 // app.use("/api/products", isAuthenticated, productRoutes);
 // app.use("/api/skilling", isAuthenticated, skillingRoutes);
 // app.use("/api/events", isAuthenticated, eventRoutes);
+app.use("/imageapi/imageCloudinary", isAuthenticated, cloudinaryRoutes)
 app.use("/api/orders", isAuthenticated, orderRoutes);
 
 const PORT = process.env.PORT || 5000;

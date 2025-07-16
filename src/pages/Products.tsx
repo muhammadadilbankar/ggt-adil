@@ -21,6 +21,8 @@ export default function Products() {
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [status, setStatus] = useState('');
+  var [titleDict, setTitleDict] = useState({});
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -81,6 +83,68 @@ export default function Products() {
 
     fetchProducts();
   }, [toast]);
+
+  useEffect(() => {
+  if (products.length > 0) {
+    fetchProductImages();
+    setFlag(true)
+  }
+}, [products]);
+
+function cleanString(str) {
+  return str.replace(/[^a-zA-Z0-9]/g, '');
+  }
+
+const [flag, setFlag] = useState(false)
+
+const fetchProductImages = async () => {
+    if(flag){
+    console.log("Products:",products);
+    console.log("Fetching product images");
+    const token = localStorage.getItem("token");
+      console.log("Using token:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const newDict = {}
+
+   await Promise.all(
+      products.map(async (product)=>{
+        var key = "products";
+        var imageIdname = cleanString(product.title);
+        // console.log("Key",key)
+        // console.log("ImageID:",imageIdname)
+        try {
+      const res = await axios.post('http://localhost:5000/imageapi/imageCloudinarypublic/publicgetimageURL', 
+        { key, imageIdname },{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      //console.log("API Fetch done")
+      //setStatus(`Fetched Image URL: ${res.data.result}`);
+      newDict[product.title] = res.data.result
+      if(res.data.result != ""){
+        console.log("image Found")
+      }
+      //setImageUrl(res.data.result);
+    } catch (err) {
+      console.error(err);
+      newDict[product.title] = "";
+      //setStatus('Failed to fetch image');
+    }
+        //newDict[product.title] = cleanString(product.title);
+      })
+    );
+
+      setTitleDict(newDict)
+      setFlag(true)
+      console.log("NEWDICT:",newDict)
+  }
+}
+
 
   const filteredProducts = products.filter((product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -170,12 +234,21 @@ export default function Products() {
                   <div className="text-center py-8">Loading products...</div>
                 ) : (
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredProducts.map((product) => (
+                    {filteredProducts.map((product) => {
+                      const imageUrl = titleDict[product.title]
+                    return(
                       <div
                         key={product._id}
                         className="border rounded-lg overflow-hidden bg-white transition-transform hover:shadow-lg"
                       >
-                        {product.imageUrl ? (
+                         {imageUrl &&  (
+            <img
+              src={imageUrl}
+              alt="product-image"
+              className="mt-2 w-full h-24 object-cover rounded"
+            />
+          )}
+                        {/* {product.imageUrl ? (
                           // <img
                           //   src={product.imageUrl}
                           //   alt={product.title}
@@ -188,7 +261,7 @@ export default function Products() {
                           <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
                             No Image
                           </div>
-                        )}
+                        )} */}
                         <div className="p-4">
                           <h3 className="font-semibold text-lg">{product.title}</h3>
                           {product.description && (
@@ -213,7 +286,8 @@ export default function Products() {
                           </Button>
                         </div>
                       </div>
-                    ))}
+                    )}
+                    )}
 
                     {filteredProducts.length === 0 && !loading && (
                       <div className="col-span-3 py-8 text-center text-gray-500">
