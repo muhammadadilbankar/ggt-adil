@@ -30,7 +30,7 @@ export default function CommunityAdmin() {
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch("http://localhost:5000/api/community", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/community`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -61,7 +61,7 @@ export default function CommunityAdmin() {
 
   // const deleteCommunity = async (id) => {
   //   try {
-  //     const response = await fetch(`http://localhost:5000/api/community/${id}`, {
+  //     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/community/${id}`, {
   //       method: "DELETE",
   //       headers: {
   //         Authorization: `Bearer ${user?.token}`,
@@ -97,7 +97,7 @@ export default function CommunityAdmin() {
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch(`http://localhost:5000/api/community/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/community/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -134,7 +134,7 @@ export default function CommunityAdmin() {
 
   // const toggleApproval = async (id, currentStatus) => {
   //   try {
-  //     const response = await fetch(`http://localhost:5000/api/community/${id}`, {
+  //     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/community/${id}`, {
   //       method: "PATCH",
   //       headers: {
   //         "Content-Type": "application/json",
@@ -174,7 +174,7 @@ export default function CommunityAdmin() {
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch(`http://localhost:5000/api/community/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/community/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -227,7 +227,7 @@ export default function CommunityAdmin() {
         throw new Error("Title and description are required");
       }
 
-      const response = await fetch("http://localhost:5000/api/community", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/community`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

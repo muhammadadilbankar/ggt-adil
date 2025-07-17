@@ -57,7 +57,7 @@ export default function ProductsAdmin() {
         // console.log("Key",key)
         // console.log("ImageID:",imageIdname)
         try {
-      const res = await axios.post('http://localhost:5000/imageapi/imageCloudinary/getimageURL', 
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinary/getimageURL`, 
         { key, imageIdname },{
         headers: {
           Authorization: `Bearer ${token}`,
@@ -98,7 +98,7 @@ export default function ProductsAdmin() {
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch("http://localhost:5000/api/products", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -139,7 +139,7 @@ export default function ProductsAdmin() {
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -188,7 +188,7 @@ export default function ProductsAdmin() {
       console.log("Key:",key)
       console.log("imageid:",imageId)
       try {
-      const res = await axios.post('http://localhost:5000/imageapi/imageCloudinary/delete', 
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinary/delete`, 
         { key, imageId },{
         headers: {
           Authorization: `Bearer ${token}`,
@@ -261,7 +261,7 @@ export default function ProductsAdmin() {
         throw new Error("Title and price are required");
       }
 
-      const response = await fetch("http://localhost:5000/api/products", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -426,7 +426,7 @@ export default function ProductsAdmin() {
                   <p className="text-gray-600">Rs.{p.price}</p>
                   {p.description && <p className="text-sm text-gray-500">{p.description}</p>}
                   <p className="text-sm text-gray-300">If Image Unavailable to Fetch.&nbsp;
-            <a href={p.imageUrl} className="text-blue-300 underline text-sm">View Image</a></p>
+            <a href={p.imageUrl} target="_blank" className="text-blue-300 underline text-sm">View Image</a></p>
                 </div>
                 <button 
                   onClick={() => {

@@ -59,7 +59,7 @@ export default function EventsAdmin() {
         // console.log("Key",key)
         // console.log("ImageID:",imageIdname)
         try {
-      const res = await axios.post('http://localhost:5000/imageapi/imageCloudinary/getimageURL', 
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinary/getimageURL`, 
         { key, imageIdname },{
         headers: {
           Authorization: `Bearer ${token}`,
@@ -90,7 +90,7 @@ export default function EventsAdmin() {
   // const fetchEvents = async () => {
   //   console.log("Starting fetchEvents function");
   //   try {
-  //     const response = await fetch("http://localhost:5000/api/events", {
+  //     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/events`, {
   //       headers: {
   //         Authorization: `Bearer ${user?.token}`,
   //       },
@@ -131,7 +131,7 @@ export default function EventsAdmin() {
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch("http://localhost:5000/api/events", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/events`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -161,7 +161,7 @@ export default function EventsAdmin() {
   };
   // const deleteEvent = async (id) => {
   //   try {
-  //     const response = await fetch(`http://localhost:5000/api/events/${id}`, {
+  //     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/events/${id}`, {
   //       method: "DELETE",
   //       headers: {
   //         Authorization: `Bearer ${user?.token}`,
@@ -195,7 +195,7 @@ export default function EventsAdmin() {
   //       tags: form.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
   //     };
 
-  //     const response = await fetch("http://localhost:5000/api/events", {
+  //     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/events`, {
   //       method: "POST",
   //       headers: {
   //         "Content-Type": "application/json",
@@ -242,7 +242,7 @@ export default function EventsAdmin() {
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch(`http://localhost:5000/api/events/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/events/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -291,7 +291,7 @@ export default function EventsAdmin() {
       console.log("Key:",key)
       console.log("imageid:",imageId)
       try {
-      const res = await axios.post('http://localhost:5000/imageapi/imageCloudinary/delete', 
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinary/delete`, 
         { key, imageId },{
         headers: {
           Authorization: `Bearer ${token}`,
@@ -375,7 +375,7 @@ export default function EventsAdmin() {
       console.log("Processed event data:", eventData);
       console.log("Final request payload:", JSON.stringify(eventData, null, 2));
 
-      const response = await fetch("http://localhost:5000/api/events", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/events`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -618,7 +618,7 @@ export default function EventsAdmin() {
                 ))}
               </div>
               <p className="text-sm text-gray-300">If Image Unavailable to Fetch.&nbsp;
-            <a href={event.imageUrl} className="text-blue-300 underline text-sm">View Image</a></p>
+            <a href={event.imageUrl} target="_blank" className="text-blue-300 underline text-sm">View Image</a></p>
             </div>
           )}
         )}

@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL; //|| 'http://localhost:5000';
 
 export default function SubmissionsAdmin() {
   const [submissions, setSubmissions] = useState([]);
@@ -139,7 +139,7 @@ export default function SubmissionsAdmin() {
         throw new Error("No authentication token found");
       }
 
-      const response = await axios.delete(`http://localhost:5000/api/submissions/${id}`, {
+      const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/submissions/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

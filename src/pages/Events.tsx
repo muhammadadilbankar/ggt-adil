@@ -61,7 +61,7 @@ export default function Events() {
           return;
         }
         
-        const response = await axios.get("http://localhost:5000/api/events/public");
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/events/public`);
         // const response = await fetch("http://localhost:5000/api/events", {
         //   headers: {
         //     "Authorization": `Bearer ${token}`
@@ -136,7 +136,7 @@ export default function Events() {
           // console.log("Key",key)
           // console.log("ImageID:",imageIdname)
           try {
-        const res = await axios.post('http://localhost:5000/imageapi/imageCloudinarypublic/getimageURL', 
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinarypublic/publicgetimageURL`, 
           { key, imageIdname },{
           headers: {
             Authorization: `Bearer ${token}`,

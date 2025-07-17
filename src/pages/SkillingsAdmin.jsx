@@ -52,7 +52,7 @@ export default function SkillingsAdmin() {
       const token = localStorage.getItem("token");
       console.log("Token exists:", !!token);
 
-      const response = await fetch("http://localhost:5000/api/skilling", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/skilling`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -102,7 +102,7 @@ export default function SkillingsAdmin() {
             // console.log("Key",key)
             // console.log("ImageID:",imageIdname)
             try {
-          const res = await axios.post('http://localhost:5000/imageapi/imageCloudinary/getimageURL', 
+          const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinary/getimageURL`, 
             { key, imageIdname },{
             headers: {
               Authorization: `Bearer ${token}`,
@@ -143,7 +143,7 @@ export default function SkillingsAdmin() {
       }
 
       // Fix URL path - should be "skilling" (singular) not "skillings"
-      const response = await fetch(`http://localhost:5000/api/skilling/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/skilling/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -192,7 +192,7 @@ export default function SkillingsAdmin() {
         console.log("Key:",key)
         console.log("imageid:",imageId)
         try {
-        const res = await axios.post('http://localhost:5000/imageapi/imageCloudinary/delete', 
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinary/delete`, 
           { key, imageId },{
           headers: {
             Authorization: `Bearer ${token}`,
@@ -458,7 +458,7 @@ export default function SkillingsAdmin() {
 
       console.log("Processed skilling data:", skillingData);
 
-      const response = await fetch("http://localhost:5000/api/skilling", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/skilling`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -712,7 +712,7 @@ export default function SkillingsAdmin() {
                 ))}
               </div>
               <p className="text-sm text-gray-300">If Image Unavailable to Fetch.&nbsp;
-            <a href={s.imageUrl} className="text-blue-300 underline text-sm">View Image</a></p>
+            <a href={s.imageUrl} target="_blank" className="text-blue-300 underline text-sm">View Image</a></p>
             </div>
           )}
           )}

@@ -83,7 +83,7 @@ export default function OrdersAdmin() {
       }
 
       // Create base URL pointing to backend server
-      let url = "http://localhost:5000/api/orders";
+      let url = `${import.meta.env.VITE_API_URL}/api/orders`;
       const params = new URLSearchParams();
 
       // Add filters if specified
@@ -144,7 +144,7 @@ export default function OrdersAdmin() {
       }
 
       // Use absolute URL to backend server
-      const url = "http://localhost:5000/api/orders/stats";
+      const url = `${import.meta.env.VITE_API_URL}/api/orders/stats`;
       console.log("Fetching order stats from:", url);
 
       // Add authorization header

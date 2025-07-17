@@ -41,7 +41,7 @@ export default function Products() {
           return;
         }
 
-        const response = await axios.get("http://localhost:5000/api/products/public")
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/products/public`)
 
         // const response = await fetch("http://localhost:5000/api/products", {
         //   headers: {
@@ -117,7 +117,7 @@ const fetchProductImages = async () => {
         // console.log("Key",key)
         // console.log("ImageID:",imageIdname)
         try {
-      const res = await axios.post('http://localhost:5000/imageapi/imageCloudinarypublic/publicgetimageURL', 
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinarypublic/publicgetimageURL`, 
         { key, imageIdname },{
         headers: {
           Authorization: `Bearer ${token}`,
@@ -214,6 +214,36 @@ const fetchProductImages = async () => {
             </p>
           </div>
         </div>
+
+    <div className="flex py-8 max-w-7xl mx-auto px-6">
+      <a href="mailto:ysrao@spit.ac.in" target="_blank" className="inline-block">
+        <button className="group relative overflow-hidden bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out">
+          {/* Animated background overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          
+          {/* Button content */}
+          <div className="relative flex items-center space-x-3">
+            <svg className="w-5 h-5 transform group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            
+            <span className="text-lg tracking-wide">
+              Click here to order products!
+            </span>
+            
+            <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </div>
+          
+          {/* Pulse animation ring */}
+          <div className="absolute inset-0 rounded-full bg-white opacity-20 scale-0 group-hover:scale-110 group-hover:opacity-0 transition-all duration-500"></div>
+          
+          {/* Shine effect */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+        </button>
+      </a>
+    </div>
 
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row gap-6">

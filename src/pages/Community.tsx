@@ -17,7 +17,7 @@ import { useUser, RedirectToSignIn } from '@clerk/clerk-react';
 // import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@clerk/clerk-react'; // Make sure this is at the top
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL; //|| 'http://localhost:5000';
 
 interface Project {
   _id: string;
@@ -49,6 +49,7 @@ export default function Community() {
   const [redirecting, setRedirecting] = useState(false);
   const { isLoaded, isSignedIn, user } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [show, setShow] = useState(false);
   const { getToken } = useAuth();
 
 
@@ -74,6 +75,12 @@ export default function Community() {
       setShowForm(true);
     }
   }, [location.search, isSignedIn]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShow(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
 
   const fetchProjects = async () => {
     try {
@@ -167,37 +174,69 @@ export default function Community() {
   if (!isLoaded) return null;
   if (redirecting) return <RedirectToSignIn redirectUrl="/community?showForm=true" />;
 
+  function parseDate(dateString: string) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', { 
+    day: 'numeric', 
+    month: 'long', 
+    year: 'numeric' 
+  });
+}
+
   return (
     <>
       <Navbar />
-      <main className="bg-gray-50 min-h-screen pb-16">
-        <div className="bg-gradient-to-r from-primary to-secondary text-white py-12 mb-8">
+      <main className="bg-gray-50 min-h-screen pb-16 pt-10">
+        {/* <div className="bg-gradient-to-r from-primary to-secondary text-white py-12 mb-8">
           <div className="max-w-7xl mx-auto px-6">
             <h1 className="text-4xl font-bold mb-4">Community Showcase</h1>
             <p className="text-lg max-w-3xl">
               Explore projects created by our club members. Get inspired and see what's possible with creativity and electronics skills.
             </p>
           </div>
-        </div>
+        </div> */}
 
-        <div className="max-w-7xl mx-auto px-6">
-          {/* Search and Submit */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-10">
-            <div className="w-full md:w-1/2">
-              <Input
-                type="text"
-                placeholder="Search projects..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <Button onClick={handleSubmitClick}>
-              Submit Your Project
-            </Button>
+        {/* Welcome to our community */}
+        <div className={`transition-all duration-700 ease-out transform ${show ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+        } relative overflow-hidden bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl shadow-lg border border-green-100 mx-auto max-w-4xl`}>
+      {/* Background decorative elements */}
+      {/* <div className="absolute top-0 right-0 w-32 h-32 bg-green-200 rounded-full opacity-20 transform translate-x-8 -translate-y-8"></div>
+      <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-200 rounded-full opacity-20 transform -translate-x-6 translate-y-6"></div> */}
+      
+      {/* Main content */}
+      <div className="relative px-12 py-16 text-center">
+        <div className="mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full mb-6">
+            <img
+      src="public/favicon-logo.png" // Replace with your image path
+      alt="Community Icon"
+      className="absolute w-12 h-12 object-contain"
+    />
           </div>
+        </div>
+        
+        <h1 className="text-4xl md:text-5xl font-bold text-black mb-6 tracking-tight">
+          Welcome to our{' '}
+          <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+            community
+          </span>
+        </h1>
+        
+        <div className="w-24 h-1 bg-gradient-to-r from-green-500 to-blue-500 mx-auto rounded-full"></div>
+        
+        <p className="text-gray-600 text-lg mt-6 max-w-2xl mx-auto leading-relaxed">
+          Join thousands of like-minded individuals sharing ideas, experiences, and building lasting connections.
+        </p>
+      </div>
+      
+      {/* Subtle animation */}
+      <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-blue-500/5 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+    </div>
 
+        <div className={`mt-10 max-w-7xl mx-auto px-6 transition-all duration-700 ease-out transform ${show ? "translate-y-0 opacity-100 delay-300" : "translate-y-8 opacity-0"
+        }`}>
           {/* Project Tabs */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-10">
+          {/* <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-10">
             <div className="flex justify-center mb-6">
               <TabsList>
                 <TabsTrigger value="all">All</TabsTrigger>
@@ -240,7 +279,159 @@ export default function Community() {
                 )}
               </div>
             </TabsContent>
-          </Tabs>
+          </Tabs> */}
+
+    <div>
+      {(() => {
+        // Filter projects with "group" in title
+        const groupProjects = filteredProjects.filter(project => 
+          project.title.toLowerCase().includes('group')
+        );
+        
+        // Filter projects without "group" in title
+        const nonGroupProjects = filteredProjects.filter(project => 
+          !project.title.toLowerCase().includes('group')
+        );
+        
+        // Combine arrays: group projects first, then non-group projects
+        const sortedProjects = [...groupProjects, ...nonGroupProjects];
+
+        const sortedGroup = [...groupProjects]
+
+        const sortedNonGroupProjects = [...nonGroupProjects]
+        
+        return sortedProjects.length > 0 ? (
+          <>
+          <div className='justify-center align-items items-center flex mb-8'>
+            <h1 className='text-black-800 text-4xl font-bold'>Google Community Groups</h1>
+          </div>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-10">
+            {/* <div className="flex justify-center mb-6">
+              <TabsList>
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="hardware">Hardware</TabsTrigger>
+                <TabsTrigger value="software">Software</TabsTrigger>
+                <TabsTrigger value="iot">IoT</TabsTrigger>
+              </TabsList>
+            </div> */}
+          <TabsContent value={activeTab}>
+          <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          {
+          sortedGroup.map((project) => (
+            <div
+              key={project._id}
+              className="bg-white rounded-lg shadow-md hover:scale-105 transition-transform overflow-hidden"
+            >
+              {project.imageUrl && (
+                <img
+                  src={project.imageUrl}
+                  alt={project.title}
+                  className="w-full h-48 object-cover"
+                />
+              )}
+              <div className="p-5">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="text-xl font-bold">{project.title}</h3>
+                    <h5 className='text-sm text-gray-500'>Created on {parseDate(`${project.createdAt}`)}</h5>
+                  </div>
+                  <div>
+                    <Button>
+                      <a href={project.projectUrl} target="_blank">Join Group</a>
+                    </Button>
+                  </div>
+                </div>
+                <p className="text-gray-600 mt-2">{project.description}</p>
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {project.tags.map((tag, index) => (
+                    <span key={index} className="bg-gray-200 text-sm px-3 py-1 rounded-full">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )) 
+        }
+        </div>
+        </TabsContent>
+      </Tabs>
+
+        <div className='justify-center align-items items-center flex mb-8'>
+            <h1 className='text-black-800 text-4xl font-bold'>Our Community Projects</h1>
+        </div>
+        {/* Search and Submit */}
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-10">
+            <div className="w-full md:w-1/2">
+              <Input
+                type="text"
+                placeholder="Search projects..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <Button onClick={handleSubmitClick}>
+              Submit Your Project
+            </Button>
+          </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-10">
+            <div className="flex justify-center mb-6">
+              <TabsList>
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="hardware">Hardware</TabsTrigger>
+                <TabsTrigger value="software">Software</TabsTrigger>
+                <TabsTrigger value="iot">IoT</TabsTrigger>
+              </TabsList>
+            </div>
+
+      <TabsContent value={activeTab}>
+        <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+        {
+          sortedNonGroupProjects.map((project) => (
+            <div
+              key={project._id}
+              className="bg-white rounded-lg shadow-md hover:scale-105 transition-transform overflow-hidden"
+            >
+              {project.imageUrl && (
+                <img
+                  src={project.imageUrl}
+                  alt={project.title}
+                  className="w-full h-48 object-cover"
+                />
+              )}
+              <div className="p-5">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="text-xl font-bold">{project.title}</h3>
+                    <h5 className='text-sm text-gray-500'>Submitted on {parseDate(`${project.createdAt}`)}</h5>
+                  </div>
+                  <div>
+                    <Button>
+                      <a href={project.projectUrl} target="_blank">View Project</a>
+                    </Button>
+                  </div>
+                </div>
+                <p className="text-gray-600 mt-2">{project.description}</p>
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {project.tags.map((tag, index) => (
+                    <span key={index} className="bg-gray-200 text-sm px-3 py-1 rounded-full">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )) 
+        }
+        </div>
+        </TabsContent>
+      </Tabs>
+        </>
+        ) : (
+          <p className="text-center col-span-full text-gray-500">No projects found</p>
+        );
+      })()}
+    </div>
         </div>
       </main>
 
@@ -250,6 +441,10 @@ export default function Community() {
           <DialogHeader>
             <DialogTitle>Submit Your Project</DialogTitle>
           </DialogHeader>
+          <p>We are so glad you would like to share your project with our  <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+            community
+          </span>! Please fill all the required details below, upon approval from website admin, your project will get featured on our website!</p>
+          <p className='text-gray-500'>Note: <span className="text-red-400 font-bold">MDM</span> course students please do <span className='underline'>not</span> submit your project here. There is a separate tab as 'MDM Submit Project'.</p>
           <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             <Input
               placeholder="Project Title"
@@ -264,13 +459,13 @@ export default function Community() {
               required
             />
             <Input
-              placeholder="Demo Video URL"
+              placeholder="Demo Video URL (Google Drive Link)"
               value={formData.projectUrl}
               onChange={(e) => setFormData({ ...formData, projectUrl: e.target.value })}
               required
             />
             <Input
-              placeholder="Image URL"
+              placeholder="Image URL (Google Drive Link)"
               value={formData.imageUrl}
               onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
             />

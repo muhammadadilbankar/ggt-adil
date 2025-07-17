@@ -51,7 +51,7 @@ export default function Skilling() {
         // Get token if authentication is needed
         const token = localStorage.getItem("token");
 
-        const response = await axios.get("http://localhost:5000/api/skilling/public")
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/skilling/public`)
         // const response = await fetch("http://localhost:5000/api/skilling", {
         //   headers: {
         //     ...(token ? { "Authorization": `Bearer ${token}` } : {})
@@ -113,7 +113,7 @@ export default function Skilling() {
                 // console.log("Key",key)
                 // console.log("ImageID:",imageIdname)
                 try {
-              const res = await axios.post('http://localhost:5000/imageapi/imageCloudinary/getimageURL', 
+              const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinarypublic/publicgetimageURL`, 
                 { key, imageIdname },{
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -316,7 +316,7 @@ export default function Skilling() {
                                     <></>:handleEnroll(skilling.title)
                                   }}
                                 >
-                                  <a href={skilling.resourceUrl}>Enroll Now</a>
+                                  <a href={skilling.resourceUrl} target="_blank">Enroll Now</a>
                                 </Button>
                                 <Button
                                   variant="outline"
