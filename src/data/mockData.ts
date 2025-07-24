@@ -152,12 +152,12 @@ export const projects: Project[] = [
   },
   {
     id: '3',
-    title: 'Solar-Powered Phone Charger',
-    author: 'Michael Brown',
+    title: 'EmpowerHer: App for Rural Women',
+    author: 'Muhammad Adil Bankar',
     date: '2025-02-28',
-    description: 'A DIY solar power bank for charging mobile devices',
-    image: 'https://images.pexels.com/photos/7516363/pexels-photo-7516363.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    link: 'https://instructables.com/example',
+    description: 'App to educate and empower underprivileged women in rural areas!',
+    image: '/EmpowerHerLogo.jpeg',
+    link: 'https://drive.google.com/file/d/1DpUQV6ETR8nElADyDv7R7Q80NOyfDMwN/view?usp=sharing',
     approved: true,
   },
   {
