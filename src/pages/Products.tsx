@@ -99,10 +99,10 @@ const [flag, setFlag] = useState(false)
 
 const fetchProductImages = async () => {
     if(flag){
-    console.log("Products:",products);
-    console.log("Fetching product images");
+   // console.log("Products:",products);
+   // console.log("Fetching product images");
     const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+     // console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -127,7 +127,7 @@ const fetchProductImages = async () => {
       //setStatus(`Fetched Image URL: ${res.data.result}`);
       newDict[product.title] = res.data.result
       if(res.data.result != ""){
-        console.log("image Found")
+       // console.log("image Found")
       }
       //setImageUrl(res.data.result);
     } catch (err) {
@@ -141,7 +141,7 @@ const fetchProductImages = async () => {
 
       setTitleDict(newDict)
       setFlag(true)
-      console.log("NEWDICT:",newDict)
+     // console.log("NEWDICT:",newDict)
   }
 }
 
@@ -150,7 +150,7 @@ const fetchProductImages = async () => {
     product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (product.description?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
   );
-  console.log(filteredProducts);
+ // console.log(filteredProducts);
 
   const addToCart = (product: Product) => {
     const existingItem = cart.find((item) => item.product._id === product._id);
@@ -216,7 +216,7 @@ const fetchProductImages = async () => {
         </div>
 
     <div className="flex py-8 max-w-7xl mx-auto px-6">
-      <a href="mailto:ysrao@spit.ac.in" target="_blank" className="inline-block">
+      <a href="https://forms.gle/8ckh3FpvsZS1BvCR6" target="_blank" className="inline-block">
         <button className="group relative overflow-hidden bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out">
           {/* Animated background overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -410,7 +410,7 @@ const fetchProductImages = async () => {
                         onClick={() => {
                           toast({
                             title: "Thank you for choosing us!",
-                            description: "You can place your order by emailing these details to ysrao@spit.ac.in or contact us on phone!",
+                            description: "You can place your order by filling our GForm: https://forms.gle/8ckh3FpvsZS1BvCR6 (at top of page) or contacting us at gogreenramakrishna@gmail.com!",
                           });
                           setCart([]);
                         }}

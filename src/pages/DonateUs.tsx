@@ -2,6 +2,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Spline from "@splinetool/react-spline";
 import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 const NAV_SECTIONS = [
   { id: "home", label: "Home", path: "/meditation" },
@@ -16,10 +17,22 @@ const NAV_SECTIONS = [
 
 export default function DonateUs() {
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSpline = () => {
+    setIsOpen((prev) => !prev);
+  };
   return (
     <>
       <Navbar />
+      <button
+        onClick={toggleSpline}
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      >
+        {isOpen ? "Close Spline" : "View Spline"}
+      </button>
       {/* Spline Header */}
+      {isOpen && (
       <section className="relative min-h-[420px] flex items-center justify-center overflow-hidden bg-transparent">
         <div className="absolute inset-0 z-0">
           <Spline 
@@ -28,6 +41,7 @@ export default function DonateUs() {
           />
         </div>
       </section>
+)}
       {/* Meditation Navbar */}
       <nav className="w-full flex justify-center z-30 relative" style={{ background: '#57cc99', marginTop: '2rem', borderBottom: '2px solid #fff', boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)' }}>
         <div className="flex gap-2 rounded-lg px-2 py-1" style={{overflowX: 'auto', maxWidth: '95vw'}}>
@@ -101,7 +115,7 @@ export default function DonateUs() {
               </div>
             </div>
             <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSdEzzwv3Gnk-SIkY4Ur61FofSvuVaZm9MqKvhtk7Io3S8hQ6g/viewform"
+              href="https://forms.gle/npMkZPzDSmEjbF4n9"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-white text-[#36c486] font-semibold px-8 py-3 rounded-full shadow-lg border-2 border-white hover:bg-[#36c486] hover:text-white transition-colors text-lg mt-2"

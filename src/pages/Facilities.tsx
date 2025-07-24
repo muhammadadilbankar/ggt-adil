@@ -2,6 +2,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Spline from "@splinetool/react-spline";
 import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 const NAV_SECTIONS = [
   { id: "home", label: "Home", path: "/meditation" },
@@ -16,10 +17,22 @@ const NAV_SECTIONS = [
 
 export default function Facilities() {
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSpline = () => {
+    setIsOpen((prev) => !prev);
+  };
   return (
     <>
       <Navbar />
+      <button
+        onClick={toggleSpline}
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      >
+        {isOpen ? "Close Spline" : "View Spline"}
+      </button>
       {/* Spline Header */}
+      {isOpen && (
       <section className="relative min-h-[420px] flex items-center justify-center overflow-hidden bg-transparent">
         <div className="absolute inset-0 z-0">
           <Spline 
@@ -28,6 +41,7 @@ export default function Facilities() {
           />
         </div>
       </section>
+)}
       {/* Meditation Navbar */}
       <nav className="w-full flex justify-center z-30 relative" style={{ background: '#57cc99', marginTop: '2rem', borderBottom: '2px solid #fff', boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)' }}>
         <div className="flex gap-2 rounded-lg px-2 py-1" style={{overflowX: 'auto', maxWidth: '95vw'}}>
@@ -72,7 +86,7 @@ export default function Facilities() {
             Please check the availability of the facility in sheet below, then kindly fill the form given below.
           </p>
           <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLSf3WJm4DxCBJE9RuujC82Pd4JteP976SqGcsa82DYFAhoVvaw/viewform"
+            href="https://forms.gle/4XjXfj15kMdEFex18"
             target="_blank"
             rel="noopener noreferrer"
             className="font-bold text-white text-lg px-8 py-4 rounded-full bg-green-600 border-4 border-green-300 shadow transition-all duration-200 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300"

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -9,12 +10,23 @@ import Spline from '@splinetool/react-spline';
 const Index = () => {
   const featuredProjects = projects.filter(project => project.approved).slice(0, 3);
   const upcomingEvents = events.slice(0, 2);
+  const [isOpen, setIsOpen] = useState(true);
+  const toggleSpline = () => {
+    setIsOpen((prev) => !prev);
+  };
 
   return (
     <>
       <Navbar />
       <main className="overflow-hidden">
+        <button
+        onClick={toggleSpline}
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      >
+        {isOpen ? "Close Spline" : "View Spline"}
+      </button>
         {/* Hero Section */}
+        {isOpen && (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-transparent">
           {/* Spline 3D Background */}
           <div className="absolute inset-0 z-0">
@@ -24,6 +36,7 @@ const Index = () => {
             />
           </div>
         </section>
+        )}
 
         {/* About the Company Section */}
         <section className="py-16 bg-transparent">
@@ -264,15 +277,7 @@ const Index = () => {
                 className="w-80 h-80 object-cover rounded-2xl shadow-lg mb-8 md:mb-0"
               />
               <p className="text-lg md:text-xl text-gray-800 leading-relaxed text-left">
-                Dr. Y.Srinivasa Rao holds a Ph.D. degree from IIT-Bombay and has a work experience of more than 10 years in the industry. He has been in the teaching profession for over 30+ years, of which he has been associated with Bhartiya Vidya Bhavans' Sardar Patel College of Engineering and subsequently, Sardar Patel Institute of Technology for more than 20 years. He has served as the Head of Department several times and is currently the Vice-Principal as well as the Dean of R&D at Sardar Patel Institute of Technology. He is also a guest faculty for various institutes. Dr. Y. S. Rao has been an expert lecturer at Short Term Teachers Training Program (STTP) of ISTE and TEQIP programs of AICTE. The lecture topics cover robotics, embedded system design, real-time systems, DSP applications and many more. He has also developed IDE systems for short term training programs.
-              </p>
-            </div>
-            <div className="max-w-4xl mx-auto mt-10">
-              <p className="text-lg md:text-xl text-gray-800 leading-relaxed text-justify mb-6">
-                He has been awarded by the IEEE Computer Society, Washington D.C., USA, at the International Design Competition (CSIDC-2002), for the project 'Swift Doc'. His research work ranges from Electrical Load Emulation using Power Electronic Converters, designing Real-time systems and operating system development for various applications, Signal processing to Embedded systems, VLSI design, Power electronics, etc. He has submitted seven patents, also consultant, and corporate trainer to companies like Gadhia Solar, Siemens Information Systems Ltd., KarRox Technologies Ltd., and L&T.
-              </p>
-              <p className="text-lg md:text-xl text-gray-800 leading-relaxed text-justify">
-                His major research publications are in Embedded Systems, Digital Power Electronics, and Communication Systems
+                Dr. Y. Srinivasa Rao holds a Ph.D. from IIT-Bombay and has over 30 years of teaching experience, including more than 20 years at Sardar Patel Institute of Technology (SPIT), where he currently serves as Vice-Principal and Dean of R&D. With 10+ years in industry, he has also headed departments and taught as a guest faculty at various institutes. He is an expert lecturer for ISTE and AICTE’s TEQIP programs, covering robotics, embedded systems, DSP, and real-time systems. Dr. Rao was awarded by the IEEE Computer Society (CSIDC-2002, Washington D.C.) for the ‘Swift Doc’ project. His research spans Embedded Systems, Digital Power Electronics, VLSI design, and Communication Systems. He has submitted seven patents and served as a consultant and corporate trainer for companies like Siemens, L&T, Gadhia Solar, and KarRox Technologies. Dr. Rao has also developed IDE systems for short-term training and continues to contribute to academia and industry through research and innovation.
               </p>
             </div>
           </div>

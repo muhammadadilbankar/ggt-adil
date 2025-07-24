@@ -8,7 +8,7 @@ import express from 'express';
 import { getImageURL,DeleteImage } from '../controllers/cloudinaryController.js';
 import { isAuthenticated, isAdmin } from '../middleware/auth.js';
 
-console.log("Cloudinary Routes")
+//console.log("Cloudinary Routes")
 
 const router = express.Router();
 

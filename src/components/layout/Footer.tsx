@@ -72,7 +72,7 @@ export default function Footer() {
               <p className="mb-2">Sardar Patel Institute of Technology,</p>
               <p className="mb-2">Bhavans Campus, Andheri-W, Mumbai-58</p>
               <p className="mb-2">
-                Email: <a href="mailto:ysrao@spit.ac.in" target="_blank" className="hover:text-primary">ysrao@spit.ac.in</a>
+                Email: <a href="mailto:gogreenramakrishna@gmail.com" target="_blank" className="hover:text-primary">gogreenramakrishna@gmail.com</a>
               </p>
               <p>
                 Phone: <a href="tel: 9137692917 / 9820962870" target="_blank" className="hover:text-primary">9137692917 / 9820962870</a>
@@ -89,6 +89,7 @@ export default function Footer() {
           <a  className="hover:underline decoration-sky-500" href="https://www.linkedin.com/in/aaron-mascarenhas-ab315125a?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAD-8zecB0Qvbzg1BWEK2B_0ev1ZWlT9IF7Q&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BDRmS0LKJRkq%2F2THHFywrhA%3D%3D" target="_blank" rel="noopener noreferrer">Aaron Mascarenhas</a> and&nbsp;
           <a className="hover:underline decoration-sky-500" href="https://www.linkedin.com/in/ria-talsania-b57775292?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAEby0zMB8gjcgOKjzOlQ7SeT_S_9qqwwX-I&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BV2Ew0leQSMi8pyru5gpaew%3D%3D" target="_blank" rel="noopener noreferrer">Ria Talsania</a>
           </p>
+          <p className="text-sm">Best Viewed in Google Chrome. Turn on Hardware Acceleration or Toggle to close Spline.</p>
           <p>&copy; {new Date().getFullYear()} GoGreen Technologies. All rights reserved.</p>
         </div>
       </div>

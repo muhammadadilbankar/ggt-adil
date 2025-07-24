@@ -5,16 +5,29 @@ import { Button } from "@/components/ui/button";
 import { events, projects } from "@/data/mockData";
 import { motion } from "framer-motion";
 import Spline from '@splinetool/react-spline';
+import { useState } from "react";
 
 const Index = () => {
   const featuredProjects = projects.filter(project => project.approved).slice(0, 3);
   const upcomingEvents = events.slice(0, 2);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSpline = () => {
+    setIsOpen((prev) => !prev);
+  };
 
   return (
     <>
       <Navbar />
       <main className="overflow-hidden">
+        <button
+        onClick={toggleSpline}
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      >
+        {isOpen ? "Close Spline" : "View Spline"}
+      </button>
         {/* Hero Section */}
+        {isOpen && (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-transparent">
           {/* Spline 3D Background */}
           <div className="absolute inset-0 z-0">
@@ -24,7 +37,7 @@ const Index = () => {
             />
           </div>
         </section>
-
+)}
         {/* Features Section */}
         <section className="py-24 bg-gradient-to-b from-gray-50 to-white relative">
           <div className="max-w-7xl mx-auto px-6">

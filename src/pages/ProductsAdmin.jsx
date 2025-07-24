@@ -39,10 +39,10 @@ export default function ProductsAdmin() {
   
   const fetchProductImages = async () => {
     if(flag){
-    console.log("Products:",products);
-    console.log("Fetching product images");
+   // console.log("Products:",products);
+   // console.log("Fetching product images");
     const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+     // console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -67,7 +67,7 @@ export default function ProductsAdmin() {
       //setStatus(`Fetched Image URL: ${res.data.result}`);
       newDict[product.title] = res.data.result
       if(res.data.result != ""){
-        console.log("image Found")
+       // console.log("image Found")
       }
       //setImageUrl(res.data.result);
     } catch (err) {
@@ -81,18 +81,18 @@ export default function ProductsAdmin() {
 
       setTitleDict(newDict)
       setFlag(true)
-      console.log("NEWDICT:",newDict)
+     // console.log("NEWDICT:",newDict)
   }
 }
 
 
   const fetchProducts = async () => {
     setTitleDict({});
-    console.log("Starting fetchProducts function");
+   // console.log("Starting fetchProducts function");
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+     // console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -103,16 +103,16 @@ export default function ProductsAdmin() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Response status:", response.status);
+     // console.log("Response status:", response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.log("Error response body:", errorText);
+       // console.log("Error response body:", errorText);
         throw new Error(`Failed to fetch products: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log("Fetched products data:", data);
+     // console.log("Fetched products data:", data);
       setProducts(data || []);
       //fetchProductImages();
     } catch (error) {
@@ -129,11 +129,11 @@ export default function ProductsAdmin() {
   };
 
   const deleteProduct = async (id) => {
-    console.log("Deleting product with ID:", id);
+   // console.log("Deleting product with ID:", id);
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+     // console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -146,19 +146,19 @@ export default function ProductsAdmin() {
         },
       });
 
-      console.log("Delete response status:", response.status);
+     // console.log("Delete response status:", response.status);
 
       if (!response.ok) {
         // Try to get detailed error message from response
         const errorData = await response.json().catch(() => null);
-        console.log("Error response:", errorData);
+       // console.log("Error response:", errorData);
         throw new Error(
           errorData?.message ||
           `Failed to delete product: ${response.status}`
         );
       }
 
-      console.log("Product deleted successfully");
+     // console.log("Product deleted successfully");
       setProducts(products.filter((p) => p._id !== id));
       toast({
         title: "Success",
@@ -176,7 +176,7 @@ export default function ProductsAdmin() {
 
   const deleteProductImage = async (imagetitle) => {
     const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+     // console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -185,8 +185,8 @@ export default function ProductsAdmin() {
       var key = 'products'
       var imageId = imagename;
       if (!key || !imageId) return;
-      console.log("Key:",key)
-      console.log("imageid:",imageId)
+     // console.log("Key:",key)
+     // console.log("imageid:",imageId)
       try {
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinary/delete`, 
         { key, imageId },{
@@ -208,7 +208,7 @@ export default function ProductsAdmin() {
         }
       )
       //setStatus(`Deleted: ${res.data.result.result}`);
-      console.log(res)
+     // console.log(res)
     } catch (err) {
       console.error(err);
       setStatus('Failed to delete image');
@@ -224,7 +224,7 @@ export default function ProductsAdmin() {
 
   const addProduct = async (e) => {
     e.preventDefault();
-    console.log("Adding product:", form);
+   // console.log("Adding product:", form);
 
     const key = 'products';
 
@@ -250,7 +250,7 @@ export default function ProductsAdmin() {
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+     // console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -270,12 +270,12 @@ export default function ProductsAdmin() {
         body: JSON.stringify(form),
       });
 
-      console.log("Response status:", response.status);
+     // console.log("Response status:", response.status);
 
       if (!response.ok) {
         // Try to get detailed error message from response
         const errorData = await response.json().catch(() => null);
-        console.log("Error response:", errorData);
+       // console.log("Error response:", errorData);
         throw new Error(
           errorData?.message ||
           `Failed to add product: ${response.status}`
@@ -289,14 +289,14 @@ export default function ProductsAdmin() {
         formData
       );
       setStatus('Success'); //URL: ${res.data.secure_url}
-      console.log(`URL: ${res.data.secure_url}`)
+     // console.log(`URL: ${res.data.secure_url}`)
       } catch (err) {
       console.error(err);
       setStatus('Error');
       }
 
       const newProduct = await response.json();
-      console.log("Product added successfully:", newProduct);
+     // console.log("Product added successfully:", newProduct);
 
       setProducts([...products, newProduct]);
       setForm({ title: "", description: "", price: "", imageUrl:"", stock: 0});

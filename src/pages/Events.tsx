@@ -118,10 +118,10 @@ export default function Events() {
 
   const fetchEventImages = async () => {
       if(flag){
-        console.log("Events:",events);
-        console.log("Fetching event images");
+       // console.log("Events:",events);
+       // console.log("Fetching event images");
         const token = localStorage.getItem("token");
-        console.log("Using token:", token ? "Token found" : "No token found");
+       // console.log("Using token:", token ? "Token found" : "No token found");
   
         if (!token) {
           throw new Error("No authentication token found");
@@ -146,7 +146,7 @@ export default function Events() {
         //setStatus(`Fetched Image URL: ${res.data.result}`);
         newDict[event.title] = res.data.result
         if(res.data.result != ""){
-          console.log("image Found")
+         // console.log("image Found")
         }
         //setImageUrl(res.data.result);
       } catch (err) {
@@ -160,7 +160,7 @@ export default function Events() {
   
         setTitleDict(newDict)
         setFlag(true)
-        console.log("NEWDICT:",newDict)
+       // console.log("NEWDICT:",newDict)
     }
   }
   // Filter events based on search term and selected date
@@ -284,7 +284,7 @@ export default function Events() {
                   <Button variant="outline" className="w-full" onClick={() => {
                     toast({
                       title: "Thank you for your interest!",
-                      description: "Event suggestions can be submitted through the club email or sent to ysrao@spit.ac.in",
+                      description: "Event suggestions can be submitted through the club email or sent to ",
                     });
                   }}>
                     Suggest Event

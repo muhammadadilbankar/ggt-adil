@@ -64,7 +64,7 @@ export default function Skilling() {
 
         const data = await response.data;
         setSkillings(data);
-        console.log("Fetched skillings:", data);
+       // console.log("Fetched skillings:", data);
       } catch (error) {
         console.error("Error fetching skillings:", error);
         toast({
@@ -95,10 +95,10 @@ export default function Skilling() {
 
     const fetchSkillingImages = async() => {
         if(flag){
-            console.log("Skillings:",skillings);
-            console.log("Fetching skilling images");
+           // console.log("Skillings:",skillings);
+           // console.log("Fetching skilling images");
             const token = localStorage.getItem("token");
-            console.log("Using token:", token ? "Token found" : "No token found");
+           // console.log("Using token:", token ? "Token found" : "No token found");
         
             if (!token) {
               throw new Error("No authentication token found");
@@ -137,7 +137,7 @@ export default function Skilling() {
         
               setTitleDict(newDict)
               setFlag(true)
-              console.log("NEWDICT SKILLING:",newDict)
+             // console.log("NEWDICT SKILLING:",newDict)
           }
       }
   // Filter skillings based on search term
@@ -155,8 +155,8 @@ export default function Skilling() {
 
   // View syllabus function
   const viewSyllabus = (skilling: Skilling) => {
-    console.log("Selected skilling:", skilling);
-    console.log("Syllabus content:", skilling.syllabus);
+   // console.log("Selected skilling:", skilling);
+   // console.log("Syllabus content:", skilling.syllabus);
     setSelectedSkilling(skilling);
   };
 
@@ -223,7 +223,7 @@ export default function Skilling() {
                   <Button variant="outline" className="w-full" onClick={() => {
                     toast({
                       title: "Request Pop-up",
-                      description: "Hi! please contact one of the club mentors or email to ysrao@spit.ac.in to discuss course options.",
+                      description: "Hi! please contact one of the club mentors or email to gogreenramakrishna@gmail.com to discuss course options.",
                     });
                   }}>
                     Request Guidance
@@ -362,40 +362,23 @@ export default function Skilling() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="flex items-center space-x-4">
                     <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
-                      <span className="text-xl font-bold">JS</span>
+                      <span className="text-xl font-bold">YSR</span>
                     </div>
                     <div>
-                      <h3 className="font-medium">Prof. John Smith</h3>
-                      <p className="text-sm text-gray-600">Digital Electronics</p>
+                      <h3 className="font-medium">Dr. Y. Srinivasa Rao</h3>
+                      <p className="text-sm text-gray-600">Ph.D. (IIT-Bombay)</p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-4">
+                  {/* Example instructor */}
+                  {/* <div className="flex items-center space-x-4">
                     <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
-                      <span className="text-xl font-bold">AT</span>
+                      <span className="text-xl font-bold">A.T.</span>
                     </div>
                     <div>
                       <h3 className="font-medium">Dr. Alice Thomas</h3>
                       <p className="text-sm text-gray-600">Embedded Systems</p>
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
-                      <span className="text-xl font-bold">RJ</span>
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Robert Johnson</h3>
-                      <p className="text-sm text-gray-600">PCB Design</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
-                      <span className="text-xl font-bold">MP</span>
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Maria Parker</h3>
-                      <p className="text-sm text-gray-600">IoT Applications</p>
-                    </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

@@ -20,11 +20,11 @@ export default function CommunityAdmin() {
   }, []);
 
   const fetchCommunities = async () => {
-    console.log("Starting fetchCommunities function");
+    //console.log("Starting fetchCommunities function");
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+      //console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -35,16 +35,16 @@ export default function CommunityAdmin() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Response status:", response.status);
+     // console.log("Response status:", response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.log("Error response body:", errorText);
+       // console.log("Error response body:", errorText);
         throw new Error(`Failed to fetch communities: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log("Fetched communities data:", data);
+    //  console.log("Fetched communities data:", data);
       setCommunities(data || []);
     } catch (error) {
       console.error('Error fetching communities:', error);
@@ -87,11 +87,11 @@ export default function CommunityAdmin() {
   //   }
   // };
   const deleteCommunity = async (id) => {
-    console.log("Deleting community with ID:", id);
+   // console.log("Deleting community with ID:", id);
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+    //  console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -104,19 +104,19 @@ export default function CommunityAdmin() {
         },
       });
 
-      console.log("Delete response status:", response.status);
+     // console.log("Delete response status:", response.status);
 
       if (!response.ok) {
         // Try to get detailed error message from response
         const errorData = await response.json().catch(() => null);
-        console.log("Error response:", errorData);
+        //console.log("Error response:", errorData);
         throw new Error(
           errorData?.message ||
           `Failed to delete community: ${response.status}`
         );
       }
 
-      console.log("Community deleted successfully");
+     // console.log("Community deleted successfully");
       setCommunities(communities.filter((c) => c._id !== id));
       toast({
         title: "Success",
@@ -168,7 +168,7 @@ export default function CommunityAdmin() {
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token for approval toggle:", token ? "Token found" : "No token found");
+      //console.log("Using token for approval toggle:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -183,11 +183,11 @@ export default function CommunityAdmin() {
         body: JSON.stringify({ isApproved: !currentStatus }),
       });
 
-      console.log("Approval toggle response status:", response.status);
+     // console.log("Approval toggle response status:", response.status);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
-        console.log("Error response:", errorData);
+      //  console.log("Error response:", errorData);
         throw new Error(errorData?.message || 'Failed to update approval status');
       }
 
@@ -211,12 +211,12 @@ export default function CommunityAdmin() {
 
   const addCommunity = async (e) => {
     e.preventDefault();
-    console.log("Adding community with form data:", form);
+    //console.log("Adding community with form data:", form);
 
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+     // console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -236,12 +236,12 @@ export default function CommunityAdmin() {
         body: JSON.stringify(form),
       });
 
-      console.log("Response status:", response.status);
+     // console.log("Response status:", response.status);
 
       if (!response.ok) {
         // Try to get detailed error message from response
         const errorData = await response.json().catch(() => null);
-        console.log("Error response:", errorData);
+       // console.log("Error response:", errorData);
         throw new Error(
           errorData?.message ||
           `Failed to add community: ${response.status}`
@@ -249,7 +249,7 @@ export default function CommunityAdmin() {
       }
 
       const newCommunity = await response.json();
-      console.log("Community added successfully:", newCommunity);
+     // console.log("Community added successfully:", newCommunity);
 
       setCommunities([...communities, newCommunity]);
       setForm({

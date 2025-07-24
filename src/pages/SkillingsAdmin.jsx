@@ -46,28 +46,28 @@ export default function SkillingsAdmin() {
   const [flag, setFlag] = useState(false)
 
   const fetchSkillings = async () => {
-    console.log("Starting fetchSkillings function");
+   // console.log("Starting fetchSkillings function");
     try {
       // Get token from localStorage
       const token = localStorage.getItem("token");
-      console.log("Token exists:", !!token);
+     // console.log("Token exists:", !!token);
 
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/skilling`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Response status:", response.status);
-      console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+     // console.log("Response status:", response.status);
+     // console.log("Response headers:", Object.fromEntries(response.headers.entries()));
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.log("Error response body:", errorText);
+       // console.log("Error response body:", errorText);
         throw new Error(`Failed to fetch skillings: ${response.status} ${errorText}`);
       }
 
       const data = await response.json();
-      console.log("Fetched data:", data);
+     // console.log("Fetched data:", data);
       setSkillings(data || []);
     } catch (error) {
       console.error('Error fetching skillings:', error);
@@ -84,10 +84,10 @@ export default function SkillingsAdmin() {
 
   const fetchSkillingImages = async() => {
     if(flag){
-        console.log("Skillings:",skillings);
-        console.log("Fetching skilling images");
+       // console.log("Skillings:",skillings);
+       // console.log("Fetching skilling images");
         const token = localStorage.getItem("token");
-        console.log("Using token:", token ? "Token found" : "No token found");
+       // console.log("Using token:", token ? "Token found" : "No token found");
     
         if (!token) {
           throw new Error("No authentication token found");
@@ -126,17 +126,17 @@ export default function SkillingsAdmin() {
     
           setTitleDict(newDict)
           setFlag(true)
-          console.log("NEWDICT SKILLING:",newDict)
+         // console.log("NEWDICT SKILLING:",newDict)
       }
   }
   
 
   const deleteSkilling = async (id) => {
-    console.log("Deleting skilling with ID:", id);
+   // console.log("Deleting skilling with ID:", id);
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+     // console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -150,19 +150,19 @@ export default function SkillingsAdmin() {
         },
       });
 
-      console.log("Delete response status:", response.status);
+     // console.log("Delete response status:", response.status);
 
       if (!response.ok) {
         // Try to get detailed error message from response
         const errorData = await response.json().catch(() => null);
-        console.log("Error response:", errorData);
+       // console.log("Error response:", errorData);
         throw new Error(
           errorData?.message ||
           `Failed to delete skilling: ${response.status}`
         );
       }
 
-      console.log("Skilling deleted successfully");
+     // console.log("Skilling deleted successfully");
       setSkillings(skillings.filter((s) => s._id !== id));
       toast({
         title: "Success",
@@ -180,7 +180,7 @@ export default function SkillingsAdmin() {
 
   const deleteSkillingImage = async (imagetitle) => {
         const token = localStorage.getItem("token");
-        console.log("Using token:", token ? "Token found" : "No token found");
+       // console.log("Using token:", token ? "Token found" : "No token found");
   
         if (!token) {
           throw new Error("No authentication token found");
@@ -189,8 +189,8 @@ export default function SkillingsAdmin() {
         var key = 'skilling'
         var imageId = imagename;
         if (!key || !imageId) return;
-        console.log("Key:",key)
-        console.log("imageid:",imageId)
+       // console.log("Key:",key)
+       // console.log("imageid:",imageId)
         try {
         const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinary/delete`, 
           { key, imageId },{
@@ -212,7 +212,7 @@ export default function SkillingsAdmin() {
           }
         )
         //setStatus(`Deleted: ${res.data.result.result}`);
-        console.log(res)
+       // console.log(res)
       } catch (err) {
         console.error(err);
         setStatus('Failed to delete image');
@@ -414,7 +414,7 @@ export default function SkillingsAdmin() {
   
   const addSkilling = async (e) => {
     e.preventDefault();
-    console.log("Adding skilling with form data:", form);
+   // console.log("Adding skilling with form data:", form);
 
     const key = 'skilling';
     const imageId = cleanString(form.title);
@@ -456,7 +456,7 @@ export default function SkillingsAdmin() {
         tags: form.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
       };
 
-      console.log("Processed skilling data:", skillingData);
+     // console.log("Processed skilling data:", skillingData);
 
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/skilling`, {
         method: "POST",
@@ -482,14 +482,14 @@ export default function SkillingsAdmin() {
               formData
             );
             setStatus('Success'); //URL: ${res.data.secure_url}
-            console.log(`URL: ${res.data.secure_url}`)
+           // console.log(`URL: ${res.data.secure_url}`)
             } catch (err) {
             console.error(err);
             setStatus('Error');
             }
 
       const newSkilling = await response.json();
-      console.log("Skilling added successfully:", newSkilling);
+     // console.log("Skilling added successfully:", newSkilling);
 
       setSkillings([...skillings, newSkilling]);
       setForm({

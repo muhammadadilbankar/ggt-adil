@@ -2,6 +2,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Spline from "@splinetool/react-spline";
 import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 const NAV_SECTIONS = [
   { id: "home", label: "Home", path: "/meditation" },
@@ -16,10 +17,22 @@ const NAV_SECTIONS = [
 
 export default function Meditation() {
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSpline = () => {
+    setIsOpen((prev) => !prev);
+  };
   return (
     <>
       <Navbar />
+      <button
+        onClick={toggleSpline}
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      >
+        {isOpen ? "Close Spline" : "View Spline"}
+      </button>
       {/* Hero Section with Spline 3D Model */}
+      {isOpen && (
       <section className="relative min-h-[420px] flex items-center justify-center overflow-hidden bg-transparent">
         <div className="absolute inset-0 z-0">
           <Spline 
@@ -28,6 +41,7 @@ export default function Meditation() {
           />
         </div>
       </section>
+)}
 
       {/* Navigation Bar */}
       <nav className="w-full flex justify-center z-30 relative" style={{ background: '#57cc99', marginTop: '2rem', borderBottom: '2px solid #fff', boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)' }}>

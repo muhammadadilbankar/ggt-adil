@@ -112,7 +112,7 @@ export default function Community() {
     setIsSubmitting(true)
     try {
       const userId = localStorage.getItem('token');
-      console.log("Handled Submit:"+userId)
+      //console.log("Handled Submit:"+userId)
       if (!userId) {
         toast.error('Please log in to submit a project');
         return;

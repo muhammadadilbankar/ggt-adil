@@ -73,7 +73,7 @@ export const createDefaultAdmin = async () => {
         password: process.env.ADMIN_PASSWORD || 'admin123',
         isAdmin: true,
       });
-      console.log('Default admin user created');
+      //console.log('Default admin user created');
     }
   } catch (error) {
     console.error('Error creating default admin:', error);

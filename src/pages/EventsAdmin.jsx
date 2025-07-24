@@ -41,10 +41,10 @@ export default function EventsAdmin() {
 
   const fetchEventImages = async () => {
     if(flag){
-      console.log("Events:",events);
-      console.log("Fetching event images");
+      //console.log("Events:",events);
+      //console.log("Fetching event images");
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+      //console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -69,7 +69,7 @@ export default function EventsAdmin() {
       //setStatus(`Fetched Image URL: ${res.data.result}`);
       newDict[event.title] = res.data.result
       if(res.data.result != ""){
-        console.log("image Found")
+       // console.log("image Found")
       }
       //setImageUrl(res.data.result);
     } catch (err) {
@@ -83,7 +83,7 @@ export default function EventsAdmin() {
 
       setTitleDict(newDict)
       setFlag(true)
-      console.log("NEWDICT:",newDict)
+      //console.log("NEWDICT:",newDict)
   }
 }
 
@@ -121,11 +121,11 @@ export default function EventsAdmin() {
   // };
 
   const fetchEvents = async () => {
-    console.log("Starting fetchEvents function");
+    //console.log("Starting fetchEvents function");
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? `${token.substring(0, 10)}...` : "none");
+     // console.log("Using token:", token ? `${token.substring(0, 10)}...` : "none");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -136,16 +136,16 @@ export default function EventsAdmin() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Response status:", response.status);
+      //console.log("Response status:", response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.log("Error response body:", errorText);
+       // console.log("Error response body:", errorText);
         throw new Error(`Failed to fetch events: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log("Fetched data:", data);
+     // console.log("Fetched data:", data);
       setEvents(data || []);
     } catch (error) {
       console.error('Error fetching events:', error);
@@ -232,11 +232,11 @@ export default function EventsAdmin() {
   //   }
   // };
   const deleteEvent = async (id) => {
-    console.log("Deleting event with ID:", id);
+    //console.log("Deleting event with ID:", id);
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+     // console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -249,19 +249,19 @@ export default function EventsAdmin() {
         },
       });
 
-      console.log("Delete response status:", response.status);
+      //console.log("Delete response status:", response.status);
 
       if (!response.ok) {
         // Try to get detailed error message from response
         const errorData = await response.json().catch(() => null);
-        console.log("Error response:", errorData);
+       // console.log("Error response:", errorData);
         throw new Error(
           errorData?.message ||
           `Failed to delete event: ${response.status}`
         );
       }
 
-      console.log("Event deleted successfully");
+     // console.log("Event deleted successfully");
       setEvents(events.filter((e) => e._id !== id));
       toast({
         title: "Success",
@@ -279,7 +279,7 @@ export default function EventsAdmin() {
 
   const deleteEventImage = async (imagetitle) => {
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+     // console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -288,8 +288,8 @@ export default function EventsAdmin() {
       var key = 'events'
       var imageId = imagename;
       if (!key || !imageId) return;
-      console.log("Key:",key)
-      console.log("imageid:",imageId)
+     // console.log("Key:",key)
+     // console.log("imageid:",imageId)
       try {
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinary/delete`, 
         { key, imageId },{
@@ -311,7 +311,7 @@ export default function EventsAdmin() {
         }
       )
       //setStatus(`Deleted: ${res.data.result.result}`);
-      console.log(res)
+     // console.log(res)
     } catch (err) {
       console.error(err);
       setStatus('Failed to delete image');
@@ -326,7 +326,7 @@ export default function EventsAdmin() {
 
   const addEvent = async (e) => {
     e.preventDefault();
-    console.log("Raw form data before submission:", JSON.stringify(form, null, 2));
+   // console.log("Raw form data before submission:", JSON.stringify(form, null, 2));
     // Add validation for location
     if (!form.location?.trim()) {
       toast({
@@ -360,7 +360,7 @@ export default function EventsAdmin() {
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+    //  console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -372,8 +372,8 @@ export default function EventsAdmin() {
         tags: form.tags?.split(',').map(tag => tag.trim()).filter(tag => tag) || [],
       };
 
-      console.log("Processed event data:", eventData);
-      console.log("Final request payload:", JSON.stringify(eventData, null, 2));
+     // console.log("Processed event data:", eventData);
+     // console.log("Final request payload:", JSON.stringify(eventData, null, 2));
 
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/events`, {
         method: "POST",
@@ -384,12 +384,12 @@ export default function EventsAdmin() {
         body: JSON.stringify(eventData),
       });
 
-      console.log("Response status:", response.status);
+     // console.log("Response status:", response.status);
 
       if (!response.ok) {
         // Try to get detailed error message from response
         const errorData = await response.json().catch(() => null);
-        console.log("Error response:", errorData);
+      //  console.log("Error response:", errorData);
         throw new Error(
           errorData?.message ||
           `Failed to add event: ${response.status}`
@@ -403,7 +403,7 @@ export default function EventsAdmin() {
         formData
       );
       setStatus('Success'); //URL: ${res.data.secure_url}
-      console.log(`URL: ${res.data.secure_url}`)
+     // console.log(`URL: ${res.data.secure_url}`)
       } catch (err) {
       console.error(err);
       setStatus('Error');
@@ -411,7 +411,7 @@ export default function EventsAdmin() {
 
 
       const newEvent = await response.json();
-      console.log("Event added successfully:", newEvent);
+     // console.log("Event added successfully:", newEvent);
 
       setEvents([...events, newEvent]);
       setForm({
@@ -528,7 +528,7 @@ export default function EventsAdmin() {
             placeholder="Location"
             value={form.location}
             onChange={(e) => {
-              console.log("Location changed to:", e.target.value);
+             // console.log("Location changed to:", e.target.value);
               setForm({ ...form, location: e.target.value });
             }}
             required

@@ -7,7 +7,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 export const getImageURL = async(req,res) => {
-    console.log("getImageURL")
+    //console.log("getImageURL")
     const key = req.body.key;
     const imageId = req.body.imageIdname;
 
@@ -39,12 +39,12 @@ export const getImageURL = async(req,res) => {
 }
 
 export const DeleteImage = async(req,res) => {
-    console.log("DeleteImage")
+   //console.log("DeleteImage")
     const key = req.body.key;
     const imageId = req.body.imageId;
 
-    console.log("Key:",key);
-    console.log("imageId",imageId);
+    //console.log("Key:",key);
+    //console.log("imageId",imageId);
 
      if (!key || !imageId) {
         return res.status(400).json({ error: 'Missing key or imageId' });
@@ -54,10 +54,10 @@ export const DeleteImage = async(req,res) => {
     
     try {
     const result = await cloudinary.uploader.destroy(publicId);
-    console.log(result)
+    //console.log(result)
     return res.json({ result });
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     res.status(500).json({ error: 'Deletion failed', details: error });
   }
 }

@@ -129,11 +129,11 @@ export default function SubmissionsAdmin() {
   }
 
   const deleteMDMSubmission = async (id) => {
-    console.log("Deleting MDM Submission with ID:", id);
+   // console.log("Deleting MDM Submission with ID:", id);
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+     // console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -158,7 +158,7 @@ export default function SubmissionsAdmin() {
       //   );
       // }
 
-      console.log("MDM Submission deleted successfully");
+     // console.log("MDM Submission deleted successfully");
       //setProducts(products.filter((p) => p._id !== id));
       toast({
         title: "Success",

@@ -16,11 +16,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Debug log environment variables
-console.log('Environment loaded:', {
-  NODE_ENV: process.env.NODE_ENV,
-  PORT: process.env.PORT,
-  JWT_SECRET: process.env.JWT_SECRET ? '[SET]' : '[NOT SET]'
-});
+// console.log('Environment loaded:', {
+//   NODE_ENV: process.env.NODE_ENV,
+//   PORT: process.env.PORT,
+//   JWT_SECRET: process.env.JWT_SECRET ? '[SET]' : '[NOT SET]'
+// });
 
 //cloudinary
 import { v2 as cloudinary } from 'cloudinary';
@@ -60,7 +60,7 @@ mongoose.connect(process.env.MONGODB_URI, {
   useUnifiedTopology: true,
 })
   .then(async () => {
-    console.log("MongoDB connected");
+    // console.log("MongoDB connected");
     // Create default admin user
     await createDefaultAdmin();
   })
@@ -142,4 +142,7 @@ app.use("/imageapi/imageCloudinary", isAuthenticated, cloudinaryRoutes)
 app.use("/api/orders", isAuthenticated, orderRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  //console.log(`Server running on port ${PORT}`)
+}
+);

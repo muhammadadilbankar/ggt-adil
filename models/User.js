@@ -64,7 +64,7 @@ export const createDefaultAdmin = async () => {
         password: 'admin123', // Simple admin password
         isAdmin: true,
       });
-      console.log('Default admin user created');
+      //console.log('Default admin user created');
     }
   } catch (error) {
     console.error('Error creating default admin:', error);
