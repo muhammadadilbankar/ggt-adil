@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import axios from "axios";
 
 // Remove mock data import
 // import { courses } from "@/data/mockData";
@@ -37,6 +38,8 @@ export default function Skilling() {
   const [searchTerm, setSearchTerm] = useState("");
   const [skillings, setSkillings] = useState<Skilling[]>([]);
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState('');
+  var [titleDict, setTitleDict] = useState({});
   const [selectedSkilling, setSelectedSkilling] = useState<Skilling | null>(null);
   const { toast } = useToast();
 
@@ -44,22 +47,24 @@ export default function Skilling() {
   useEffect(() => {
     const fetchSkillings = async () => {
       try {
+        setLoading(true)
         // Get token if authentication is needed
         const token = localStorage.getItem("token");
 
-        const response = await fetch("http://localhost:5000/api/skilling", {
-          headers: {
-            ...(token ? { "Authorization": `Bearer ${token}` } : {})
-          }
-        });
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/skilling/public`)
+        // const response = await fetch("http://localhost:5000/api/skilling", {
+        //   headers: {
+        //     ...(token ? { "Authorization": `Bearer ${token}` } : {})
+        //   }
+        // });
 
-        if (!response.ok) {
-          throw new Error(`Failed to fetch skillings: ${response.status}`);
-        }
+        // if (!response.ok) {
+        //   throw new Error(`Failed to fetch skillings: ${response.status}`);
+        // }
 
-        const data = await response.json();
+        const data = await response.data;
         setSkillings(data);
-        console.log("Fetched skillings:", data);
+       // console.log("Fetched skillings:", data);
       } catch (error) {
         console.error("Error fetching skillings:", error);
         toast({
@@ -75,6 +80,66 @@ export default function Skilling() {
     fetchSkillings();
   }, [toast]);
 
+  useEffect(() => {
+      if (skillings.length > 0) {
+        fetchSkillingImages();
+        setFlag(true)
+      }
+    }, [skillings]);
+
+  function cleanString(str) {
+    return str.replace(/[^a-zA-Z0-9]/g, '');
+    }
+  
+    const [flag, setFlag] = useState(false)
+
+    const fetchSkillingImages = async() => {
+        if(flag){
+           // console.log("Skillings:",skillings);
+           // console.log("Fetching skilling images");
+           // const token = localStorage.getItem("token");
+           // console.log("Using token:", token ? "Token found" : "No token found");
+        
+            // if (!token) {
+            //   throw new Error("No authentication token found");
+            // }
+        
+            const newDict = {}
+        
+           await Promise.all(
+              skillings.map(async (skilling)=>{
+                var key = "skilling";
+                var imageIdname = cleanString(skilling.title);
+                // console.log("Key",key)
+                // console.log("ImageID:",imageIdname)
+                try {
+              const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinarypublic/publicgetimageURL`, 
+                { key, imageIdname },{
+                headers: {
+                  //Authorization: `Bearer ${token}`,
+                },
+              });
+              //console.log("API Fetch done")
+              //setStatus(`Fetched Image URL: ${res.data.result}`);
+              newDict[skilling.title] = res.data.result
+              // if(res.data.result != ""){
+              //   console.log("image Found")
+              // }
+              //setImageUrl(res.data.result);
+            } catch (err) {
+              console.error(err);
+              newDict[skilling.title] = "";
+              //setStatus('Failed to fetch image');
+            }
+                //newDict[product.title] = cleanString(product.title);
+              })
+            );
+        
+              setTitleDict(newDict)
+              setFlag(true)
+             // console.log("NEWDICT SKILLING:",newDict)
+          }
+      }
   // Filter skillings based on search term
   const filteredSkillings = skillings.filter((skilling) =>
     skilling.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -83,15 +148,15 @@ export default function Skilling() {
 
   const handleEnroll = (skillingTitle: string) => {
     toast({
-      title: "Enrollment Request Sent",
-      description: `You've requested to join "${skillingTitle}". A club administrator will contact you with further details.`,
+      title: "Enrollment Request",
+      description: `You've requested to join "${skillingTitle}". A Google Form will be available for the same shortly.`,
     });
   };
 
   // View syllabus function
   const viewSyllabus = (skilling: Skilling) => {
-    console.log("Selected skilling:", skilling);
-    console.log("Syllabus content:", skilling.syllabus);
+   // console.log("Selected skilling:", skilling);
+   // console.log("Syllabus content:", skilling.syllabus);
     setSelectedSkilling(skilling);
   };
 
@@ -157,8 +222,8 @@ export default function Skilling() {
                   </p>
                   <Button variant="outline" className="w-full" onClick={() => {
                     toast({
-                      title: "Request Sent",
-                      description: "A club mentor will contact you soon to discuss course options.",
+                      title: "Request Pop-up",
+                      description: "Hi! please contact one of the club mentors or email to gogreenramakrishna@gmail.com to discuss course options.",
                     });
                   }}>
                     Request Guidance
@@ -181,27 +246,29 @@ export default function Skilling() {
                 </div>
               ) : (
                     <div className="space-y-6">
-                      {filteredSkillings.map((skilling) => (
+                      {filteredSkillings.map((skilling) => {
+                        const imageUrl = titleDict[skilling.title]
+                      return(
                         <div
                           key={skilling._id}
                           className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row"
                         >
                           <div className="md:w-1/3 bg-gray-200 h-64 relative">
-                            {skilling.imageUrl ? (
-                              <img
-                                src={skilling.imageUrl}
-                                alt={skilling.title}
-                                className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
-                                onError={(e) => {
-                                  // Fallback if image fails to load
-                                  e.currentTarget.onerror = null;
-                                  e.currentTarget.src = "https://via.placeholder.com/500x300?text=Course+Image";
-                                }}
-                              />
-                            ) : (
+                            {(
+                              // <img
+                              //   src={skilling.imageUrl}
+                              //   alt={skilling.title}
+                              //   className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+                              //   onError={(e) => {
+                              //     // Fallback if image fails to load
+                              //     e.currentTarget.onerror = null;
+                              //     e.currentTarget.src = "https://via.placeholder.com/500x300?text=Course+Image";
+                              //   }}
+                              // />
+                            // ) : (
                               <div className="flex items-center justify-center h-full">
                                 <div className="text-center">
-                                  <svg
+                                  {/* <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-16 w-16 mx-auto text-gray-400"
                                     fill="none"
@@ -209,7 +276,14 @@ export default function Skilling() {
                                     stroke="currentColor"
                                   >
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                  </svg>
+                                  </svg> */}
+                                  {imageUrl &&  (
+                                    <img
+                                      src={imageUrl}
+                                      alt="skilling-image"
+                                      className="mt-2 w-full h-24 object-cover rounded"
+                                    />
+                                  )}
                                   <h4 className="mt-2 font-medium text-gray-600">Course Materials</h4>
                                 </div>
                               </div>
@@ -232,14 +306,17 @@ export default function Skilling() {
                             <p className="text-gray-700 mb-6">
                               {skilling.description}
                             </p>
-
+                           
                             {/* Bottom section with buttons and tags */}
                             <div className="flex flex-wrap items-center justify-between">
                               <div className="flex flex-wrap gap-4 mb-3 md:mb-0">
                                 <Button
-                                  onClick={() => handleEnroll(skilling.title)}
+                                  onClick={() => {
+                                    skilling.resourceUrl ?
+                                    <></>:handleEnroll(skilling.title)
+                                  }}
                                 >
-                                  Enroll Now
+                                  <a href={skilling.resourceUrl} target="_blank">Enroll Now</a>
                                 </Button>
                                 <Button
                                   variant="outline"
@@ -251,7 +328,7 @@ export default function Skilling() {
 
                               {/* Tags in bottom right */}
                               {/* Tags in bottom right - with improved layout */}
-                              <div className="flex flex-wrap gap-1.5 justify-end max-w-[50%]">
+                              <div className="flex flex-wrap gap-1.5 justify-end mt-5">
                                 {skilling.tags?.length > 3 ? (
                                   <>
                                     {skilling.tags.slice(0, 2).map((tag, index) => (
@@ -274,7 +351,8 @@ export default function Skilling() {
                             </div>
                           </div>
                         </div>
-                      ))}
+                      )}
+                      )}
                     </div>
               )}
 
@@ -284,40 +362,23 @@ export default function Skilling() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="flex items-center space-x-4">
                     <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
-                      <span className="text-xl font-bold">JS</span>
+                      <span className="text-xl font-bold">YSR</span>
                     </div>
                     <div>
-                      <h3 className="font-medium">Prof. John Smith</h3>
-                      <p className="text-sm text-gray-600">Digital Electronics</p>
+                      <h3 className="font-medium">Dr. Y. Srinivasa Rao</h3>
+                      <p className="text-sm text-gray-600">Ph.D. (IIT-Bombay)</p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-4">
+                  {/* Example instructor */}
+                  {/* <div className="flex items-center space-x-4">
                     <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
-                      <span className="text-xl font-bold">AT</span>
+                      <span className="text-xl font-bold">A.T.</span>
                     </div>
                     <div>
                       <h3 className="font-medium">Dr. Alice Thomas</h3>
                       <p className="text-sm text-gray-600">Embedded Systems</p>
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
-                      <span className="text-xl font-bold">RJ</span>
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Robert Johnson</h3>
-                      <p className="text-sm text-gray-600">PCB Design</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
-                      <span className="text-xl font-bold">MP</span>
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Maria Parker</h3>
-                      <p className="text-sm text-gray-600">IoT Applications</p>
-                    </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

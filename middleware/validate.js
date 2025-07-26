@@ -1,7 +1,7 @@
 // Submission validation middleware
 export const validateSubmission = (req, res, next) => {
   const { name, uid, branch, title, pdfLink } = req.body;
-
+  //console.log("validateSubmissions")
   // Validate required fields
   if (!name || !uid || !branch || !title || !pdfLink) {
     return res.status(400).json({ message: 'All fields are required' });

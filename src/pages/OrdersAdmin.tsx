@@ -72,18 +72,18 @@ export default function OrdersAdmin() {
   //   }
   // };
   const fetchOrders = async () => {
-    console.log("Starting fetchOrders function");
+   // console.log("Starting fetchOrders function");
     try {
       // Get token from localStorage
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+     // console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
       }
 
       // Create base URL pointing to backend server
-      let url = "http://localhost:5000/api/orders";
+      let url = `${import.meta.env.VITE_API_URL}/api/orders`;
       const params = new URLSearchParams();
 
       // Add filters if specified
@@ -100,7 +100,7 @@ export default function OrdersAdmin() {
         url += `?${params.toString()}`;
       }
 
-      console.log("Fetching orders from:", url);
+     // console.log("Fetching orders from:", url);
 
       // Use axios with proper authorization header
       const response = await axios.get(url, {
@@ -109,7 +109,7 @@ export default function OrdersAdmin() {
         }
       });
 
-      console.log("Orders data received:", response.data.length, "orders");
+     // console.log("Orders data received:", response.data.length, "orders");
       setOrders(response.data);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -133,19 +133,19 @@ export default function OrdersAdmin() {
   //   }
   // };
   const fetchStats = async () => {
-    console.log("Starting fetchStats function");
+   // console.log("Starting fetchStats function");
     try {
       // Get token from localStorage
       const token = localStorage.getItem("token");
-      console.log("Using token for stats:", token ? "Token found" : "No token found");
+     // console.log("Using token for stats:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
       }
 
       // Use absolute URL to backend server
-      const url = "http://localhost:5000/api/orders/stats";
-      console.log("Fetching order stats from:", url);
+      const url = `${import.meta.env.VITE_API_URL}/api/orders/stats`;
+     // console.log("Fetching order stats from:", url);
 
       // Add authorization header
       const response = await axios.get(url, {
@@ -154,7 +154,7 @@ export default function OrdersAdmin() {
         }
       });
 
-      console.log("Stats data received:", response.data);
+     // console.log("Stats data received:", response.data);
       setStats(response.data);
     } catch (error) {
       console.error("Error fetching order stats:", error);
@@ -226,6 +226,12 @@ export default function OrdersAdmin() {
 
   return (
     <div className="p-6">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-red-600">Service Unavilable</h2>
+        <p className="mt-1 text-sm text-gray-600">
+          Review and manage orders
+        </p>
+      </div>
       {/* Stats Section */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">

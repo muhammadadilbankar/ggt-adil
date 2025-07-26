@@ -23,6 +23,7 @@ export const isAuthenticated = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
+    // console.error('Full JWT error:', error);
     if (error instanceof jwt.JsonWebTokenError) {
       return res.status(401).json({ message: 'Invalid token: ' + error.message });
     }

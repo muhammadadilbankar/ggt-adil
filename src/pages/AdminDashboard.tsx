@@ -10,12 +10,12 @@ import { useSearchParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 const tabs = [
   { id: "products", label: "Products", icon: "🛍️" },
-  { id: "orders", label: "Orders", icon: "📦" },
   { id: "skillings", label: "Skillings", icon: "🎓" },
   { id: "events", label: "Events", icon: "📅" },
   { id: "community", label: "Community", icon: "👥" },
   { id: "community-submissions", label: "Project Submissions", icon: "🚀" },
-  { id: "submissions", label: "Submissions", icon: "📝" },
+  { id: "submissions", label: "MDM Submissions", icon: "📝" },
+  { id: "orders", label: "Orders", icon: "📦" },
 ];
 
 const LoadingSpinner = () => (
@@ -51,7 +51,7 @@ export default function AdminDashboard() {
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
               <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
-            Back to ElectronNexus
+            Back to GoGreenTech
           </Link>
         </div>
 

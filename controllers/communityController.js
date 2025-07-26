@@ -44,7 +44,7 @@ export const submitUserProject = async (req, res) => {
       projectUrl,
       tags,
       images,
-      userId: req.user.id,
+      userId: req.userId,
       status: 'pending',
       isAdminUpload: false
     });
@@ -138,7 +138,7 @@ export const getProjectById = async (req, res) => {
 // };
 export const createProject = async (req, res) => {
   try {
-    console.log("Received project data:", req.body);
+    //console.log("Received project data:", req.body);
 
     // Create the community/project with defaults for missing required fields
     const community = new Community({
@@ -149,9 +149,9 @@ export const createProject = async (req, res) => {
       userId: new mongoose.Types.ObjectId("507f1f77bcf86cd799439011") // Use a valid ObjectId
     });
 
-    console.log("Attempting to save community:", community);
+    //console.log("Attempting to save community:", community);
     const savedCommunity = await community.save();
-    console.log("Saved community successfully");
+    //console.log("Saved community successfully");
     res.status(201).json(savedCommunity);
   } catch (error) {
     console.error('Error creating project:', error);
@@ -236,7 +236,7 @@ export const deleteProject = async (req, res) => {
 
 export const updateCommunityPost = async (req, res) => {
   try {
-    console.log('Updating community:', req.params.id, req.body);
+    //console.log('Updating community:', req.params.id, req.body);
 
     const updatedCommunity = await Community.findByIdAndUpdate(
       req.params.id,

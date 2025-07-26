@@ -19,6 +19,24 @@ import { AuthProvider } from "./context/AuthContext";
 import CommunitySubmissionForm from './pages/CommunitySubmissionForm';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import { SignIn, SignUp } from '@clerk/clerk-react';
+import { RedirectToSignIn, useUser } from '@clerk/clerk-react';
+import AboutCentre from "./pages/AboutCentre";
+import Objectives from "./pages/Objectives";
+import Gallery from "./pages/Gallery";
+import Facilities from "./pages/Facilities";
+import Activities from "./pages/Activities";
+import ContactUs from "./pages/ContactUs";
+import DonateUs from "./pages/DonateUs";
+import Home from "./pages/Home";
+
+const ClerkProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const { isSignedIn, isLoaded } = useUser();
+
+  if (!isLoaded) return null; // or a loader
+
+  return isSignedIn ? children : <RedirectToSignIn />;
+};
 
 const queryClient = new QueryClient();
 
@@ -30,9 +48,17 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/about-centre" element={<AboutCentre />} />
+            <Route path="/objectives" element={<Objectives />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/facilities" element={<Facilities />} />
+            <Route path="/activities" element={<Activities />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/donate-us" element={<DonateUs />} />
+            <Route path="/meditation/home" element={<Meditation />} />
+            <Route path="/login" element={<SignIn routing="path" path="/login" />} />
+            <Route path="/register" element={<SignUp routing="path" path="/register" />} />
             <Route path="/products" element={<Products />} />
             <Route path="/skilling" element={<Skilling />} />
             <Route path="/meditation" element={<Meditation />} />

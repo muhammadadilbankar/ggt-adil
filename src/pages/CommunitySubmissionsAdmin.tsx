@@ -25,7 +25,7 @@ export default function CommunitySubmissionsAdmin() {
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<'pending' | 'approved' | 'rejected'>('pending');
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_URL = import.meta.env.VITE_API_URL; //|| 'http://localhost:5000';
 
   const fetchSubmissions = async () => {
     try {

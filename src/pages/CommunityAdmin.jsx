@@ -20,31 +20,31 @@ export default function CommunityAdmin() {
   }, []);
 
   const fetchCommunities = async () => {
-    console.log("Starting fetchCommunities function");
+    //console.log("Starting fetchCommunities function");
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+      //console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch("http://localhost:5000/api/community", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/community`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Response status:", response.status);
+     // console.log("Response status:", response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.log("Error response body:", errorText);
+       // console.log("Error response body:", errorText);
         throw new Error(`Failed to fetch communities: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log("Fetched communities data:", data);
+    //  console.log("Fetched communities data:", data);
       setCommunities(data || []);
     } catch (error) {
       console.error('Error fetching communities:', error);
@@ -61,7 +61,7 @@ export default function CommunityAdmin() {
 
   // const deleteCommunity = async (id) => {
   //   try {
-  //     const response = await fetch(`http://localhost:5000/api/community/${id}`, {
+  //     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/community/${id}`, {
   //       method: "DELETE",
   //       headers: {
   //         Authorization: `Bearer ${user?.token}`,
@@ -87,36 +87,36 @@ export default function CommunityAdmin() {
   //   }
   // };
   const deleteCommunity = async (id) => {
-    console.log("Deleting community with ID:", id);
+   // console.log("Deleting community with ID:", id);
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+    //  console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch(`http://localhost:5000/api/community/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/community/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      console.log("Delete response status:", response.status);
+     // console.log("Delete response status:", response.status);
 
       if (!response.ok) {
         // Try to get detailed error message from response
         const errorData = await response.json().catch(() => null);
-        console.log("Error response:", errorData);
+        //console.log("Error response:", errorData);
         throw new Error(
           errorData?.message ||
           `Failed to delete community: ${response.status}`
         );
       }
 
-      console.log("Community deleted successfully");
+     // console.log("Community deleted successfully");
       setCommunities(communities.filter((c) => c._id !== id));
       toast({
         title: "Success",
@@ -134,7 +134,7 @@ export default function CommunityAdmin() {
 
   // const toggleApproval = async (id, currentStatus) => {
   //   try {
-  //     const response = await fetch(`http://localhost:5000/api/community/${id}`, {
+  //     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/community/${id}`, {
   //       method: "PATCH",
   //       headers: {
   //         "Content-Type": "application/json",
@@ -168,13 +168,13 @@ export default function CommunityAdmin() {
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token for approval toggle:", token ? "Token found" : "No token found");
+      //console.log("Using token for approval toggle:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch(`http://localhost:5000/api/community/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/community/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -183,11 +183,11 @@ export default function CommunityAdmin() {
         body: JSON.stringify({ isApproved: !currentStatus }),
       });
 
-      console.log("Approval toggle response status:", response.status);
+     // console.log("Approval toggle response status:", response.status);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
-        console.log("Error response:", errorData);
+      //  console.log("Error response:", errorData);
         throw new Error(errorData?.message || 'Failed to update approval status');
       }
 
@@ -211,12 +211,12 @@ export default function CommunityAdmin() {
 
   const addCommunity = async (e) => {
     e.preventDefault();
-    console.log("Adding community with form data:", form);
+    //console.log("Adding community with form data:", form);
 
     try {
       // Get token from localStorage instead of user object
       const token = localStorage.getItem("token");
-      console.log("Using token:", token ? "Token found" : "No token found");
+     // console.log("Using token:", token ? "Token found" : "No token found");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -227,7 +227,7 @@ export default function CommunityAdmin() {
         throw new Error("Title and description are required");
       }
 
-      const response = await fetch("http://localhost:5000/api/community", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/community`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -236,12 +236,12 @@ export default function CommunityAdmin() {
         body: JSON.stringify(form),
       });
 
-      console.log("Response status:", response.status);
+     // console.log("Response status:", response.status);
 
       if (!response.ok) {
         // Try to get detailed error message from response
         const errorData = await response.json().catch(() => null);
-        console.log("Error response:", errorData);
+       // console.log("Error response:", errorData);
         throw new Error(
           errorData?.message ||
           `Failed to add community: ${response.status}`
@@ -249,7 +249,7 @@ export default function CommunityAdmin() {
       }
 
       const newCommunity = await response.json();
-      console.log("Community added successfully:", newCommunity);
+     // console.log("Community added successfully:", newCommunity);
 
       setCommunities([...communities, newCommunity]);
       setForm({
@@ -281,14 +281,14 @@ export default function CommunityAdmin() {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">Community Management</h2>
+      <h2 className="text-2xl font-bold mb-6">Community Management (Projects and Google Groups)</h2>
 
       <form onSubmit={addCommunity} className="mb-8 space-y-4 max-w-2xl">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Title (Include the word "Group" if Google Community)</label>
           <input
             type="text"
-            placeholder="Enter community title"
+            placeholder="Enter community/project title"
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
             required
@@ -298,7 +298,7 @@ export default function CommunityAdmin() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
           <textarea
-            placeholder="Enter community description"
+            placeholder="Enter community/project description"
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24"
@@ -315,10 +315,10 @@ export default function CommunityAdmin() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">GitHub Link</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Community Link</label>
           <input
             type="url"
-            placeholder="Enter GitHub repository link"
+            placeholder="Enter Community/Project link"
             value={form.githubLink}
             onChange={(e) => setForm({ ...form, githubLink: e.target.value })}
             className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"

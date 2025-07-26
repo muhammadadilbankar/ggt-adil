@@ -16,11 +16,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Debug log environment variables
-console.log('Environment loaded:', {
-  NODE_ENV: process.env.NODE_ENV,
-  PORT: process.env.PORT,
-  JWT_SECRET: process.env.JWT_SECRET ? '[SET]' : '[NOT SET]'
-});
+// console.log('Environment loaded:', {
+//   NODE_ENV: process.env.NODE_ENV,
+//   PORT: process.env.PORT,
+//   JWT_SECRET: process.env.JWT_SECRET ? '[SET]' : '[NOT SET]'
+// });
+
+//cloudinary
+import { v2 as cloudinary } from 'cloudinary';
 
 // Models
 import User, { createDefaultAdmin } from "./models/User.js";
@@ -36,6 +39,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import uploadRoutes from './routes/upload.routes.js';
+import cloudinaryRoutes from "./routes/cloudinaryRoutes.js";
 
 // Middleware
 import { isAuthenticated, isAdmin } from "./middleware/auth.js";
@@ -56,7 +60,7 @@ mongoose.connect(process.env.MONGODB_URI, {
   useUnifiedTopology: true,
 })
   .then(async () => {
-    console.log("MongoDB connected");
+    // console.log("MongoDB connected");
     // Create default admin user
     await createDefaultAdmin();
   })
@@ -97,6 +101,13 @@ app.post("/api/admin/login", async (req, res) => {
   }
 });
 
+//cloudinary connect
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 // ✨ Manual submission endpoint (if used separately)
 app.post("/api/submit-project", async (req, res) => {
   const { name, uid, branch, title, pdfLink } = req.body;
@@ -116,13 +127,22 @@ app.post("/api/submit-project", async (req, res) => {
 
 // Community routes (some public, some protected)
 app.use("/api/community", communityRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/skilling", skillingRoutes)
+app.use("/api/events", eventRoutes)
+app.use("/api/submissions/mdm", submissionRoutes)
+app.use("/imageapi/imageCloudinarypublic",cloudinaryRoutes)
 
 // Protected routes
 app.use("/api/submissions", isAuthenticated, submissionRoutes);
-app.use("/api/products", isAuthenticated, productRoutes);
-app.use("/api/skilling", isAuthenticated, skillingRoutes);
-app.use("/api/events", isAuthenticated, eventRoutes);
+// app.use("/api/products", isAuthenticated, productRoutes);
+// app.use("/api/skilling", isAuthenticated, skillingRoutes);
+// app.use("/api/events", isAuthenticated, eventRoutes);
+app.use("/imageapi/imageCloudinary", isAuthenticated, cloudinaryRoutes)
 app.use("/api/orders", isAuthenticated, orderRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  //console.log(`Server running on port ${PORT}`)
+}
+);

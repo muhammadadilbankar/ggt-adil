@@ -51,6 +51,7 @@ router.get('/public', getPublicProjects); // Get all approved projects
 router.get('/:id', getProjectById); // Public project details
 // routes/communityRoutes.js
 router.patch('/:id', updateCommunityPost);
+router.post('/submit/public', upload.array('images',5),submitUserProject)
 
 // Protected routes (authentication needed)
 router.get('/user/:userId', isAuthenticated, getUserProjects); // Get user's own projects

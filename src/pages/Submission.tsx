@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { useUser, RedirectToSignIn } from "@clerk/clerk-react";
+
 import {
   Card,
   CardContent,
@@ -13,9 +15,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL; //|| 'http://localhost:5000';
 
 export default function Submission() {
+  const { isLoaded, isSignedIn } = useUser(); // ✅ correct usage
+
   const [formData, setFormData] = useState({
     name: "",
     uid: "",
@@ -23,9 +27,12 @@ export default function Submission() {
     title: "",
     pdfLink: "",
   });
-
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  if (!isLoaded) return null; // Prevents flash of content
+  if (!isSignedIn) return <RedirectToSignIn />;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -54,7 +61,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 
   try {
-    const response = await fetch(`${API_URL}/api/submissions`, {
+    const response = await fetch(`${API_URL}/api/submissions/mdm`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

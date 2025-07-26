@@ -1,16 +1,17 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/context/AuthContext";
+import { useUser, SignOutButton } from "@clerk/clerk-react";
+import { useClerk } from "@clerk/clerk-react";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, isAdmin, logout } = useAuth();
+  const { user, isSignedIn } = useUser();
+  const navigate = useNavigate();
+  const { signOut } = useClerk();
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -19,21 +20,34 @@ export default function Navbar() {
     { name: "Meditation", path: "/meditation" },
     { name: "Events", path: "/events" },
     { name: "Community", path: "/community" },
-    { name: "Submit Project", path: "/submission" },
+    { name: "MDM Submit Project", path: "/submission" },
   ];
 
+  const handleSignOut = async () => {
+  await signOut();
+  // your callback logic
+  console.log('Signed out');
+  navigate('/');
+};
+
   return (
-    <nav className="flex items-center justify-between p-4 bg-white shadow-sm">
+    <nav className="flex items-center justify-between p-4 bg-white shadow-sm relative z-50">
+      {/* Left - Logo */}
       <div className="flex items-center">
-        <Link to="/" className="flex items-center gap-2 text-primary hover:text-primary-dark">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-          </svg>
-          <span>Back to Homepage</span>
+        <Link
+          to="/"
+          className="flex items-center gap-2 text-primary hover:text-primary-dark"
+        >
+          <img 
+            src="/ysrlogo.png" 
+            alt="YSR Logo" 
+            className="h-12 w-auto object-contain"
+          />
         </Link>
       </div>
 
-      <div className="hidden md:flex space-x-6">
+      {/* Center - Nav Links (absolutely centered) */}
+      <div className="hidden md:flex space-x-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
         {navLinks.map((link) => (
           <Link
             key={link.name}
@@ -45,30 +59,22 @@ export default function Navbar() {
         ))}
       </div>
 
+      {/* Right - Auth Actions */}
       <div className="hidden md:flex items-center space-x-4">
-        {isAdmin ? (
+        {isSignedIn ? (
           <>
-            <Link to="/admin">
-              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white">
-                Dashboard
+            <img
+              src={user?.imageUrl}
+              alt="Profile"
+              className="w-8 h-8 rounded-full object-cover border"
+            />
+            <span className="text-sm text-gray-700">{user?.firstName}</span>
+            <SignOutButton>
+              <Button variant="ghost" className="text-red-500 hover:text-red-600" onClick={handleSignOut}>
+                Logout
               </Button>
-            </Link>
-            <Button
-              variant="ghost"
-              onClick={logout}
-              className="text-gray-700"
-            >
-              Logout
-            </Button>
+            </SignOutButton>
           </>
-        ) : user ? (
-          <Button
-            variant="ghost"
-            onClick={logout}
-            className="text-gray-700"
-          >
-            Logout
-          </Button>
         ) : (
           <Link to="/admin-login">
             <Button variant="ghost" className="text-gray-700">
@@ -81,21 +87,14 @@ export default function Navbar() {
 
       {/* Mobile Menu Button */}
       <div className="md:hidden flex items-center">
-        <button
-          onClick={toggleMenu}
-          className="text-gray-700 focus:outline-none"
-        >
-          {isMenuOpen ? (
-            <X className="h-6 w-6" />
-          ) : (
-            <Menu className="h-6 w-6" />
-          )}
+        <button onClick={toggleMenu} className="text-gray-700 focus:outline-none">
+          {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden mt-4 bg-white rounded-lg shadow-lg absolute left-4 right-4 p-4 z-50">
+        <div className="md:hidden mt-4 bg-white rounded-lg shadow-lg absolute left-4 right-4 p-4">
           <div className="flex flex-col space-y-3">
             {navLinks.map((link) => (
               <Link
@@ -107,36 +106,24 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
+
             <div className="border-t border-gray-200 my-2 pt-2">
-              {isAdmin ? (
+              {isSignedIn ? (
                 <>
-                  <Link
-                    to="/admin"
-                    className="text-primary hover:text-primary-dark transition-colors py-2 block"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Admin Dashboard
-                  </Link>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setIsMenuOpen(false);
-                    }}
-                    className="text-gray-700 hover:text-primary transition-colors py-2 block w-full text-left"
-                  >
-                    Logout
-                  </button>
+                  <div className="flex items-center gap-2 py-2">
+                    <img
+                      src={user?.imageUrl}
+                      alt="Profile"
+                      className="w-8 h-8 rounded-full object-cover border"
+                    />
+                    <span className="text-sm text-gray-700">{user?.firstName}</span>
+                  </div>
+                  <SignOutButton>
+                    <button className="text-left w-full text-red-500 hover:text-red-600 py-2" onClick={handleSignOut}>
+                      Logout
+                    </button>
+                  </SignOutButton>
                 </>
-              ) : user ? (
-                <button
-                  onClick={() => {
-                    logout();
-                    setIsMenuOpen(false);
-                  }}
-                  className="text-gray-700 hover:text-primary transition-colors py-2 block w-full text-left"
-                >
-                  Logout
-                </button>
               ) : (
                 <Link
                   to="/admin-login"

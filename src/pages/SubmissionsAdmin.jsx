@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL; //|| 'http://localhost:5000';
 
 export default function SubmissionsAdmin() {
   const [submissions, setSubmissions] = useState([]);
@@ -127,6 +127,53 @@ export default function SubmissionsAdmin() {
       </div>
     );
   }
+
+  const deleteMDMSubmission = async (id) => {
+   // console.log("Deleting MDM Submission with ID:", id);
+    try {
+      // Get token from localStorage instead of user object
+      const token = localStorage.getItem("token");
+     // console.log("Using token:", token ? "Token found" : "No token found");
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/submissions/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      //console.log("Delete response status:", response.status);
+
+      // if (!response.ok) {
+      //   // Try to get detailed error message from response
+      //   const errorData = await response.json().catch(() => null);
+      //   console.log("Error response:", errorData);
+      //   throw new Error(
+      //     errorData?.message ||
+      //     `Failed to delete product: ${response.status}`
+      //   );
+      // }
+
+     // console.log("MDM Submission deleted successfully");
+      //setProducts(products.filter((p) => p._id !== id));
+      toast({
+        title: "Success",
+        description: "MDM Submission deleted successfully. Please Reload page.",
+      });
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete MDM Submission",
+        variant: "destructive",
+      });
+    }
+  };
+
 
   return (
     <div className="p-6 space-y-6">
@@ -254,6 +301,12 @@ export default function SubmissionsAdmin() {
                       >
                         View PDF
                       </Button>
+                    </td>
+                    <td>
+                      <button
+                      onClick={() => deleteMDMSubmission(submission._id)}
+                      className="text-red-500 hover:text-red-700"
+                      >Delete</button>
                     </td>
                   </tr>
                 ))}

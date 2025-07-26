@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { format } from "date-fns";
+import axios from "axios";
 
 // Define Event interface to match your MongoDB schema
 interface Event {
@@ -34,34 +35,38 @@ export default function Events() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState('');
+    var [titleDict, setTitleDict] = useState({});
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (events.length > 0) {
-      console.log("First event:", events[0]);
-      console.log("Location value:", events[0].location);
-    }
-  }, [events]);
+  // useEffect(() => {
+  //   if (events.length > 0) {
+  //     console.log("First event:", events[0]);
+  //     console.log("Location value:", events[0].location);
+  //   }
+  // }, [events]);
   // Fetch events from API
   useEffect(() => {
     const fetchEvents = async () => {
       try {
+        setLoading(true)
         // Get the token from localStorage
-        const token = localStorage.getItem("token");
+        //const token = localStorage.getItem("token");
 
-        if (!token) {
-          console.warn("No authentication token found");
-          // You might want to redirect to login page here
-          // window.location.href = '/login';
-          setLoading(false);
-          return;
-        }
-
-        const response = await fetch("http://localhost:5000/api/events", {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
+        // if (!token) {
+        //   console.warn("No authentication token found");
+        //   // You might want to redirect to login page here
+        //   // window.location.href = '/login';
+        //   setLoading(false);
+        //   return;
+        // }
+        
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/events/public`);
+        // const response = await fetch("http://localhost:5000/api/events", {
+        //   headers: {
+        //     "Authorization": `Bearer ${token}`
+        //   }
+        // });
 
         if (response.status === 401) {
           // Token expired or invalid
@@ -77,11 +82,11 @@ export default function Events() {
           return;
         }
 
-        if (!response.ok) {
-          throw new Error(`Failed to fetch events: ${response.status}`);
-        }
+        // if (!response.ok) {
+        //   throw new Error(`Failed to fetch events: ${response.status}`);
+        // }
 
-        const data = await response.json();
+        const data = await response.data;
         setEvents(data);
       } catch (error) {
         console.error("Error fetching events:", error);
@@ -98,6 +103,66 @@ export default function Events() {
     fetchEvents();
   }, [toast]);
 
+  useEffect(() => {
+    if (events.length > 0) {
+      fetchEventImages();
+      setFlag(true)
+    }
+  }, [events]);
+
+  function cleanString(str) {
+    return str.replace(/[^a-zA-Z0-9]/g, '');
+    }
+  
+  const [flag, setFlag] = useState(false)
+
+  const fetchEventImages = async () => {
+      if(flag){
+       // console.log("Events:",events);
+       // console.log("Fetching event images");
+       // const token = localStorage.getItem("token");
+       // console.log("Using token:", token ? "Token found" : "No token found");
+  
+        // if (!token) {
+        //   throw new Error("No authentication token found");
+        // }
+  
+        const newDict = {}
+  
+     await Promise.all(
+        events.map(async (event)=>{
+          var key = "events";
+          var imageIdname = cleanString(event.title);
+          // console.log("Key",key)
+          // console.log("ImageID:",imageIdname)
+          try {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinarypublic/publicgetimageURL`, 
+          { key, imageIdname },{
+          headers: {
+            //Authorization: `Bearer ${token}`,
+          },
+        });
+        //console.log("API Fetch done")
+        //setStatus(`Fetched Image URL: ${res.data.result}`);
+        newDict[event.title] = res.data.result
+        if(res.data.result != ""){
+         // console.log("image Found")
+        }
+        //setImageUrl(res.data.result);
+      } catch (err) {
+        console.error(err);
+        newDict[event.title] = "";
+        //setStatus('Failed to fetch image');
+      }
+          //newDict[product.title] = cleanString(product.title);
+        })
+      );
+  
+        setTitleDict(newDict)
+        setFlag(true)
+       // console.log("NEWDICT:",newDict)
+    }
+  }
   // Filter events based on search term and selected date
   const filteredEvents = events.filter(
     (event) =>
@@ -107,10 +172,18 @@ export default function Events() {
       (!date || new Date(event.date).toDateString() === date.toDateString())
   );
 
-  const handleRSVP = (eventTitle: string) => {
+  const handleRSVP = (eventTitle: string, eventURL:string) => {
     toast({
-      title: "RSVP Successful",
-      description: `You've successfully registered for "${eventTitle}". We'll send you a reminder before the event.`,
+      title: "See you at the event!",
+      //description: `You've requested to register for "${eventTitle}". We are redirecting you to the ${<a href={eventURL} className="underline">registration page</a>}.`,
+      description: (
+      <>
+        You've requested to register for "<strong>{eventTitle}</strong>". We are redirecting you to the{" "}
+        <a href={eventURL} className="underline" target="_blank" rel="noopener noreferrer">
+          registration page
+        </a>.
+      </>
+    ),
     });
   };
 
@@ -134,26 +207,36 @@ export default function Events() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row gap-8">
             {/* Sidebar with Calendar */}
-            <div className="md:w-1/3 lg:w-1/4">
+            <div className="">
               <div className="bg-white p-6 rounded-lg shadow-md sticky top-20">
-                <h2 className="text-xl font-bold mb-4">Find Events</h2>
-                <Input
-                  type="text"
-                  placeholder="Search events..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="mb-6"
-                />
-
-                <div className="mb-6">
-                  <h3 className="font-medium mb-2">Filter by Date</h3>
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    className="rounded-md border"
-                  // highlightedDays={eventDates.map(date => date.getDate())}
+                <div>
+                  <h2 className="text-xl font-bold mb-4">Find Events</h2>
+                  <Input
+                    type="text"
+                    placeholder="Search events..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="mb-6"
                   />
+                </div>
+
+
+                {/* <div className="">
+                  <div className="">
+                    <h3 className="font-medium mb-2">Filter by Date</h3>
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      className="rounded-md border
+                                [&_.rdp-table]:w-full 
+                                [&_.rdp-day]:w-full 
+                                [&_.rdp-caption_label]:text-center"
+                  
+                    />
+                  </div>
+                 </div> */}
+                 {/* <div>
                   {date && (
                     <div className="mt-2 text-right">
                       <Button
@@ -165,7 +248,7 @@ export default function Events() {
                       </Button>
                     </div>
                   )}
-                </div>
+                </div> */}
 
                 <div className="border-t pt-4">
                   <h3 className="font-medium mb-2">Event Categories</h3>
@@ -201,7 +284,7 @@ export default function Events() {
                   <Button variant="outline" className="w-full" onClick={() => {
                     toast({
                       title: "Thank you for your interest!",
-                      description: "Event suggestions can be submitted through the club email.",
+                      description: "Event suggestions can be submitted through the club email or sent to ",
                     });
                   }}>
                     Suggest Event
@@ -222,30 +305,45 @@ export default function Events() {
                     <h2 className="text-2xl font-bold">
                       {filteredEvents.length} {filteredEvents.length === 1 ? "Event" : "Events"} Found
                     </h2>
-                    <Button onClick={() => {
+                    {/* <Button onClick={() => {
                       toast({
                         title: "Calendar Synced",
                         description: "Events have been added to your calendar.",
                       });
                     }}>
                       Add to Calendar
-                    </Button>
+                    </Button> */}
                   </div>
 
-                  {filteredEvents.length === 0 ? (
+                  {filteredEvents.length === 0 ? 
+                  (
                     <div className="bg-white p-8 rounded-lg shadow-md text-center">
                       <p className="text-gray-500">No events matching your criteria.</p>
                     </div>
                   ) : (
                     <div className="space-y-6">
-                      {filteredEvents.map((event) => (
+                      {filteredEvents.map((event, index) => {
+                        const imageUrl = titleDict[event.title]
+                      return(
                         <div
                           key={event._id}
                           id={`event-${event._id}`}
                           className="bg-white rounded-lg shadow-md overflow-hidden"
                         >
+                          {index === 0 && (
+                          <div className="bg-primary text-white p-4 text-center">
+                            <span className="font-bold text-xl">Featured Workshop</span>
+                          </div>
+                          )}
                           <div className="md:flex">
-                            {event.imageUrl ? (
+                            {imageUrl &&  (
+            <img
+              src={imageUrl}
+              alt="event-image"
+              className="mt-2 ml-2 w-auto h-full object-cover rounded"
+            />
+          )}
+                            {/* {event.imageUrl ? (
                               <div className="md:w-1/3">
                                 <img
                                   src={event.imageUrl}
@@ -257,7 +355,7 @@ export default function Events() {
                               <div className="md:w-1/3 bg-gray-200 flex items-center justify-center">
                                 <span className="text-gray-500">No Image</span>
                               </div>
-                            )}
+                            )} */}
                             <div className="p-6 md:w-2/3">
                               <h3 className="text-2xl font-bold mb-2">{event.title}</h3>
                               <div className="flex flex-wrap gap-y-2 mb-4">
@@ -320,7 +418,7 @@ export default function Events() {
                               <div className="flex flex-wrap gap-3">
                                 <Button
                                   asChild
-                                  onClick={() => handleRSVP(event.title)}
+                                  onClick={() => handleRSVP(event.title,event.redirectUrl)}
                                 >
                                   <a
                                     href={event.redirectUrl}
@@ -340,14 +438,15 @@ export default function Events() {
                             </div>
                           </div>
                         </div>
-                      ))}
+                      )}
+                      )}
                     </div>
                   )}
                 </>
               )}
 
               {/* Keep the Featured Workshop section if you want */}
-              {!loading && events.length > 0 && (
+              {/* {!loading && events.length > 0 && (
                 <div className="mt-12 bg-white rounded-lg shadow-md overflow-hidden">
                   <div className="bg-primary text-white p-4 text-center">
                     <span className="font-bold text-xl">Featured Workshop</span>
@@ -399,7 +498,7 @@ export default function Events() {
                     </div>
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
@@ -442,7 +541,7 @@ export default function Events() {
                   Close
                 </Button>
                 <Button asChild onClick={() => {
-                  handleRSVP(selectedEvent.title);
+                  handleRSVP(selectedEvent.title, selectedEvent.redirectUrl);
                   setSelectedEvent(null);
                 }}>
                   <a

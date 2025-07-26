@@ -1,9 +1,11 @@
 import express from 'express';
 import Product from '../models/Product.js';
 import { isAuthenticated, isAdmin } from '../middleware/auth.js';
+import { getAllProducts } from '../controllers/productController.js';
 
 const router = express.Router();
 
+router.get('/public', getAllProducts)
 // Apply authentication and admin middleware to all routes
 router.use(isAuthenticated);
 router.use(isAdmin);
