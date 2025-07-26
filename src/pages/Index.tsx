@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import Spline from '@splinetool/react-spline';
 import { useState } from "react";
 
+
 const Index = () => {
   const featuredProjects = projects.filter(project => project.approved).slice(0, 3);
   const upcomingEvents = events.slice(0, 2);
