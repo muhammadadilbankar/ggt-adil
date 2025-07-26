@@ -97,12 +97,12 @@ export default function Skilling() {
         if(flag){
            // console.log("Skillings:",skillings);
            // console.log("Fetching skilling images");
-            const token = localStorage.getItem("token");
+           // const token = localStorage.getItem("token");
            // console.log("Using token:", token ? "Token found" : "No token found");
         
-            if (!token) {
-              throw new Error("No authentication token found");
-            }
+            // if (!token) {
+            //   throw new Error("No authentication token found");
+            // }
         
             const newDict = {}
         
@@ -116,7 +116,7 @@ export default function Skilling() {
               const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinarypublic/publicgetimageURL`, 
                 { key, imageIdname },{
                 headers: {
-                  Authorization: `Bearer ${token}`,
+                  //Authorization: `Bearer ${token}`,
                 },
               });
               //console.log("API Fetch done")

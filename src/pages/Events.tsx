@@ -51,15 +51,15 @@ export default function Events() {
       try {
         setLoading(true)
         // Get the token from localStorage
-        const token = localStorage.getItem("token");
+        //const token = localStorage.getItem("token");
 
-        if (!token) {
-          console.warn("No authentication token found");
-          // You might want to redirect to login page here
-          // window.location.href = '/login';
-          setLoading(false);
-          return;
-        }
+        // if (!token) {
+        //   console.warn("No authentication token found");
+        //   // You might want to redirect to login page here
+        //   // window.location.href = '/login';
+        //   setLoading(false);
+        //   return;
+        // }
         
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/events/public`);
         // const response = await fetch("http://localhost:5000/api/events", {
@@ -120,12 +120,12 @@ export default function Events() {
       if(flag){
        // console.log("Events:",events);
        // console.log("Fetching event images");
-        const token = localStorage.getItem("token");
+       // const token = localStorage.getItem("token");
        // console.log("Using token:", token ? "Token found" : "No token found");
   
-        if (!token) {
-          throw new Error("No authentication token found");
-        }
+        // if (!token) {
+        //   throw new Error("No authentication token found");
+        // }
   
         const newDict = {}
   
@@ -139,7 +139,7 @@ export default function Events() {
         const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinarypublic/publicgetimageURL`, 
           { key, imageIdname },{
           headers: {
-            Authorization: `Bearer ${token}`,
+            //Authorization: `Bearer ${token}`,
           },
         });
         //console.log("API Fetch done")

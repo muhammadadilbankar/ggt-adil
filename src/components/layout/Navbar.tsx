@@ -3,11 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUser, SignOutButton } from "@clerk/clerk-react";
+import { useClerk } from "@clerk/clerk-react";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, isSignedIn } = useUser();
   const navigate = useNavigate();
+  const { signOut } = useClerk();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -20,6 +22,13 @@ export default function Navbar() {
     { name: "Community", path: "/community" },
     { name: "MDM Submit Project", path: "/submission" },
   ];
+
+  const handleSignOut = async () => {
+  await signOut();
+  // your callback logic
+  console.log('Signed out');
+  navigate('/');
+};
 
   return (
     <nav className="flex items-center justify-between p-4 bg-white shadow-sm relative z-50">
@@ -60,8 +69,8 @@ export default function Navbar() {
               className="w-8 h-8 rounded-full object-cover border"
             />
             <span className="text-sm text-gray-700">{user?.firstName}</span>
-            <SignOutButton signOutCallback={() => navigate("/")}>
-              <Button variant="ghost" className="text-red-500 hover:text-red-600">
+            <SignOutButton>
+              <Button variant="ghost" className="text-red-500 hover:text-red-600" onClick={handleSignOut}>
                 Logout
               </Button>
             </SignOutButton>
@@ -109,8 +118,8 @@ export default function Navbar() {
                     />
                     <span className="text-sm text-gray-700">{user?.firstName}</span>
                   </div>
-                  <SignOutButton signOutCallback={() => navigate("/")}>
-                    <button className="text-left w-full text-red-500 hover:text-red-600 py-2">
+                  <SignOutButton>
+                    <button className="text-left w-full text-red-500 hover:text-red-600 py-2" onClick={handleSignOut}>
                       Logout
                     </button>
                   </SignOutButton>

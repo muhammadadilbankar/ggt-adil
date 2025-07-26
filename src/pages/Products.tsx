@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
+//import { useUser, RedirectToSignIn } from "@clerk/clerk-react";
 
 // Define Product interface to match your MongoDB schema
 interface Product {
@@ -25,21 +26,25 @@ export default function Products() {
   var [titleDict, setTitleDict] = useState({});
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  // const { isLoaded, isSignedIn } = useUser(); // ✅ correct usage
+  
+  // if (!isLoaded) return null; // Prevents flash of content
+  // if (!isSignedIn) return <RedirectToSignIn />;
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
         // Get the token from localStorage
-        const token = localStorage.getItem("token");
+        // const token = localStorage.getItem("token");
 
-        if (!token) {
-          console.warn("No authentication token found");
-          // You might want to redirect to login page here
-          // window.location.href = '/login';
-          setLoading(false);
-          return;
-        }
+        // if (!token) {
+        //   console.warn("No authentication token found");
+        //   // You might want to redirect to login page here
+        //   // window.location.href = '/login';
+        //   setLoading(false);
+        //   return;
+        // }
 
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/products/public`)
 
@@ -101,12 +106,12 @@ const fetchProductImages = async () => {
     if(flag){
    // console.log("Products:",products);
    // console.log("Fetching product images");
-    const token = localStorage.getItem("token");
-     // console.log("Using token:", token ? "Token found" : "No token found");
+    // const token = localStorage.getItem("token");
+    //  // console.log("Using token:", token ? "Token found" : "No token found");
 
-      if (!token) {
-        throw new Error("No authentication token found");
-      }
+    //   if (!token) {
+    //     throw new Error("No authentication token found");
+    //   }
 
       const newDict = {}
 
@@ -120,7 +125,7 @@ const fetchProductImages = async () => {
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/imageapi/imageCloudinarypublic/publicgetimageURL`, 
         { key, imageIdname },{
         headers: {
-          Authorization: `Bearer ${token}`,
+          //Authorization: `Bearer ${token}`,
         },
       });
       //console.log("API Fetch done")

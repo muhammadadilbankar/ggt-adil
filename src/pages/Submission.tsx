@@ -20,9 +20,6 @@ const API_URL = import.meta.env.VITE_API_URL; //|| 'http://localhost:5000';
 export default function Submission() {
   const { isLoaded, isSignedIn } = useUser(); // ✅ correct usage
 
-  if (!isLoaded) return null; // Prevents flash of content
-  if (!isSignedIn) return <RedirectToSignIn />;
-
   const [formData, setFormData] = useState({
     name: "",
     uid: "",
@@ -31,9 +28,11 @@ export default function Submission() {
     pdfLink: "",
   });
   
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  if (!isLoaded) return null; // Prevents flash of content
+  if (!isSignedIn) return <RedirectToSignIn />;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

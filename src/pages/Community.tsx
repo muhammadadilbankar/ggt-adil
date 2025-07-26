@@ -51,6 +51,10 @@ export default function Community() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [show, setShow] = useState(false);
   const { getToken } = useAuth();
+  const [allProjectsNumber, setAllProjectsNumber] = useState(false)
+  const [softwareProjectsTab, setSoftwareProjectsTab] = useState(false)
+  const [hardwareProjectsTab, setHardwareProjectsTab] = useState(false)
+  const [iotProjectsTab,setIotProjectsTab] = useState(false)
 
 
   const location = useLocation();
@@ -67,6 +71,18 @@ export default function Community() {
   useEffect(() => {
     if (!isLoaded) return;
     fetchProjects();
+    if (publicProjects.length > 0) {
+      const tags = publicProjects.flatMap(project => project.tags || []);
+
+      setSoftwareProjectsTab(tags.includes('software'));
+      setHardwareProjectsTab(tags.includes('hardware'));
+      setIotProjectsTab(tags.includes('iot'));
+    }
+    else {
+      setSoftwareProjectsTab(false);
+      setHardwareProjectsTab(false);
+      setIotProjectsTab(false);
+    }
   }, [isLoaded]);
 
   useEffect(() => {
@@ -111,17 +127,17 @@ export default function Community() {
     e.preventDefault();
     setIsSubmitting(true)
     try {
-      const userId = localStorage.getItem('token');
+      //const userId = localStorage.getItem('token');
+      //console.log("Entered handleSubmit",userId)
       //console.log("Handled Submit:"+userId)
-      if (!userId) {
-        toast.error('Please log in to submit a project');
-        return;
-      }
-
+      // if (!userId) {
+      //   toast.error('Please log in to submit a project');
+      //   return;
+      // }
       const data = {
         ...formData,
         tags: formData.tags.split(',').map(tag => tag.trim()),
-        userId
+        //userId
       };
 
       await axios.post('/api/community/submit/public', data);
@@ -317,6 +333,7 @@ export default function Community() {
           <TabsContent value={activeTab}>
           <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {
+            sortedGroup.length > 0 ? (
           sortedGroup.map((project) => (
             <div
               key={project._id}
@@ -351,7 +368,9 @@ export default function Community() {
                 </div>
               </div>
             </div>
-          )) 
+          ))):(<>
+          <p className="text-center col-span-full text-gray-500">No groups found &nbsp;&nbsp; OR &nbsp;&nbsp; No groups for chosen tab category &nbsp;&nbsp; OR &nbsp;&nbsp; Try logging in with us (Click on 'MDM Submit Project' tab) to view the Community Groups!</p>
+          </>)
         }
         </div>
         </TabsContent>
@@ -378,15 +397,25 @@ export default function Community() {
             <div className="flex justify-center mb-6">
               <TabsList>
                 <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="hardware">Hardware</TabsTrigger>
-                <TabsTrigger value="software">Software</TabsTrigger>
-                <TabsTrigger value="iot">IoT</TabsTrigger>
+                {
+                  hardwareProjectsTab ? (
+                <TabsTrigger value="hardware">Hardware</TabsTrigger>):(<></>)
+      }
+      {          
+                softwareProjectsTab ? (
+                <TabsTrigger value="software">Software</TabsTrigger>):(<></>)
+      }
+      {
+                iotProjectsTab?(
+                <TabsTrigger value="iot">IoT</TabsTrigger>):(<></>)
+      }
               </TabsList>
             </div>
 
       <TabsContent value={activeTab}>
         <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
         {
+          sortedNonGroupProjects.length > 0 ? (
           sortedNonGroupProjects.map((project) => (
             <div
               key={project._id}
@@ -421,14 +450,16 @@ export default function Community() {
                 </div>
               </div>
             </div>
-          )) 
+          ))):(<>
+          <p className="text-center col-span-full text-gray-500">No projects found or OR Try logging in with us (Click on 'MDM Submit Project' tab) to view the Projects!</p>
+          </>)
         }
         </div>
         </TabsContent>
       </Tabs>
         </>
         ) : (
-          <p className="text-center col-span-full text-gray-500">No projects found</p>
+          <p className="text-center col-span-full text-gray-500">No projects found or OR Try logging in with us (Click on 'MDM Submit Project' tab) to view the Projects!</p>
         );
       })()}
     </div>
@@ -437,7 +468,7 @@ export default function Community() {
 
       {/* Submission Dialog */}
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl" aria-describedby={undefined}>
           <DialogHeader>
             <DialogTitle>Submit Your Project</DialogTitle>
           </DialogHeader>

@@ -407,7 +407,7 @@ export default function ProductsAdmin() {
       </form>
 
       {products.length === 0 ? (
-        <p>No products found.</p>
+        <p>No products found OR Try logging in with us (Click on 'MDM Submit Project' tab) to view the Products!</p>
       ) : (
         <ul className="space-y-4">
           {products.map((p) => {
