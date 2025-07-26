@@ -17,7 +17,7 @@ const NAV_SECTIONS = [
 
 export default function Meditation() {
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const toggleSpline = () => {
     setIsOpen((prev) => !prev);
@@ -68,7 +68,7 @@ export default function Meditation() {
           {/* Image Placeholder */}
           <div className="flex-shrink-0 flex items-center justify-center w-72 h-72 md:w-80 md:h-80 rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
             {/* Replace src with actual image if available */}
-            <img src="public\yrkm.jpg" alt="Sri Yerramreddy Rama Krishna Murthy" className="object-cover w-full h-full" />
+            <img src="/yrkm.jpg" alt="Sri Yerramreddy Rama Krishna Murthy" className="object-cover w-full h-full" />
           </div>
           {/* Text Content */}
           <div className="flex-1">

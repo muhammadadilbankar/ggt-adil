@@ -140,7 +140,7 @@ export default function Community() {
         //userId
       };
 
-      await axios.post('/api/community/submit/public', data);
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/community/submit/public`, data);
       alert("Project submitted successfully! Waiting for admin approval.")
       toast.success('Project submitted successfully! Waiting for admin approval.');
 
@@ -224,7 +224,7 @@ export default function Community() {
         <div className="mb-4">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full mb-6">
             <img
-      src="public/favicon-logo.png" // Replace with your image path
+      src="/favicon-logo.png" // Replace with your image path
       alt="Community Icon"
       className="absolute w-12 h-12 object-contain"
     />
